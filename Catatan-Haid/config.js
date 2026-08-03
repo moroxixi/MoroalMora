@@ -9,4 +9,4 @@
  * (lihat README.md). Selama masih placeholder, aplikasi menampilkan
  * banner setup dan tidak melakukan fetch apa pun.
  * ============================================================ */
-const GAS_WEB_APP_URL = "ISI_SETELAH_DEPLOY";
+const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbxQGlAR1BgtQf0vFP580miLf9mvahAAupo1vXxqGLlpAtynTeO4bPMAWZfzvHqgw5xlzA/exec";
