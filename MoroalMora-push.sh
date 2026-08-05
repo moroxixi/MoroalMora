@@ -22,6 +22,46 @@ if [ -z "$SSH_AUTH_SOCK" ] || [ ! -S "$SSH_AUTH_SOCK" ]; then
     fi
 fi
 
+# ── [Graphify] Update graph otomatis sebelum push ──────────────────────────
+# Urutan: graphify update → cek manifest → gen-folder-tree → (git add kalau tracked).
+# Kalau graphify-out/ ter-track git, perubahannya ikut di-commit & di-push.
+if ! command -v graphify >/dev/null 2>&1; then
+    echo "$(date '+%H:%M') [Graphify] ERROR: command graphify tidak ditemukan." >> "$LOG"
+    echo "❌ graphify tidak ditemukan — push dibatalkan."
+    exit 4
+fi
+
+echo "$(date '+%H:%M') [Graphify] graphify update . ..." >> "$LOG"
+if ! graphify update .; then
+    echo "$(date '+%H:%M') [Graphify] ERROR: graphify update gagal." >> "$LOG"
+    echo "❌ graphify update GAGAL — push dibatalkan."
+    exit 4
+fi
+
+echo "$(date '+%H:%M') [Graphify] graphify update OK." >> "$LOG"
+
+MANIFEST="$HOMELAB_DIR/graphify-out/manifest.json"
+if [ ! -f "$MANIFEST" ]; then
+    echo "$(date '+%H:%M') [Graphify] ERROR: manifest.json tidak ada: $MANIFEST" >> "$LOG"
+    echo "❌ manifest.json tidak ditemukan setelah graphify update — push dibatalkan."
+    exit 5
+fi
+
+echo "$(date '+%H:%M') [Graphify] gen-folder-tree.py ..." >> "$LOG"
+if ! python3 ~/.local/bin/gen-folder-tree.py "$MANIFEST"; then
+    echo "$(date '+%H:%M') [Graphify] ERROR: gen-folder-tree.py gagal." >> "$LOG"
+    echo "❌ gen-folder-tree.py GAGAL — push dibatalkan."
+    exit 6
+fi
+
+# Kalau graphify-out/ ter-track git → stage perubahannya (ikut commit push ini)
+if git ls-files graphify-out | grep -q .; then
+    echo "$(date '+%H:%M') [Graphify] graphify-out tracked — git add." >> "$LOG"
+    git add graphify-out/
+fi
+
+echo "$(date '+%H:%M') [Graphify] selesai." >> "$LOG"
+
 # ── Cek syntax semua file JS/GS sebelum commit ─────────────────────────────
 SYNTAX_ERRORS=""
 while IFS= read -r -d '' jsfile; do
@@ -122,4 +162,7 @@ else
     echo "❌ Push GAGAL:"
     echo "$PUSH_OUTPUT"
     notify-send "MoroalMora" "❌ Push gagal! $PUSH_OUTPUT" --urgency=critical 2>/dev/null
+    exit 7
 fi
+
+exit 0

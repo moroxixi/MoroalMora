@@ -1,0 +1,27 @@
+# MoroalMora-specific ignores
+
+# Logs
+push.log
+
+# Graphify cache (build artifacts, regeneratable)
+graphify-out/cache/
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+
+# Node
+node_modules/
+
+# Environment files
+.env
+.env.*
+
+# OS junk
+.DS_Store
+Thumbs.db
+
+# Editor
+.vscode/
+.idea/
