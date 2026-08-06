@@ -6,6 +6,13 @@ push.log
 # Graphify cache (build artifacts, regeneratable)
 graphify-out/cache/
 
+# Graphify artifacts (junk, regeneratable via graphify update)
+graphify-out/graph.html
+graphify-out/graph.json
+graphify-out/.graphify_labels.json
+graphify-out/.graphify_labels.json.sig
+graphify-out/.graphify_root
+
 # Python cache
 __pycache__/
 *.pyc
