@@ -1,4 +1,4 @@
-# Folder Tree (7 files tracked)
+# Folder Tree (8 files tracked)
 
 > Auto-generated dari manifest.json — jangan edit manual. Regenerate: gen-folder-tree.py <path-manifest.json>
 
@@ -11,5 +11,7 @@
 │   ├── config.js
 │   ├── index.html
 │   └── script.js
+├── System-Bedroom/
+│   └── index.html
 └── MoroalMora-push.sh
 ```

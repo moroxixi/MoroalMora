@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>dashboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #131313;
+    --sidebar: #161616;
+    --card: #1a1a1a;
+    --card-hover: #202020;
+    --border: #2a2a2a;
+    --fg: #f2f2f2;
+    --fg-dim: #9a9a9a;
+    --fg-faint: #6b6b6b;
+    --c-orange: #e8a33d;
+    --c-teal: #4fd1b5;
+    --c-blue: #5b8def;
+    --c-purple: #a06bf0;
+  }
+  *{ margin:0; padding:0; box-sizing:border-box; }
+  body{
+    background: var(--bg);
+    color: var(--fg);
+    font-family: 'Inter', sans-serif;
+    display:flex;
+    min-height:100vh;
+    font-size: 14px;
+  }
+
+  /* ── Sidebar ── */
+  .sidebar{
+    width: 220px;
+    flex-shrink:0;
+    background: var(--sidebar);
+    border-right: 1px solid var(--border);
+    padding: 20px 16px;
+    display:flex; flex-direction:column; gap: 22px;
+  }
+  .sidebar-title{ font-weight:600; font-size:14px; color: var(--fg); }
+  .side-group{ display:flex; flex-direction:column; gap:2px; }
+  .side-label{
+    font-size: 10.5px; letter-spacing:0.08em; color: var(--fg-faint);
+    text-transform: uppercase; margin-bottom: 6px; padding-left: 8px;
+  }
+  .side-item{
+    padding: 6px 8px; border-radius: 6px; color: var(--fg-dim);
+    cursor:pointer; display:flex; align-items:center; gap:8px; font-size:13px;
+    transition: background .15s ease, color .15s ease;
+  }
+  .side-item:hover, .side-item.active{ background: var(--card-hover); color: var(--fg); }
+  .side-item::before{ content:'•'; color: var(--fg-faint); font-size:10px; }
+
+  /* ── Main ── */
+  .main{ flex:1; padding: 24px 32px 60px; max-width: 1200px; }
+  .topbar{ display:flex; align-items:center; justify-content:space-between; margin-bottom: 24px; }
+  .topbar-title{ font-weight:600; font-size:15px; }
+  .clock{ font-size:13px; color: var(--fg-faint); }
+
+  .searchrow{ display:flex; align-items:center; gap:14px; margin-bottom: 30px; }
+  .searchbox{
+    flex:1; max-width: 420px;
+    background: var(--card); border:1px solid var(--border); border-radius: 8px;
+    padding: 10px 14px; color: var(--fg-faint); font-size:13px;
+  }
+  .count{ font-size:13px; color: var(--fg-faint); }
+
+  .section{ margin-bottom: 36px; }
+  .section-label{
+    font-size: 11px; letter-spacing:0.08em; color: var(--fg-faint);
+    text-transform: uppercase; margin-bottom: 14px; padding-bottom: 8px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .grid{
+    display:grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 16px;
+  }
+
+  .card{
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--accent, var(--c-orange));
+    border-radius: 10px;
+    padding: 16px 18px;
+    cursor: pointer;
+    transition: background .15s ease, transform .15s ease;
+    position: relative;
+  }
+  .card:hover{ background: var(--card-hover); transform: translateY(-1px); }
+  .card.done{ opacity: 0.55; }
+  .card.done .card-title::after{ content: ' ✓'; color: var(--accent, var(--c-teal)); }
+
+  .icon{
+    width: 30px; height:30px; border-radius:7px;
+    display:flex; align-items:center; justify-content:center;
+    color: var(--accent, var(--c-orange));
+    margin-bottom: 14px; font-size: 15px;
+  }
+
+  .card-title{ font-weight:600; font-size: 14px; margin-bottom: 4px; }
+  .card-desc{ font-size: 12.5px; color: var(--fg-dim); line-height:1.45; }
+
+  @media (max-width: 720px){
+    .sidebar{ display:none; }
+    .main{ padding: 20px 16px 60px; }
+  }
+</style>
+</head>
+<body>
+
+  <div class="sidebar">
+    <div class="sidebar-title">jaga_rapi</div>
+
+    <div class="side-group">
+      <div class="side-label">Ritme</div>
+      <div class="side-item active">Harian</div>
+      <div class="side-item">Mingguan</div>
+      <div class="side-item">Saat belanja</div>
+      <div class="side-item">Sekali setup</div>
+    </div>
+
+    <div class="side-group">
+      <div class="side-label">Lainnya</div>
+      <div class="side-item">Progress</div>
+      <div class="side-item">Reset</div>
+    </div>
+  </div>
+
+  <div class="main">
+    <div class="topbar">
+      <div class="topbar-title">sistem kamar rapi</div>
+      <div class="clock" id="clock">--.--.--</div>
+    </div>
+
+    <div class="searchrow">
+      <div class="searchbox">cari modul...</div>
+      <div class="count">7 modul</div>
+    </div>
+
+    <div class="section">
+      <div class="section-label">Saat Belanja</div>
+      <div class="grid">
+        <div class="card" style="--accent: var(--c-orange)" data-name="One in, one out">
+          <div class="icon">⇄</div>
+          <div class="card-title">One in, one out</div>
+          <div class="card-desc">Beli barang baru, satu barang lama keluar — dibuang, dijual, atau didonasikan.</div>
+        </div>
+        <div class="card" style="--accent: var(--c-orange)" data-name="Evaluasi sebelum beli">
+          <div class="icon">?</div>
+          <div class="card-title">Evaluasi sebelum beli</div>
+          <div class="card-desc">Tanya dulu: bakal dipakai minimal sebulan sekali, atau cuma jadi tumpukan baru?</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-label">Sekali Setup</div>
+      <div class="grid">
+        <div class="card" style="--accent: var(--c-purple)" data-name="Tiga kategori barang">
+          <div class="icon">▤</div>
+          <div class="card-title">Tiga kategori barang</div>
+          <div class="card-desc">Pakai, Simpan (kotak/laci tertutup), Buang/Donasi — nggak dipakai 6–12 bulan.</div>
+        </div>
+        <div class="card" style="--accent: var(--c-purple)" data-name="Rumah untuk tiap barang">
+          <div class="icon">⌂</div>
+          <div class="card-title">Rumah untuk tiap barang</div>
+          <div class="card-desc">Tiap benda punya tempat tetap. Nggak punya tempat = kemungkinan nggak dibutuhkan.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-label">Mingguan</div>
+      <div class="grid">
+        <div class="card" style="--accent: var(--c-blue)" data-name="Sesi declutter singkat">
+          <div class="icon">↻</div>
+          <div class="card-title">Sesi declutter singkat</div>
+          <div class="card-desc">10–15 menit tiap Minggu malam, cek barang yang mulai numpuk lagi.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-label">Harian</div>
+      <div class="grid">
+        <div class="card" style="--accent: var(--c-teal)" data-name="Batasi permukaan terbuka">
+          <div class="icon">▭</div>
+          <div class="card-title">Batasi permukaan terbuka</div>
+          <div class="card-desc">Meja, nakas, lantai — minim barang. Permukaan kosong = kamar kelihatan rapi.</div>
+        </div>
+        <div class="card" style="--accent: var(--c-teal)" data-name="Aturan 2 menit">
+          <div class="icon">⏱</div>
+          <div class="card-title">Aturan 2 menit</div>
+          <div class="card-desc">Kalau balikin barang butuh &lt;2 menit, langsung lakukan — jangan ditunda.</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+<script>
+  function updateClock(){
+    const now = new Date();
+    const h = String(now.getHours()).padStart(2,'0');
+    const m = String(now.getMinutes()).padStart(2,'0');
+    const s = String(now.getSeconds()).padStart(2,'0');
+    document.getElementById('clock').textContent = h + '.' + m + '.' + s;
+  }
+  updateClock();
+  setInterval(updateClock, 1000);
+
+  document.querySelectorAll('.card').forEach(card => {
+    card.addEventListener('click', () => card.classList.toggle('done'));
+  });
+
+  document.querySelectorAll('.side-item').forEach(item => {
+    item.addEventListener('click', () => {
+      document.querySelectorAll('.side-item').forEach(i => i.classList.remove('active'));
+      item.classList.add('active');
+    });
+  });
+</script>
+</body>
+</html>
