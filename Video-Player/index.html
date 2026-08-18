@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Video Player</title>
+<style>
+  :root {
+    --bg: #0a0a0a;
+    --bg-card: #141414;
+    --border: #262626;
+    --fg: #e5e5e5;
+    --fg-muted: #8a8a8a;
+    --accent: #f59e0b;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--bg);
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    color: var(--fg);
+  }
+
+  .player-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--accent);
+    border-radius: 10px;
+    padding: 18px;
+    width: min(90vw, 900px);
+  }
+
+  .title {
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 0.2px;
+    color: var(--fg);
+    margin: 0 0 3px 2px;
+  }
+
+  .subtitle {
+    font-size: 12px;
+    color: var(--fg-muted);
+    margin: 0 0 14px 2px;
+  }
+
+  video {
+    width: 100%;
+    border-radius: 8px;
+    background: #000;
+    display: block;
+    outline: none;
+  }
+
+  .hint {
+    margin-top: 14px;
+    font-size: 12px;
+    color: var(--fg-muted);
+    text-align: center;
+  }
+</style>
+</head>
+<body>
+
+  <div class="player-card">
+    <p class="title">quiet-house-jazz-for-deep-concentration</p>
+    <p class="subtitle">Local video · autoplay · loop</p>
+    <video controls autoplay loop preload="auto">
+      <source src="~/Sound/quiet-house-jazz-for-deep-concentration.mp4" type="video/mp4">
+      Browser kamu tidak mendukung tag video.
+    </video>
+  </div>
+
+</body>
+</html>
