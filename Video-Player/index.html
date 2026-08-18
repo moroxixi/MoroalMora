@@ -72,10 +72,21 @@
     <p class="title">quiet-house-jazz-for-deep-concentration</p>
     <p class="subtitle">Local video · autoplay · loop</p>
     <video controls autoplay loop preload="auto">
-      <source src="quiet-house-jazz-for-deep-concentration.mp4" type="video/mp4">
+      <source type="video/mp4">
       Browser kamu tidak mendukung tag video.
     </video>
   </div>
+
+  <script>
+    // Resolve base path dari URL saat ini supaya video tetap benar diakses
+    // dari "/", "/video" maupun "/video/" (via Tailscale serve proxy).
+    const basePath = window.location.pathname.endsWith('/')
+      ? window.location.pathname
+      : window.location.pathname + '/';
+    const videoElement = document.querySelector('video');
+    videoElement.src = basePath + 'quiet-house-jazz-for-deep-concentration.mp4';
+    videoElement.load();
+  </script>
 
 </body>
 </html>
