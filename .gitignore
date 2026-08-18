@@ -32,3 +32,6 @@ Thumbs.db
 # Editor
 .vscode/
 .idea/
+
+# Video files (besar — serve via symlink, jangan commit)
+Video-Player/*.mp4
