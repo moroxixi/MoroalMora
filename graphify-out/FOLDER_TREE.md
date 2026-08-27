@@ -12,8 +12,7 @@
 │   ├── index.html
 │   └── script.js
 ├── Kondangan/
-│   └── html/
-│       └── index.html
+│   └── index.html
 ├── System-Bedroom/
 │   └── index.html
 ├── Video-Player/
