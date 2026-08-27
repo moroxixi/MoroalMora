@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Data Kondangan</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;background:#f5f5f5;color:#333;line-height:1.5;padding-bottom:80px}
+.header{background:linear-gradient(135deg,#1a5276,#2e86c1);color:#fff;padding:20px 16px;text-align:center}
+.header h1{font-size:1.4em;margin-bottom:4px}
+.header .subtitle{font-size:0.85em;opacity:0.85}
+.summary{display:flex;flex-wrap:wrap;gap:8px;padding:12px 16px;background:#fff;border-bottom:1px solid #e0e0e0;justify-content:center}
+.summary .badge{background:#eaf2f8;color:#1a5276;padding:6px 12px;border-radius:20px;font-size:0.82em;font-weight:600}
+.summary .badge.total{background:#d4efdf;color:#1e8449}
+.search-wrap{position:sticky;top:0;z-index:100;background:#fff;padding:10px 16px;border-bottom:1px solid #ddd;box-shadow:0 2px 4px rgba(0,0,0,0.06)}
+.search-wrap input{width:100%;padding:14px 16px;font-size:16px;border:2px solid #ddd;border-radius:10px;outline:none;transition:border-color .2s}
+.search-wrap input:focus{border-color:#2e86c1}
+.counter{text-align:center;padding:8px 16px 0;font-size:0.82em;color:#666}
+.chips{display:flex;flex-wrap:wrap;gap:8px;padding:10px 16px;background:#fff;border-bottom:1px solid #eee;justify-content:center}
+.chip{padding:8px 14px;border-radius:20px;font-size:0.82em;font-weight:500;cursor:pointer;border:2px solid #ddd;background:#fff;transition:all .2s;min-height:40px;display:flex;align-items:center;-webkit-user-select:none;user-select:none}
+.chip.active{background:#1a5276;color:#fff;border-color:#1a5276}
+.chip:not(.active){background:#f0f0f0;color:#555}
+.results{padding:0 16px;margin-top:8px}
+.category{margin-bottom:16px}
+.cat-header{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;background:#2e86c1;color:#fff;border-radius:10px 10px 0 0;font-weight:700;font-size:0.95em;position:sticky;top:58px;z-index:50}
+.cat-header .count{font-weight:400;font-size:0.85em;opacity:0.9}
+.entries{background:#fff;border-radius:0 0 10px 10px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,0.08)}
+.entry{display:flex;justify-content:space-between;align-items:center;padding:10px 14px;border-bottom:1px solid #f0f0f0;font-size:0.9em;min-height:40px}
+.entry:last-child{border-bottom:none}
+.entry-name{flex:1;padding-right:12px}
+.entry-name .num{color:#999;margin-right:6px;font-size:0.85em}
+.entry-name .text{word-break:break-word}
+.entry-amount{white-space:nowrap;font-weight:600;color:#1a5276;font-size:0.9em}
+.entry-amount.kado{color:#888;font-weight:400;font-style:italic;font-size:0.85em}
+.no-results{text-align:center;padding:40px 16px;color:#999;font-size:0.95em}
+.no-results span{font-size:2em;display:block;margin-bottom:8px}
+@media(max-width:480px){
+  .header h1{font-size:1.2em}
+  .cat-header{top:52px}
+  .entry{padding:8px 10px;font-size:0.85em}
+}
+</style>
+</head>
+<body>
+<div class="header">
+  <h1>📋 Data Kondangan</h1>
+  <div class="subtitle">Daftar nama penyumbang, lokasi &amp; nominal</div>
+</div>
+<div class="summary" id="summary"></div>
+<div class="search-wrap">
+  <input type="text" id="search" placeholder="Cari nama, lokasi, atau kategori..." autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
+</div>
+<div class="counter" id="counter"></div>
+<div class="chips" id="chips"></div>
+<div class="results" id="results"></div>
+
+<script>
+var DATA_UTAMA = "1. Fahmi-Ciledug 50rb\n2. Anton-Anjun 10rb\n3. Bianda - Cilengkrang girang 30rb\n4. Wenti - Waled 50rb\n5. Yuli - Impres 30rb\n6. Kintan - Pasaleman 50rb\n7. Azni - Sukadana 30rb\n8. Arif/Neng - Sukadana II 25rb\n9. Deni/Siti Umi - Sukadana 30rb\n10. Sati - Pabuaran 50rb\n11. Karyawan Leweung AM 50rb\n12. Annisah - Cigobang 50rb\n13. Devi - Cikeusal 50rb\n14. Putri Sugiarti - Jatiseeng 50rb\n15. Dewi - Cengli 30rb\n16. Desi - Kramat 30rb\n17. Nova - Cikulak 20rb\n18. Chaerunnisa - Cikulak 50rb\n19. Hayat - Sukadana 50rb\n20. Nurul Hidayah - Jatirenggang 40rb\n21. Serli - Sukadana 30rb\n22. Roni F. SPBU 50rb\n23. Riska Cs - Ciledug 50rb\n24. Meidi - Cikesik 50rb\n25. Desy - Mekarsari 50rb\n26. Lintang - Waled 35rb\n27. Agam/Hena - Waled 50rb\n28. Annisah - Cigobang part 2 50rb\n29. Uba - Kombong 100rb\n30. Irfan/Anggun - Sukadana 50rb\n31. Amsah/Rika - Getrak 75rb\n32. Angga - Sukadana 30rb\n33. Ajeng/Suami - Pereng 50rb\n34. Dewi - Waled Desa 50rb\n35. Refan/Cahyanti - Pabedilan 50rb\n36. Karyawan Leweung NS 50rb\n37. Rio - Gardu 30rb\n38. Ajeng SMK - Pabedilan 50rb\n39. Putri/Bagas - Waledkota 30rb\n40. Dina Yunita - Waled 50rb\n41. Amel - Kramat 20rb\n42. Fitri Andriyani - 30rb\n43. Asep Saepudin - Cibau 50rb\n44. Mita/Opik - Bbkn 50rb\n45. Refan/Cahyanti - Waledkota 50rb\n46. Aep - Sukadana 50rb\n47. Dini - Sukadana 50rb\n48. Mba Fitri - Pabuaran Kidul 50rb\n49. A Ibey/teh Kokom - Jatiseeng 50rb\n50. Sinta - Gunung Sari 30rb\n51. Ica Monika - Sukajaya 50rb\n52. Opik/Mita - Pabuaran Wetan 25rb\n53. Trimey - Ciledug 30rb\n54. Rike - Kombong 20rb\n55. Sani - Sukadana 30rb\n56. Citra Bapa Umm - Pakembangan 100rb\n57. Azri Bapa Umm - Pakembangan 50rb\n58. Indah - Pasaleman 50rb\n59. Mansyah/Dewi - Sukadana 30rb\n60. Novi - Pabuaran kidul 30rb\n61. Ririn - Bojongsari 50rb\n62. Wulan Antika- Sukadana 50rb\n63. Nuna/Indra - Kar. Ayam Pa Sabar 30rb\n64. Tegar - Ciledug 50rb\n65. Deby - Cisaat Cangkuang 50rb\n66. Teh Ulpah Ayam 50rb\n67. Nurul Amanah 50rb\n68. Galih SMA - Pabuaran 50rb\n69. Fitri - Jatiseeng 50rb\n70. Teh Omah/Diki 75rb\n71. Ayub - Gunung Sari 50rb\n72. Reza - Sukadana 25rb\n73. Widianto SMA - Babakan 50rb\n74. Dania - Pabuaran kidul 50rb\n75. Rifa - Pabuaran Wetan 50rb\n76. Abdillah - Gardu 50rb\n77. Fiona - Getrak 50rb\n78. Sita - Sukadana 50rb\n79. Imas - Sukadana 30rb\n80. Duriko - Waled 50rb\n81. Monik - Sukadana 3 35rb\n82. Nuis/Kikim - 100rb\n83. Pak Iqbal/bu Ocha - Pabuaran 50rb\n84. Dian/Ibnu - Getrak 50rb\n85. Dewi Ratnasari - Bbkn 50rb\n86. Neneng - Sukadana 50rb\n87. Ayu - Cikulak 50rb\n88. Tya Ifanka - Cibogo 50rb\n89. Yuli - Waled 30rb\n90. Dadan kuswanto - Waled Desa 75rb\n91. Aab Cs - 50rb\n92. Cicih/Fahmi kar Ayam Pa Sabar 50rb\n93. Aep SPBU 50rb\n94. Rika/Amsah - Getrak 75rb\n95. Isna - Mekar Sari 50rb\n96. Cahya - Sukadana 25rb\n97. Rola - Cigobang 30rb\n98. Nurul - Pabuaran 30rb\n99. Arya - Pabuaran 50rb\n100. Nila - Waled 50rb\n101. Ririn Siti Arofah - Cibau 35rb\n102. Miya - Waled Asem 50rb\n103. Randi Karyawan bbkn - 50rb\n104. Ayu Syarif - Sukadana 25rb\n105. Teh Noke - Cikancas 50rb\n106. Lilis - Waled Kota 50rb\n107. Pak Apif SPBU 30rb\n108. Haikal/Alfa - Waled Asem 25rb\n109. Erika - Cikancas 30rb\n110. Agam/ Hena 50rb\n111. Ajrun  - Cirebon 100rb\n112. Trisna Ariska - Sukadana 50rb\n113. Keke - Sukadana 30rb\n114. Zahra - Mekarjaya 30rb\n115. Ijah - Yadi Sukadana 25rb\n116. Lulu - Sukadana Kramat 30rb\n117. Mita - Naifan  Ambit 50rb\n118. Julia - Cikancas 50rb\n119. Dinar 9C 100rb\n120. Fela karyawan - Pabuaran 50rb\n121. Naifan - Mita Ciuyah 50rb\n122. Erik - Pakembangan 50rb\n123. Putri Nabila - Waled Kota 30rb\n124. Nafa SMA - Cilengkrang 50rb\n125. Deby - Waled Kota 50rb\n126. Ajay - Waled Kota 100rb\n127. Anggi Febrianti - Gunungsari 30rb\n128. Fahrul RPL - Bablos 100rb\n129. Amelia Raharjo - Sukadana 35rb\n130. Mona - Waled 50rb\n131. Rica/Imad - Waled Kota 50rb\n132. Jejen RPL - 50rb\n133. lulu - Sukadana 2 30rb\n134. Rizki Ananda RPL - 50rb\n135. Tije - Cikancas 50rb\n136. Mega - Sukadana 50rb\n137. Felly CS 100rb\n138. Agip SPBU 30rb\n139. Angga SPBU 50rb\n140. Adelia - Waled Asem 50rb\n141. Aas Widia - Waled Desa 50rb\n142. Kori / Akhpas - Waled Asem 50rb\n143. Chintya - Damarguna 50rb\n144. Rismawati - Cilengkrang 50rb\n145. Euis Farhatus Osis 50rb\n146. Anggi Setiawan - Karanganyar 50rb\n147. Paris SPBU 30rb\n148. Andi SPBU 35rb\n149. Ambar SPBU 50rb\n150. Nuni CS - 50rb\n151. Nindi / Arif - Cirebon 400rb\n152. Pa Mamat - Kalimaro 100rb\n153. Dina Rosmala Osis - 50rb\n154. Lala SPBU 50rb\n155. Ka Fahri - Waled Kota 50rb\n156. Caca Cahyadi - Mulyajaya 50rb\n157. Magfuroh - Cikulak 50rb\n158. Aliya Karyawan - Pabuaran Kidul 100rb\n159. Bu Al SPBU 50rb\n160. Indah SPBU 50rb\n161. Ka Andre - Waled Kota 50rb\n162. Nufus - Waled Kota 50rb\n163. Reio SPBU 50rb\n164. Ugi SPBU 50rb\n165. Yuke 30rb\n166. Zaskia SPBU 30rb\n167. Rois SPBU 30rb\n168. Fadel - Cikeusik 50rb\n169. Tomi / Risma - Sukadana 100rb\n170. Anjani - Kalimanggis 50rb\n171. Pina Arum Sari - Cikeusik 50rb\n172. Nada - Ambit 30rb\n173. Galih MPK - Cikeusik 30rb\n174. Abduh Alfa 50rb\n175. Wida - Cikulak Kidul 30rb\n176. Anjas - Cigobang Wangi 30rb\n177. Tio Dwi Anggara 50rb\n178. Syarif Hidayatullah RPL 50rb\n179. Wulan - Pabrik 50rb\n180. Omah / Diki - 75rb\n181. Galuh - Waled Kota 50rb\n182. Vanesa - Waled 25rb\n183. Sulis - Getrak 50rb\n184. Heru - Getrak 50rb\n185. Melin - Kombong 50rb\n186. Neneng/Erah - Tembong Rea 30rb\n187. Ajeng / Suami 50rb\n188. A Lilik 50rb\n189. Dian / Ibnu - Getrak 50rb\n190. Bila - Getrak 30rb\n191. Iqbal - Waled 50rb\n192. Ating/Tatang - Kuningan 70rb -- mamah Rofi\n193. M Anto - Bablos 50rb\n194. Lulu - Kombong 30rb\n195. Uceng - Waled 30rb\n196. Rehan - Waled 30rb\n197. Aji ceu Eno - 30rb\n198. Teh Ade - Gardu 50rb\n199. Siska Nani - Waled Desa 30rb\n200. Shela Ceu Asih - 50rb\n201. A Takur - Waled 50rb\n202. A iwan - Waled 50rb\n203. Manda - Getrak 50rb\n204. Agnes - Waled 30rb\n205. Teh Dian Nur Ari 25rb\n206. Wahyu - Kombong 50rb\n207. Cele - Pabrik 25rb\n208. A Fani - pabrik 50rb\n209. Sinta - Getrak 25rb\n210. Rusdi - Pabrik 50rb\n211. Ayip - Cikulak 30rb\n212. Umay - Kombong 30rb\n213. Dedi - Kombong 30rb\n214. Dadan- Waled Desa 75rb\n215. Widia adik dadan- 50rb\n216. suli Waled 35rb\n217. Jaja bablos 50rb\n218. Irgi - Kombong 20rb\n219. Totong - Waled 25rb\n220. Labib - Getrak 30rb\n221. Diki Waled 50rb\n222. Nisa - Kombong 30rb\n223. Widiya Wati - Waled 30rrb\n224. Pa joko - 30rb\n225. Dea agra 25rb\n226. Mona - Pembangunan 50rb\n227. Ebeng 50rb\n228. Sahrul Umay 25rb\n229. Agipe 30rb\n230. Teh Silvi / a Omat 50rb\n231. Ahmad - Kombong 30rb\n232. Dela - Pembangunan 30rb\n233. Atri - Cikulak 50rb\n234. Rival - Cikulak 50rb\n235. Agus bin Tatang - awirarangan Kuningan 50rb --mamah Rofi\n236. Riki - Anjun 30rb\n237. Hani - Sukadana bucket 200rb\n238. Siti Poci 30rb\n239. Leha Pabuaran Kidul 50rb\n240. Nani/Wirson - Pabuaran Kidul 50rb\n241. Tuti - Pabuaran Kidul 30rb\n242. Tiara - Waled Asem 30rb\n243. Inka 50rb\n244. Tika 30rb\n245. Ambarwati 50rb\n246. Neng Diana- Cengly 30rb\n247. Delia oktafiani - Waled 35rb\n248. Dinda Deftani - Pasaleman 35rb\n249. Alif - Sukadana 30rb\n250. Ade Tamara - Waled Desa 50rb\n251. Iger - Sukadana 20rb\n252. Agung - Sukadana 20rb\n253. Amanda Yulia - Sukadana 30rb\n254. Monica Dewi - Sukadana 50rb\n255. Yoga - Sukadana 30rb\n256. Amel - Sukadana 50rb\n257. Siti - Pabuaran Lor 30rb\n258. Farhan - Sukadana 30rb\n259. Iksan - Kuningan 50rb\n260. Selvi - Sukadana 50rb\n261. Maziyah Jihan - Sukadana 20rb";
+
+var DATA_NONENAME = "1 . 30rb\n2. 30rb\n3. 20rb\n4. 20rb";
+
+var DATA_TRANSFER = "1. Riska-HuluBanteng 60rb\n2. Sophia Nazar- 35rb\n3. Sri Santimah - 35rb\n4. Teti- 50rb\n5. Mola 50rb\n6. Wina Devita Putri 100rb\n7. Teh Anggi 50rb\n8. Eli 30rb\n9. Diah 50rb\n10. Selina 100rb\n11. Anita 50rb\n12. Annis cs 30rb\n13. Bella 100rb\n14. Fatma 30rb\n15. Jeni 100rb\n16. Silvy- pabuaran 50rb\n17. Tedi Sd - 100rb\n18. Rani SMP 50rb\n19. Mega Waled 30rb\n20. Alda - Kananga 100rb\n21. Irena Osis 50rb\n22. Ainun cs 50rb\n23. A eko 50rb\n24. Dela Amalia - Gebang 50rb\n25. Rian SPBU- 50rb\n26. Ian Skygame - 50rb\n27. Ajeng Dwi - 50rb\n28. Agni smk - 100rb";
+
+var DATA_KADO = "Teh Nindi Badcover\nRisma Iyan set Cangkir\nBu haji sayur sprei\nNisrina Sprei\nFela Sprei\nNeng Aliyah buku\nBi Amel Sprei\nHani Aldo Ricecooker cosmos\nNiken Heni Sharp rice cooker\nTeteh Sprei\nA ahmad frozen Set cangkir";
+
+var DATA_7BULANAN = "1. Teteh Eva 100rb\n2. Teh Ulfah 50rb\n3. Mamah 250rb\n4. Teh Eka/ Dendi 30rb\n5. Wa Timah 100rb\n6. Bu Mul karyawan 50rb\n7. Wa Kariah 30rb\n8. Ibu yuyun ayam depan pasar 90rb (fillet 2Kg)\n9. Wa Nining 100rb";
+
+var DATA_MUPUTAN = "1. Ami - Karang wangun 50rb\n2. Teh Halimah/Om Opik - Kombong 30rb\n3. Nadi / Warini - Cikulak 50rb\n4. Tomi/Risma - Sukadana 100rb\n5. Ajeng/Rian - Waled Dusun Siliwangi 100rb\n6. Yanah/Opa - Pabuaran Kidul 50rb\n7. Teh Uul - Bablos 50rb\n8. Nur/Opik Pedagang Sayuran&kelapa - Pabuaran Wetan 30rb\n9. Teteh Eva - Waled 100rb\n10. Ani/Ami - Cisaat 100rb\n11. Teh Dian - Waled Kota 50rb\n12. Arya/Cici - Pabuaran Wetan 30rb\n13. Mama Anisa (Ibu Sum) - Kramat Sukadana 2 100rb\n14. Atun - Sukadana 30rb\n15. Wida/Anggi - Cikulak 30rb\n16. Mi Dewi / Ma Yoyo - Pembangunan 30rb\n17. Bu Fenti - Waled 50rb\n18. Bapa Atim/Juju - Cikulak 30rb\n19. Dira/Puspita - Cikulak 50rb\n20. Teh Tri/Uum - Sukadana 50rb\n21. Bibi Oning - Waled dusun Siliwangi 50rb\n22. Marni (temen bu Mul karyawan) - Mekarsari 50rb\n23. Bi Amel/Arin - Sukadana 50rb\n24. Mona - Pembangunan 25rb\n25. Teh Uda - Sukadana 25rb\n26. Wulan/Agung - Perum Gcp 50rb\n27. Bi Ayu / Yaya - Kombong 30rb\n28. Mi Kokom - Dusun Pembangunan 50rb\n29. Iksan anak ceu Ina - Waled 50rb\n30. Ceu Ina - Waled 35rb\n31. Ceu Yati - Sukadana Huludayeuh 50rb\n32. Silvi anak wa Nani - Pembangunan 30rb\n33. Ceu Iyus - pembangunan 30rb\n34. Taris/Nur anak Wa Tasih - Paburan Wetan 30rb\n35. Lupi / Nana - Pabuaran Wetan 50rb\n36. Tini/Uyut - Pabuaran Wetan 50rb\n37. Teh Nia - Cibogo 50rb\n38. Teh Lilis/Mang Yana - Impres 50rb\n39. Ceu Yoyoh - Kramat 30rb\n40. Wa Tiri - Kombong 50rb\n41. Mi Aan - Lap Bola Walkot 50rb\n42. Mi Iis - Waled Kota 30rb\n43. Mi Yanti - Lapang Bola 30rb\n44. Mi Ini - Lapang Bola 30rb\n45. Mamah Rofi - Waled 300rb\n46. Hana / Waji - Perum green pabuaran 30rb\n47. Wulan (Ceu Edah) - Sukadana 30rb\n48. Wa Timah - Kuningan 50rb\n49. Eka / Dendi - Sukadana 30rb\n50. Arif / Neng Sindi - Sukadana 50rb\n51. Darnengsih - Blok Kembang 30rb\n52. Bibi Enci - Kombong 50rb\n53. Teh Omah - Anjun 30rb\n54. Bi Sinah ( mamah teh Omah) - Anjun 30rb\n55. Seli/Tenda - Pabuaran Wetan 30rb\n56. Teh Ulpah Ayam - Pabuaran 50rb\n57. Fya karyawan Tempura - Damarguna 50rb\n58. Wati / Aip - Sukadana 50rb\n59. Bunda Yuyun - Bablos 50rb\n60. Bu Mul karyawan - Mekarsari 50rb\n61. Bi Miah / Om ikin - Kombong 30rb\n62. Bi Wati / Om Rudi - Waled Kota 50rb\n63. Susi/Karnen pedagang kelapa - Dompyong 30rb\n64. Anisa karyawan - sukadana 50rb\n65. Ceu Iin - Sukadana 30rb\n66. Wa Ati - Sukadana 25rb\n67. Mamah Carini - Bablos 50rb\n68. Mih Suri - Bablos 50rb\n69. Ana / Jaja - Bablos 50rb\n70. Bu Hj Sayur - bucket 200rb\n71. Wa Nining 250rb\n72. Abah 100rb\n73. Bi Asih - Kombong 50rb";
+
+// --- PARSING ---
+var CATEGORIES = [
+  { key: "utama", label: "Utama", data: DATA_UTAMA },
+  { key: "nonename", label: "Nonename", data: DATA_NONENAME },
+  { key: "transfer", label: "Transfer", data: DATA_TRANSFER },
+  { key: "kado", label: "Kado", data: DATA_KADO },
+  { key: "7bulanan", label: "7 Bulanan (7 April 2026)", data: DATA_7BULANAN },
+  { key: "muputan", label: "Muputan", data: DATA_MUPUTAN }
+];
+
+var AMOUNT_RE = /(\d+)\s*r+b\b/i;
+var NUM_RE = /^\d+\s*\.?\s*/;
+
+function parseData(rawText, categoryLabel) {
+  var lines = rawText.split("\n");
+  var entries = [];
+  for (var i = 0; i < lines.length; i++) {
+    var raw = lines[i].trim();
+    if (raw.length === 0) continue;
+    var m = raw.match(AMOUNT_RE);
+    var amount = m ? parseInt(m[1], 10) * 1000 : null;
+    var stripped = raw.replace(NUM_RE, "");
+    var isKado = categoryLabel === "Kado";
+    entries.push({ raw: raw, stripped: stripped, amount: amount, isKado: isKado });
+  }
+  return entries;
+}
+
+var allData = [];
+for (var ci = 0; ci < CATEGORIES.length; ci++) {
+  var cat = CATEGORIES[ci];
+  allData.push({ key: cat.key, label: cat.label, entries: parseData(cat.data, cat.label) });
+}
+
+// --- TOTALS ---
+var totalEntries = 0;
+var totalNominal = 0;
+for (var ci = 0; ci < allData.length; ci++) {
+  var cat = allData[ci];
+  totalEntries += cat.entries.length;
+  for (var ei = 0; ei < cat.entries.length; ei++) {
+    if (cat.entries[ei].amount !== null) totalNominal += cat.entries[ei].amount;
+  }
+}
+
+function formatRp(n) {
+  var s = n.toString();
+  var result = "";
+  var count = 0;
+  for (var i = s.length - 1; i >= 0; i--) {
+    count++;
+    result = s[i] + result;
+    if (count % 3 === 0 && i > 0) result = "." + result;
+  }
+  return result;
+}
+
+// --- SUMMARY ---
+var summaryEl = document.getElementById("summary");
+summaryEl.innerHTML = '<span class="badge total">📊 Total: ' + totalEntries + ' entri</span>' +
+  '<span class="badge total">💰 Total: Rp ' + formatRp(totalNominal) + '</span>';
+
+// --- CHIPS ---
+var activeFilters = {};
+for (var ci = 0; ci < CATEGORIES.length; ci++) { activeFilters[CATEGORIES[ci].key] = true; }
+var chipsEl = document.getElementById("chips");
+
+function renderChips() {
+  chipsEl.innerHTML = "";
+  for (var ci = 0; ci < CATEGORIES.length; ci++) {
+    var cat = CATEGORIES[ci];
+    var chip = document.createElement("div");
+    chip.className = "chip" + (activeFilters[cat.key] ? " active" : "");
+    chip.textContent = cat.label + " (" + allData[ci].entries.length + ")";
+    chip.setAttribute("data-key", cat.key);
+    (function(k) {
+      chip.addEventListener("click", function() {
+        activeFilters[k] = !activeFilters[k];
+        renderChips();
+        doSearch();
+      });
+    })(cat.key);
+    chipsEl.appendChild(chip);
+  }
+}
+renderChips();
+
+// --- SEARCH ---
+var searchEl = document.getElementById("search");
+var counterEl = document.getElementById("counter");
+var resultsEl = document.getElementById("results");
+
+function doSearch() {
+  var q = searchEl.value.toLowerCase().trim();
+  var totalFound = 0;
+  var html = "";
+
+  for (var ci = 0; ci < allData.length; ci++) {
+    var cat = allData[ci];
+    if (!activeFilters[cat.key]) continue;
+    var matched = [];
+    for (var ei = 0; ei < cat.entries.length; ei++) {
+      var e = cat.entries[ei];
+      if (!q || e.raw.toLowerCase().indexOf(q) !== -1) {
+        matched.push(e);
+      }
+    }
+    if (matched.length === 0) continue;
+    totalFound += matched.length;
+
+    html += '<div class="category">';
+    html += '<div class="cat-header"><span>' + cat.label + '</span><span class="count">' + matched.length + ' entri</span></div>';
+    html += '<div class="entries">';
+    for (var mi = 0; mi < matched.length; mi++) {
+      var me = matched[mi];
+      html += '<div class="entry">';
+      html += '<div class="entry-name"><span class="num">' + (mi + 1) + '.</span><span class="text">' + escapeHtml(me.raw) + '</span></div>';
+      if (me.amount !== null) {
+        html += '<div class="entry-amount">Rp ' + formatRp(me.amount) + '</div>';
+      } else if (me.isKado) {
+        html += '<div class="entry-amount kado">kado</div>';
+      }
+      html += '</div>';
+    }
+    html += '</div></div>';
+  }
+
+  if (q) {
+    counterEl.textContent = totalFound + " hasil ditemukan";
+  } else {
+    counterEl.textContent = "";
+  }
+
+  if (!q && !html) {
+    html = '<div class="no-results"><span>📋</span>Pilih kategori untuk melihat data</div>';
+  } else if (q && totalFound === 0) {
+    html = '<div class="no-results"><span>🔍</span>Tidak ada hasil untuk "' + escapeHtml(q) + '"</div>';
+  }
+  resultsEl.innerHTML = html;
+}
+
+function escapeHtml(s) {
+  return s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+}
+
+searchEl.addEventListener("input", doSearch);
+doSearch();
+</script>
+</body>
+</html>
