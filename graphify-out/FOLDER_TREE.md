@@ -17,8 +17,8 @@
 │   │   ├── index.html
 │   │   ├── script.js
 │   │   └── sumber-asli.md
-│   ├── editor.html
 │   ├── editor.js
+│   ├── index.html
 │   └── server.py
 ├── Kondangan/
 │   └── index.html
