@@ -48,5 +48,25 @@
     "mtime": 1787830158.502031,
     "ast_hash": "2130e6a6536af7b9cd91075d50f98fc0",
     "semantic_hash": ""
+  },
+  "Kisah/Tiga-Kisah-Babylon/content.json": {
+    "mtime": 1788672259.751688,
+    "ast_hash": "4a2ccf05b655eb7d993d09f8f1037f88",
+    "semantic_hash": ""
+  },
+  "Kisah/Tiga-Kisah-Babylon/script.js": {
+    "mtime": 1788672310.9303024,
+    "ast_hash": "a939ea29764d9e1a9fc8bb893ed15d62",
+    "semantic_hash": ""
+  },
+  "Kisah/Tiga-Kisah-Babylon/index.html": {
+    "mtime": 1788672314.5034492,
+    "ast_hash": "8af44e4bad2caab45ed11cd33c2df13f",
+    "semantic_hash": ""
+  },
+  "Kisah/Tiga-Kisah-Babylon/sumber-asli.md": {
+    "mtime": 1788671551.44694,
+    "ast_hash": "c0f706a8af8a108104ccf81c6ff3c07e",
+    "semantic_hash": ""
   }
 }

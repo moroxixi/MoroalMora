@@ -70,7 +70,7 @@
       "norm_label": "runtimeversion"
     },
     {
-      "label": "script.js",
+      "label": "Catatan-Haid/script.js",
       "file_type": "code",
       "source_file": "Catatan-Haid/script.js",
       "source_location": "L1",
@@ -78,7 +78,7 @@
       "id": "catatan_haid_script",
       "community": 3,
       "community_name": "script.js",
-      "norm_label": "script.js"
+      "norm_label": "catatan-haid/script.js"
     },
     {
       "label": "state",
@@ -121,7 +121,7 @@
       "_origin": "ast",
       "id": "catatan_haid_script_parseisodate",
       "community": 4,
-      "community_name": "fmtTanggal",
+      "community_name": "loadAll",
       "norm_label": "parseisodate()"
     },
     {
@@ -131,7 +131,7 @@
       "source_location": "L37",
       "_origin": "ast",
       "id": "catatan_haid_script_fmttanggal",
-      "community": 4,
+      "community": 2,
       "community_name": "fmtTanggal",
       "norm_label": "fmttanggal()"
     },
@@ -142,8 +142,8 @@
       "source_location": "L42",
       "_origin": "ast",
       "id": "catatan_haid_script_fmttanggalpendek",
-      "community": 7,
-      "community_name": "renderChart",
+      "community": 2,
+      "community_name": "fmtTanggal",
       "norm_label": "fmttanggalpendek()"
     },
     {
@@ -154,7 +154,7 @@
       "_origin": "ast",
       "id": "catatan_haid_script_relhari",
       "community": 4,
-      "community_name": "fmtTanggal",
+      "community_name": "loadAll",
       "norm_label": "relhari()"
     },
     {
@@ -165,7 +165,7 @@
       "_origin": "ast",
       "id": "catatan_haid_script_escapehtml",
       "community": 2,
-      "community_name": "loadAll",
+      "community_name": "fmtTanggal",
       "norm_label": "escapehtml()"
     },
     {
@@ -175,8 +175,8 @@
       "source_location": "L58",
       "_origin": "ast",
       "id": "catatan_haid_script_fmtdurasi",
-      "community": 4,
-      "community_name": "fmtTanggal",
+      "community": 6,
+      "community_name": "showToast",
       "norm_label": "fmtdurasi()"
     },
     {
@@ -197,7 +197,7 @@
       "source_location": "L79",
       "_origin": "ast",
       "id": "catatan_haid_script_apiget",
-      "community": 2,
+      "community": 4,
       "community_name": "loadAll",
       "norm_label": "apiget()"
     },
@@ -209,7 +209,7 @@
       "_origin": "ast",
       "id": "catatan_haid_script_apipost",
       "community": 2,
-      "community_name": "loadAll",
+      "community_name": "fmtTanggal",
       "norm_label": "apipost()"
     },
     {
@@ -219,7 +219,7 @@
       "source_location": "L100",
       "_origin": "ast",
       "id": "catatan_haid_script_setbusy",
-      "community": 2,
+      "community": 4,
       "community_name": "loadAll",
       "norm_label": "setbusy()"
     },
@@ -230,7 +230,7 @@
       "source_location": "L105",
       "_origin": "ast",
       "id": "catatan_haid_script_loadall",
-      "community": 2,
+      "community": 4,
       "community_name": "loadAll",
       "norm_label": "loadall()"
     },
@@ -242,7 +242,7 @@
       "_origin": "ast",
       "id": "catatan_haid_script_renderkalkulasi",
       "community": 4,
-      "community_name": "fmtTanggal",
+      "community_name": "loadAll",
       "norm_label": "renderkalkulasi()"
     },
     {
@@ -252,8 +252,8 @@
       "source_location": "L161",
       "_origin": "ast",
       "id": "catatan_haid_script_renderchart",
-      "community": 7,
-      "community_name": "renderChart",
+      "community": 2,
+      "community_name": "fmtTanggal",
       "norm_label": "renderchart()"
     },
     {
@@ -264,7 +264,7 @@
       "_origin": "ast",
       "id": "catatan_haid_script_rendersiklus",
       "community": 2,
-      "community_name": "loadAll",
+      "community_name": "fmtTanggal",
       "norm_label": "rendersiklus()"
     },
     {
@@ -275,7 +275,7 @@
       "_origin": "ast",
       "id": "catatan_haid_script_rendercatatan",
       "community": 2,
-      "community_name": "loadAll",
+      "community_name": "fmtTanggal",
       "norm_label": "rendercatatan()"
     },
     {
@@ -285,8 +285,8 @@
       "source_location": "L302",
       "_origin": "ast",
       "id": "catatan_haid_script_setreminder",
-      "community": 4,
-      "community_name": "fmtTanggal",
+      "community": 6,
+      "community_name": "showToast",
       "norm_label": "setreminder()"
     },
     {
@@ -332,6 +332,116 @@
       "community": 6,
       "community_name": "showToast",
       "norm_label": "init()"
+    },
+    {
+      "label": "Tiga-Kisah-Babylon/script.js",
+      "file_type": "code",
+      "source_file": "Kisah/Tiga-Kisah-Babylon/script.js",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "kisah_tiga_kisah_babylon_script",
+      "community": 1,
+      "community_name": "Tiga-Kisah-Babylon/script.js",
+      "norm_label": "tiga-kisah-babylon/script.js"
+    },
+    {
+      "label": "renderInline()",
+      "file_type": "code",
+      "source_file": "Kisah/Tiga-Kisah-Babylon/script.js",
+      "source_location": "L18",
+      "_origin": "ast",
+      "id": "kisah_tiga_kisah_babylon_script_renderinline",
+      "community": 1,
+      "community_name": "Tiga-Kisah-Babylon/script.js",
+      "norm_label": "renderinline()"
+    },
+    {
+      "label": "el()",
+      "file_type": "code",
+      "source_file": "Kisah/Tiga-Kisah-Babylon/script.js",
+      "source_location": "L26",
+      "_origin": "ast",
+      "id": "kisah_tiga_kisah_babylon_script_el",
+      "community": 1,
+      "community_name": "Tiga-Kisah-Babylon/script.js",
+      "norm_label": "el()"
+    },
+    {
+      "label": "ornament()",
+      "file_type": "code",
+      "source_file": "Kisah/Tiga-Kisah-Babylon/script.js",
+      "source_location": "L59",
+      "_origin": "ast",
+      "id": "kisah_tiga_kisah_babylon_script_ornament",
+      "community": 1,
+      "community_name": "Tiga-Kisah-Babylon/script.js",
+      "norm_label": "ornament()"
+    },
+    {
+      "label": "renderKisah()",
+      "file_type": "code",
+      "source_file": "Kisah/Tiga-Kisah-Babylon/script.js",
+      "source_location": "L67",
+      "_origin": "ast",
+      "id": "kisah_tiga_kisah_babylon_script_renderkisah",
+      "community": 1,
+      "community_name": "Tiga-Kisah-Babylon/script.js",
+      "norm_label": "renderkisah()"
+    },
+    {
+      "label": "renderBenangMerah()",
+      "file_type": "code",
+      "source_file": "Kisah/Tiga-Kisah-Babylon/script.js",
+      "source_location": "L88",
+      "_origin": "ast",
+      "id": "kisah_tiga_kisah_babylon_script_renderbenangmerah",
+      "community": 1,
+      "community_name": "Tiga-Kisah-Babylon/script.js",
+      "norm_label": "renderbenangmerah()"
+    },
+    {
+      "label": "render()",
+      "file_type": "code",
+      "source_file": "Kisah/Tiga-Kisah-Babylon/script.js",
+      "source_location": "L98",
+      "_origin": "ast",
+      "id": "kisah_tiga_kisah_babylon_script_render",
+      "community": 1,
+      "community_name": "Tiga-Kisah-Babylon/script.js",
+      "norm_label": "render()"
+    },
+    {
+      "label": "gagal()",
+      "file_type": "code",
+      "source_file": "Kisah/Tiga-Kisah-Babylon/script.js",
+      "source_location": "L117",
+      "_origin": "ast",
+      "id": "kisah_tiga_kisah_babylon_script_gagal",
+      "community": 1,
+      "community_name": "Tiga-Kisah-Babylon/script.js",
+      "norm_label": "gagal()"
+    },
+    {
+      "label": "bacaInline()",
+      "file_type": "code",
+      "source_file": "Kisah/Tiga-Kisah-Babylon/script.js",
+      "source_location": "L127",
+      "_origin": "ast",
+      "id": "kisah_tiga_kisah_babylon_script_bacainline",
+      "community": 1,
+      "community_name": "Tiga-Kisah-Babylon/script.js",
+      "norm_label": "bacainline()"
+    },
+    {
+      "label": "muat()",
+      "file_type": "code",
+      "source_file": "Kisah/Tiga-Kisah-Babylon/script.js",
+      "source_location": "L137",
+      "_origin": "ast",
+      "id": "kisah_tiga_kisah_babylon_script_muat",
+      "community": 1,
+      "community_name": "Tiga-Kisah-Babylon/script.js",
+      "norm_label": "muat()"
     },
     {
       "label": "MoroalMora-push.sh",
@@ -414,8 +524,8 @@
       "source_location": "L68",
       "_origin": "ast",
       "id": "catatan_haid_readme_setup_manual_google_sheets_apps_script_wajib_1x",
-      "community": 1,
-      "community_name": "Setup manual Google Sheets + Apps Script (WAJIB 1x)",
+      "community": 0,
+      "community_name": "Catatan Haid \u00b7 MAO \u2014 Pencatat Siklus + Kalkulator Masa Subur",
       "norm_label": "setup manual google sheets + apps script (wajib 1x)"
     },
     {
@@ -425,8 +535,8 @@
       "source_location": "L73",
       "_origin": "ast",
       "id": "catatan_haid_readme_1_install_login_clasp",
-      "community": 1,
-      "community_name": "Setup manual Google Sheets + Apps Script (WAJIB 1x)",
+      "community": 0,
+      "community_name": "Catatan Haid \u00b7 MAO \u2014 Pencatat Siklus + Kalkulator Masa Subur",
       "norm_label": "1. install & login clasp"
     },
     {
@@ -436,8 +546,8 @@
       "source_location": "L81",
       "_origin": "ast",
       "id": "catatan_haid_readme_2_buat_sheet_project_apps_script_terikat",
-      "community": 1,
-      "community_name": "Setup manual Google Sheets + Apps Script (WAJIB 1x)",
+      "community": 0,
+      "community_name": "Catatan Haid \u00b7 MAO \u2014 Pencatat Siklus + Kalkulator Masa Subur",
       "norm_label": "2. buat sheet + project apps script terikat"
     },
     {
@@ -447,8 +557,8 @@
       "source_location": "L97",
       "_origin": "ast",
       "id": "catatan_haid_readme_3_push_kode_backend",
-      "community": 1,
-      "community_name": "Setup manual Google Sheets + Apps Script (WAJIB 1x)",
+      "community": 0,
+      "community_name": "Catatan Haid \u00b7 MAO \u2014 Pencatat Siklus + Kalkulator Masa Subur",
       "norm_label": "3. push kode backend"
     },
     {
@@ -458,8 +568,8 @@
       "source_location": "L109",
       "_origin": "ast",
       "id": "catatan_haid_readme_4_deploy_sebagai_web_app_manual_tidak_otomatis",
-      "community": 1,
-      "community_name": "Setup manual Google Sheets + Apps Script (WAJIB 1x)",
+      "community": 0,
+      "community_name": "Catatan Haid \u00b7 MAO \u2014 Pencatat Siklus + Kalkulator Masa Subur",
       "norm_label": "4. deploy sebagai web app (manual \u2014 tidak otomatis)"
     },
     {
@@ -469,8 +579,8 @@
       "source_location": "L122",
       "_origin": "ast",
       "id": "catatan_haid_readme_5_isi_url_ke_config_js",
-      "community": 1,
-      "community_name": "Setup manual Google Sheets + Apps Script (WAJIB 1x)",
+      "community": 0,
+      "community_name": "Catatan Haid \u00b7 MAO \u2014 Pencatat Siklus + Kalkulator Masa Subur",
       "norm_label": "5. isi url ke config.js"
     },
     {
@@ -480,8 +590,8 @@
       "source_location": "L132",
       "_origin": "ast",
       "id": "catatan_haid_readme_6_test_end_to_end",
-      "community": 1,
-      "community_name": "Setup manual Google Sheets + Apps Script (WAJIB 1x)",
+      "community": 0,
+      "community_name": "Catatan Haid \u00b7 MAO \u2014 Pencatat Siklus + Kalkulator Masa Subur",
       "norm_label": "6. test end-to-end"
     },
     {
@@ -527,6 +637,72 @@
       "community": 0,
       "community_name": "Catatan Haid \u00b7 MAO \u2014 Pencatat Siklus + Kalkulator Masa Subur",
       "norm_label": "verifikasi yang sudah dilakukan saat build"
+    },
+    {
+      "label": "sumber-asli.md",
+      "file_type": "document",
+      "source_file": "Kisah/Tiga-Kisah-Babylon/sumber-asli.md",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "kisah_tiga_kisah_babylon_sumber_asli",
+      "community": 7,
+      "community_name": "Tiga Kisah dari Babylon",
+      "norm_label": "sumber-asli.md"
+    },
+    {
+      "label": "Tiga Kisah dari Babylon",
+      "file_type": "document",
+      "source_file": "Kisah/Tiga-Kisah-Babylon/sumber-asli.md",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "kisah_tiga_kisah_babylon_sumber_asli_tiga_kisah_dari_babylon",
+      "community": 7,
+      "community_name": "Tiga Kisah dari Babylon",
+      "norm_label": "tiga kisah dari babylon"
+    },
+    {
+      "label": "Kisah Pertama: Naran dan Sungai yang Tidak Peduli",
+      "file_type": "document",
+      "source_file": "Kisah/Tiga-Kisah-Babylon/sumber-asli.md",
+      "source_location": "L7",
+      "_origin": "ast",
+      "id": "kisah_tiga_kisah_babylon_sumber_asli_kisah_pertama_naran_dan_sungai_yang_tidak_peduli",
+      "community": 7,
+      "community_name": "Tiga Kisah dari Babylon",
+      "norm_label": "kisah pertama: naran dan sungai yang tidak peduli"
+    },
+    {
+      "label": "Kisah Kedua: Idin, Sang Guru Tua, dan Bel yang Tidak Peduli",
+      "file_type": "document",
+      "source_file": "Kisah/Tiga-Kisah-Babylon/sumber-asli.md",
+      "source_location": "L39",
+      "_origin": "ast",
+      "id": "kisah_tiga_kisah_babylon_sumber_asli_kisah_kedua_idin_sang_guru_tua_dan_bel_yang_tidak_peduli",
+      "community": 7,
+      "community_name": "Tiga Kisah dari Babylon",
+      "norm_label": "kisah kedua: idin, sang guru tua, dan bel yang tidak peduli"
+    },
+    {
+      "label": "Kisah Ketiga: Ur-Nanshe dan Kebun yang Tak Pernah Dilihat",
+      "file_type": "document",
+      "source_file": "Kisah/Tiga-Kisah-Babylon/sumber-asli.md",
+      "source_location": "L69",
+      "_origin": "ast",
+      "id": "kisah_tiga_kisah_babylon_sumber_asli_kisah_ketiga_ur_nanshe_dan_kebun_yang_tak_pernah_dilihat",
+      "community": 7,
+      "community_name": "Tiga Kisah dari Babylon",
+      "norm_label": "kisah ketiga: ur-nanshe dan kebun yang tak pernah dilihat"
+    },
+    {
+      "label": "Benang Merah dari Tiga Kisah",
+      "file_type": "document",
+      "source_file": "Kisah/Tiga-Kisah-Babylon/sumber-asli.md",
+      "source_location": "L95",
+      "_origin": "ast",
+      "id": "kisah_tiga_kisah_babylon_sumber_asli_benang_merah_dari_tiga_kisah",
+      "community": 7,
+      "community_name": "Tiga Kisah dari Babylon",
+      "norm_label": "benang merah dari tiga kisah"
     }
   ],
   "links": [
@@ -1214,6 +1390,249 @@
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
+      "source_file": "Kisah/Tiga-Kisah-Babylon/script.js",
+      "source_location": "L127",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "kisah_tiga_kisah_babylon_script",
+      "target": "kisah_tiga_kisah_babylon_script_bacainline",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "Kisah/Tiga-Kisah-Babylon/script.js",
+      "source_location": "L26",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "kisah_tiga_kisah_babylon_script",
+      "target": "kisah_tiga_kisah_babylon_script_el",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "Kisah/Tiga-Kisah-Babylon/script.js",
+      "source_location": "L117",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "kisah_tiga_kisah_babylon_script",
+      "target": "kisah_tiga_kisah_babylon_script_gagal",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "Kisah/Tiga-Kisah-Babylon/script.js",
+      "source_location": "L137",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "kisah_tiga_kisah_babylon_script",
+      "target": "kisah_tiga_kisah_babylon_script_muat",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "Kisah/Tiga-Kisah-Babylon/script.js",
+      "source_location": "L59",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "kisah_tiga_kisah_babylon_script",
+      "target": "kisah_tiga_kisah_babylon_script_ornament",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "Kisah/Tiga-Kisah-Babylon/script.js",
+      "source_location": "L98",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "kisah_tiga_kisah_babylon_script",
+      "target": "kisah_tiga_kisah_babylon_script_render",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "Kisah/Tiga-Kisah-Babylon/script.js",
+      "source_location": "L88",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "kisah_tiga_kisah_babylon_script",
+      "target": "kisah_tiga_kisah_babylon_script_renderbenangmerah",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "Kisah/Tiga-Kisah-Babylon/script.js",
+      "source_location": "L18",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "kisah_tiga_kisah_babylon_script",
+      "target": "kisah_tiga_kisah_babylon_script_renderinline",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "Kisah/Tiga-Kisah-Babylon/script.js",
+      "source_location": "L67",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "kisah_tiga_kisah_babylon_script",
+      "target": "kisah_tiga_kisah_babylon_script_renderkisah",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "Kisah/Tiga-Kisah-Babylon/script.js",
+      "source_location": "L91",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "kisah_tiga_kisah_babylon_script_renderbenangmerah",
+      "target": "kisah_tiga_kisah_babylon_script_renderinline",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "Kisah/Tiga-Kisah-Babylon/script.js",
+      "source_location": "L74",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "kisah_tiga_kisah_babylon_script_renderkisah",
+      "target": "kisah_tiga_kisah_babylon_script_renderinline",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "Kisah/Tiga-Kisah-Babylon/script.js",
+      "source_location": "L121",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "kisah_tiga_kisah_babylon_script_gagal",
+      "target": "kisah_tiga_kisah_babylon_script_el",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "Kisah/Tiga-Kisah-Babylon/script.js",
+      "source_location": "L60",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "kisah_tiga_kisah_babylon_script_ornament",
+      "target": "kisah_tiga_kisah_babylon_script_el",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "Kisah/Tiga-Kisah-Babylon/script.js",
+      "source_location": "L89",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "kisah_tiga_kisah_babylon_script_renderbenangmerah",
+      "target": "kisah_tiga_kisah_babylon_script_el",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "Kisah/Tiga-Kisah-Babylon/script.js",
+      "source_location": "L68",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "kisah_tiga_kisah_babylon_script_renderkisah",
+      "target": "kisah_tiga_kisah_babylon_script_el",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "Kisah/Tiga-Kisah-Babylon/script.js",
+      "source_location": "L109",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "kisah_tiga_kisah_babylon_script_render",
+      "target": "kisah_tiga_kisah_babylon_script_ornament",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "Kisah/Tiga-Kisah-Babylon/script.js",
+      "source_location": "L107",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "kisah_tiga_kisah_babylon_script_render",
+      "target": "kisah_tiga_kisah_babylon_script_renderkisah",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "Kisah/Tiga-Kisah-Babylon/script.js",
+      "source_location": "L114",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "kisah_tiga_kisah_babylon_script_render",
+      "target": "kisah_tiga_kisah_babylon_script_renderbenangmerah",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "Kisah/Tiga-Kisah-Babylon/script.js",
+      "source_location": "L153",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "kisah_tiga_kisah_babylon_script_muat",
+      "target": "kisah_tiga_kisah_babylon_script_render",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "Kisah/Tiga-Kisah-Babylon/script.js",
+      "source_location": "L155",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "kisah_tiga_kisah_babylon_script_muat",
+      "target": "kisah_tiga_kisah_babylon_script_gagal",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "Kisah/Tiga-Kisah-Babylon/script.js",
+      "source_location": "L149",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "kisah_tiga_kisah_babylon_script_muat",
+      "target": "kisah_tiga_kisah_babylon_script_bacainline",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
       "source_file": "MoroalMora-push.sh",
       "source_location": "L1",
       "weight": 1.0,
@@ -1375,8 +1794,63 @@
       "source": "catatan_haid_readme_setup_manual_google_sheets_apps_script_wajib_1x",
       "target": "catatan_haid_readme_6_test_end_to_end",
       "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "Kisah/Tiga-Kisah-Babylon/sumber-asli.md",
+      "source_location": "L1",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "kisah_tiga_kisah_babylon_sumber_asli",
+      "target": "kisah_tiga_kisah_babylon_sumber_asli_tiga_kisah_dari_babylon",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "Kisah/Tiga-Kisah-Babylon/sumber-asli.md",
+      "source_location": "L95",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "kisah_tiga_kisah_babylon_sumber_asli_tiga_kisah_dari_babylon",
+      "target": "kisah_tiga_kisah_babylon_sumber_asli_benang_merah_dari_tiga_kisah",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "Kisah/Tiga-Kisah-Babylon/sumber-asli.md",
+      "source_location": "L39",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "kisah_tiga_kisah_babylon_sumber_asli_tiga_kisah_dari_babylon",
+      "target": "kisah_tiga_kisah_babylon_sumber_asli_kisah_kedua_idin_sang_guru_tua_dan_bel_yang_tidak_peduli",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "Kisah/Tiga-Kisah-Babylon/sumber-asli.md",
+      "source_location": "L69",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "kisah_tiga_kisah_babylon_sumber_asli_tiga_kisah_dari_babylon",
+      "target": "kisah_tiga_kisah_babylon_sumber_asli_kisah_ketiga_ur_nanshe_dan_kebun_yang_tak_pernah_dilihat",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "Kisah/Tiga-Kisah-Babylon/sumber-asli.md",
+      "source_location": "L7",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "kisah_tiga_kisah_babylon_sumber_asli_tiga_kisah_dari_babylon",
+      "target": "kisah_tiga_kisah_babylon_sumber_asli_kisah_pertama_naran_dan_sungai_yang_tidak_peduli",
+      "confidence_score": 1.0
     }
   ],
   "hyperedges": [],
-  "built_at_commit": "1bffa742bd916f898db50a1b3d32cc0385f44927"
+  "built_at_commit": "2aba331c399c016095d8f3c692f081caeb00acf3"
 }

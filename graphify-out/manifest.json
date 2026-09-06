@@ -50,7 +50,7 @@
     "semantic_hash": ""
   },
   "Kisah/Tiga-Kisah-Babylon/content.json": {
-    "mtime": 1788672259.751688,
+    "mtime": 1788697910.677077,
     "ast_hash": "4a2ccf05b655eb7d993d09f8f1037f88",
     "semantic_hash": ""
   },
@@ -67,6 +67,21 @@
   "Kisah/Tiga-Kisah-Babylon/sumber-asli.md": {
     "mtime": 1788671551.44694,
     "ast_hash": "c0f706a8af8a108104ccf81c6ff3c07e",
+    "semantic_hash": ""
+  },
+  "Kisah/editor.js": {
+    "mtime": 1788697856.691272,
+    "ast_hash": "c54775428294321039539aea3172f9e7",
+    "semantic_hash": ""
+  },
+  "Kisah/server.py": {
+    "mtime": 1788697780.0846024,
+    "ast_hash": "074169fa3d517ef273969ce6981a99ac",
+    "semantic_hash": ""
+  },
+  "Kisah/editor.html": {
+    "mtime": 1788697783.5912693,
+    "ast_hash": "cb2ad0c4cf05216b55834c5413fd133e",
     "semantic_hash": ""
   }
 }

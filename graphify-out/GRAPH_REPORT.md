@@ -1,27 +1,26 @@
 # Graph Report - MoroalMora  (2026-09-06)
 
 ## Corpus Check
-- 9 files · ~18,266 words
+- 11 files · ~20,842 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 63 nodes · 100 edges · 10 communities (9 shown, 1 thin omitted)
+- 105 nodes · 188 edges · 9 communities (8 shown, 1 thin omitted)
 - Extraction: 99% EXTRACTED · 1% INFERRED · 0% AMBIGUOUS · INFERRED: 1 edges (avg confidence: 0.5)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `2aba331c`
+- Built from commit: `598096c8`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
 ## Community Hubs (Navigation)
 - Catatan Haid · MAO — Pencatat Siklus + Kalkulator Masa Subur
 - Tiga-Kisah-Babylon/script.js
-- fmtTanggal
-- script.js
-- loadAll
+- Catatan-Haid/script.js
+- editor.js
+- server.py
 - appsscript.json
-- showToast
 - Tiga Kisah dari Babylon
 - MoroalMora-push.sh
 
@@ -31,26 +30,19 @@
 3. `fmtTanggal()` - 7 edges
 4. `showToast()` - 7 edges
 5. `renderSiklus()` - 7 edges
-6. `Setup manual Google Sheets + Apps Script (WAJIB 1x)` - 7 edges
-7. `setReminder()` - 6 edges
-8. `bindReminderButtons()` - 5 edges
-9. `init()` - 5 edges
-10. `el()` - 5 edges
+6. `h()` - 7 edges
+7. `buildControl()` - 7 edges
+8. `buildArrayEditor()` - 7 edges
+9. `Handler` - 7 edges
+10. `Setup manual Google Sheets + Apps Script (WAJIB 1x)` - 7 edges
 
 ## Surprising Connections (you probably didn't know these)
-- `init()` --calls--> `todayIso()`  [EXTRACTED]
-  Catatan-Haid/script.js → Catatan-Haid/script.js  _Bridges community 3 → community 6_
-- `setReminder()` --calls--> `parseIsoDate()`  [EXTRACTED]
-  Catatan-Haid/script.js → Catatan-Haid/script.js  _Bridges community 4 → community 6_
-- `bindReminderButtons()` --calls--> `fmtTanggal()`  [EXTRACTED]
-  Catatan-Haid/script.js → Catatan-Haid/script.js  _Bridges community 2 → community 6_
-- `renderKalkulasi()` --calls--> `fmtTanggal()`  [EXTRACTED]
-  Catatan-Haid/script.js → Catatan-Haid/script.js  _Bridges community 2 → community 4_
+- None detected - all connections are within the same source files.
 
 ## Import Cycles
 - None detected.
 
-## Communities (10 total, 1 thin omitted)
+## Communities (9 total, 1 thin omitted)
 
 ### Community 0 - "Catatan Haid · MAO — Pencatat Siklus + Kalkulator Masa Subur"
 Cohesion: 0.13
@@ -60,25 +52,21 @@ Nodes (14): 1. Install & login clasp, 2. Buat Sheet + project Apps Script terika
 Cohesion: 0.47
 Nodes (9): bacaInline(), el(), gagal(), muat(), ornament(), render(), renderBenangMerah(), renderInline() (+1 more)
 
-### Community 2 - "fmtTanggal"
-Cohesion: 0.38
-Nodes (7): apiPost(), escapeHtml(), fmtTanggal(), fmtTanggalPendek(), renderCatatan(), renderChart(), renderSiklus()
+### Community 2 - "Catatan-Haid/script.js"
+Cohesion: 0.20
+Nodes (23): apiGet(), apiPost(), bindReminderButtons(), csvEscape(), downloadCsv(), escapeHtml(), fmtDurasi(), fmtTanggal() (+15 more)
 
-### Community 3 - "script.js"
-Cohesion: 0.47
-Nodes (5): csvEscape(), downloadCsv(), pad2(), state, todayIso()
+### Community 3 - "editor.js"
+Cohesion: 0.20
+Nodes (23): apiGet(), apiPost(), blankValueOf(), buildArrayEditor(), buildArrayItem(), buildControl(), buildObjectEditor(), collectValue() (+15 more)
 
-### Community 4 - "loadAll"
-Cohesion: 0.33
-Nodes (6): apiGet(), loadAll(), parseIsoDate(), relHari(), renderKalkulasi(), setBusy()
+### Community 4 - "server.py"
+Cohesion: 0.21
+Nodes (11): BaseHTTPRequestHandler, find_free_port(), Handler, is_safe_folder_name(), json_bytes(), main(), Subfolder LANGSUNG di dalam Kisah/ yang berisi content.json., Nama folder aman: non-kosong, bukan '.'/'..', tanpa separator path. (+3 more)
 
 ### Community 5 - "appsscript.json"
 Cohesion: 0.40
 Nodes (4): dependencies, exceptionLogging, runtimeVersion, timeZone
-
-### Community 6 - "showToast"
-Cohesion: 0.60
-Nodes (5): bindReminderButtons(), fmtDurasi(), init(), setReminder(), showToast()
 
 ### Community 7 - "Tiga Kisah dari Babylon"
 Cohesion: 0.33

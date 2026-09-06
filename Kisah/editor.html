@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Editor content.json — Kisah</title>
+  <link rel="stylesheet" href="editor.css">
+</head>
+<body>
+
+  <header class="app-header">
+    <h1>Editor Konten Kisah</h1>
+    <p class="subhead">Edit <code>content.json</code> di subfolder <code>Kisah/</code></p>
+
+    <div class="toolbar">
+      <label class="picker">
+        <span>Folder kisah</span>
+        <select id="folder-select" aria-label="Pilih folder kisah"></select>
+      </label>
+      <button id="save-btn" type="button" disabled>Simpan</button>
+    </div>
+
+    <div id="status" class="status" role="status" aria-live="polite"></div>
+  </header>
+
+  <main id="form-area" class="form-area" aria-live="polite"></main>
+
+  <footer class="app-footer">
+    <p>Server lokal — <code>server.py</code> (Python stdlib). Data hanya tersimpan di <code>Kisah/&lt;folder&gt;/content.json</code>.</p>
+  </footer>
+
+  <script src="editor.js"></script>
+</body>
+</html>
