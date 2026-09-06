@@ -1,0 +1,365 @@
+/* ============================================================
+   Tiga Kisah dari Babylon — tema gelap hangat bernuansa kuno
+   ============================================================ */
+
+:root {
+  --bg: #151210;
+  --bg-panel: #1e1a16;
+  --bg-panel-deep: #191512;
+  --teks: #e8dfd0;
+  --teks-muted: #a89a86;
+  --aksen: #c9a655;
+  --aksen-dim: rgba(201, 166, 85, 0.28);
+  --aksen-faint: rgba(201, 166, 85, 0.12);
+  --border: rgba(201, 166, 85, 0.18);
+  --font-heading: "Cormorant Garamond", "Palatino Linotype", Palatino, Georgia, serif;
+  --font-body: "Lora", "Crimson Pro", Georgia, "Times New Roman", serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  background-color: var(--bg);
+  background-image: radial-gradient(1100px 520px at 50% -8%, rgba(201, 166, 85, 0.08), transparent 70%);
+  background-attachment: fixed;
+  color: var(--teks);
+  font-family: var(--font-body);
+  font-size: 1.125rem;
+  line-height: 1.8;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+section[id] {
+  scroll-margin-top: 1.25rem;
+}
+
+::selection {
+  background: var(--aksen-dim);
+  color: var(--teks);
+}
+
+/* ---------- Header ---------- */
+
+.site-header {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 4.5rem 1.25rem 0;
+  text-align: center;
+}
+
+.site-header h1 {
+  margin: 0;
+  font-family: var(--font-heading);
+  font-weight: 600;
+  font-size: clamp(2.1rem, 5vw, 3.3rem);
+  line-height: 1.15;
+  color: var(--teks);
+  letter-spacing: 0.02em;
+}
+
+.subjudul {
+  margin: 0.9rem auto 0;
+  font-style: italic;
+  font-size: 1.05rem;
+  color: var(--teks-muted);
+  max-width: 34ch;
+}
+
+/* ---------- Nav ---------- */
+
+.nav-kisah {
+  max-width: 720px;
+  margin: 2rem auto 0;
+  padding: 0 1.25rem;
+  text-align: center;
+}
+
+.nav-desktop {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0.4rem 1.6rem;
+}
+
+.nav-desktop a {
+  color: var(--aksen);
+  text-decoration: none;
+  font-size: 0.85rem;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 0.35rem 0.1rem;
+  border-bottom: 1px solid transparent;
+  transition: border-color 0.2s ease, color 0.2s ease;
+}
+
+.nav-desktop a:hover,
+.nav-desktop a:focus-visible {
+  border-bottom-color: var(--aksen);
+  color: #e0c987;
+}
+
+.nav-mobile {
+  display: none;
+}
+
+/* ---------- Layout konten ---------- */
+
+.konten {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 1.5rem 1.25rem 4rem;
+}
+
+.status-loading,
+.noscript-warning {
+  text-align: center;
+  font-style: italic;
+  color: var(--teks-muted);
+  padding: 3.5rem 0;
+}
+
+.noscript-warning {
+  font-style: normal;
+}
+
+/* ---------- Section kisah ---------- */
+
+.kisah {
+  background: var(--bg-panel);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 2.75rem 2.5rem;
+  box-shadow: 0 14px 34px rgba(0, 0, 0, 0.28);
+}
+
+.kisah-header {
+  text-align: center;
+  margin-bottom: 1.6rem;
+}
+
+.kisah-ikon {
+  display: block;
+  margin: 0 auto 0.9rem;
+  width: 46px;
+  height: 46px;
+  color: var(--aksen);
+  opacity: 0.92;
+}
+
+.kisah h2 {
+  margin: 0;
+  font-family: var(--font-heading);
+  font-weight: 500;
+  font-size: clamp(1.55rem, 3.4vw, 2.05rem);
+  line-height: 1.25;
+  color: var(--aksen);
+}
+
+.kisah p {
+  margin: 0 0 1.15rem;
+}
+
+.kisah p:last-child {
+  margin-bottom: 0;
+}
+
+/* Kotak "Yang perlu diingat" — inti pelajaran tiap kisah */
+
+.penutup {
+  margin-top: 1.9rem;
+  padding: 1.3rem 1.5rem 1.35rem;
+  background: var(--bg-panel-deep);
+  border-left: 3px solid var(--aksen);
+  border-radius: 0 8px 8px 0;
+  font-style: italic;
+  font-size: 1.02em;
+  color: var(--teks);
+}
+
+.penutup strong {
+  color: var(--aksen);
+  font-weight: 500;
+}
+
+/* ---------- Benang merah ---------- */
+
+.benang-merah {
+  background: linear-gradient(180deg, var(--bg-panel) 0%, var(--bg-panel-deep) 100%);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 2.75rem 2.5rem;
+  box-shadow: 0 14px 34px rgba(0, 0, 0, 0.28);
+}
+
+.benang-merah h2 {
+  margin: 0 0 1.6rem;
+  font-family: var(--font-heading);
+  font-weight: 500;
+  font-size: clamp(1.55rem, 3.4vw, 2.05rem);
+  text-align: center;
+  color: var(--aksen);
+}
+
+.benang-merah p {
+  margin: 0 0 1.15rem;
+}
+
+.benang-merah p:last-child {
+  margin-bottom: 0;
+}
+
+.benang-merah strong {
+  color: var(--aksen);
+  font-weight: 600;
+}
+
+/* ---------- Ornamen pembatas antar kisah ---------- */
+
+.ornament {
+  display: flex;
+  align-items: center;
+  gap: 1.1rem;
+  width: min(340px, 70%);
+  margin: 3rem auto;
+  color: var(--aksen);
+}
+
+.ornament::before,
+.ornament::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(to right, transparent, var(--aksen-dim), var(--aksen));
+}
+
+.ornament::after {
+  background: linear-gradient(to left, transparent, var(--aksen-dim), var(--aksen));
+}
+
+.ornament-diamond {
+  width: 8px;
+  height: 8px;
+  flex: none;
+  background: var(--aksen);
+  transform: rotate(45deg);
+}
+
+/* ---------- Footer ---------- */
+
+.site-footer {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 0 1.25rem 3.5rem;
+  text-align: center;
+}
+
+.site-footer p {
+  margin: 0;
+  color: var(--teks-muted);
+  font-size: 0.82rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  opacity: 0.8;
+}
+
+/* ---------- Responsive < 600px ---------- */
+
+@media (max-width: 600px) {
+  body {
+    font-size: 1rem;
+    line-height: 1.75;
+  }
+
+  .site-header {
+    padding-top: 3rem;
+  }
+
+  .site-header h1 {
+    font-size: clamp(1.8rem, 8vw, 2.4rem);
+  }
+
+  .subjudul {
+    font-size: 0.98rem;
+  }
+
+  .nav-desktop {
+    display: none;
+  }
+
+  .nav-mobile {
+    display: block;
+    width: 100%;
+  }
+
+  .nav-mobile summary {
+    cursor: pointer;
+    list-style: none;
+    display: inline-block;
+    padding: 0.55rem 1.4rem;
+    border: 1px solid var(--aksen-dim);
+    border-radius: 999px;
+    color: var(--aksen);
+    font-size: 0.85rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    user-select: none;
+  }
+
+  .nav-mobile summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .nav-mobile[open] summary {
+    margin-bottom: 0.6rem;
+  }
+
+  .nav-mobile a {
+    display: block;
+    padding: 0.55rem 1rem;
+    color: var(--teks);
+    text-decoration: none;
+    border-bottom: 1px solid var(--border);
+    font-size: 0.98rem;
+  }
+
+  .nav-mobile a:hover {
+    color: var(--aksen);
+  }
+
+  .kisah,
+  .benang-merah {
+    padding: 1.7rem 1.25rem;
+  }
+
+  .kisah-ikon {
+    width: 38px;
+    height: 38px;
+  }
+
+  .penutup {
+    padding: 1.05rem 1.1rem;
+    font-size: 1em;
+  }
+
+  .ornament {
+    margin: 2.25rem auto;
+    width: 80%;
+  }
+
+  .konten {
+    padding: 0.75rem 0.9rem 3rem;
+  }
+
+  .nav-kisah {
+    padding: 0 0.9rem;
+  }
+}
