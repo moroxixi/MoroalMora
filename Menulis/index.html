@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Halaman harian</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&display=swap" rel="stylesheet">
+<style>
+:root{
+  color-scheme:dark;
+  --bg:#000;
+  --ink:#e9e6df;
+  --muted:#7d7a74;
+  --line:#1c1c1c;
+  --field:#070707;
+  --accent:#9db8ff;
+  --serif:"Newsreader",Georgia,"Times New Roman",serif;
+  --sans:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+*,*::before,*::after{box-sizing:inherit}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--serif);font-size:19px;line-height:1.6}
+main{max-width:660px;margin:0 auto;padding:48px 24px 96px}
+header{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:12px 24px;margin-bottom:8px}
+h1{font-size:30px;font-weight:500;margin:0;letter-spacing:-.01em}
+.tag{display:flex;align-items:center;gap:6px;font-family:var(--sans);font-size:15px;color:var(--muted)}
+.tag input{width:150px;background:transparent;border:0;border-bottom:1px solid var(--line);color:var(--accent);font:inherit;padding:4px 2px}
+.tag input:focus{outline:none;border-color:var(--accent)}
+.hint{font-family:var(--sans);font-size:14px;color:var(--muted);margin:0 0 40px}
+.dot{display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--accent);vertical-align:middle;margin-right:6px}
+.f{margin-bottom:32px}
+label{display:block;font-family:var(--sans);font-size:14px;color:var(--muted);margin-bottom:6px}
+textarea{width:100%;min-height:72px;resize:none;overflow:hidden;background:var(--field);color:var(--ink);border:1px solid var(--line);border-radius:6px;padding:12px 14px;font:inherit}
+textarea::placeholder{color:#44423f;font-style:italic}
+textarea:focus{outline:2px solid var(--accent);outline-offset:2px;border-color:transparent}
+.bar{display:flex;align-items:center;gap:20px;flex-wrap:wrap;margin-top:8px}
+button{font-family:var(--sans);font-size:16px;font-weight:500;background:var(--accent);color:#000;border:0;border-radius:6px;padding:12px 22px;cursor:pointer}
+button:hover{filter:brightness(1.1)}
+button:focus-visible{outline:2px solid var(--ink);outline-offset:3px}
+#st{font-family:var(--sans);font-size:14px;color:var(--muted)}
+#st.err{color:#ff9a8a}
+@media(max-width:520px){body{font-size:18px}main{padding:32px 18px 72px}}
+@media(prefers-reduced-motion:no-preference){textarea{transition:border-color .15s}}
+</style>
+</head>
+<body>
+<main>
+  <header>
+    <h1 id="tgl"></h1>
+    <div class="tag"><label for="tag" style="margin:0">Tag</label><input id="tag" list="tags" placeholder="mis. genius" autocomplete="off"></div>
+    <datalist id="tags"></datalist>
+  </header>
+  <p class="hint"><span class="dot"></span>Hari malas? Isi tiga kolom bertanda titik saja.</p>
+
+  <div class="f"><label for="q"><span class="dot"></span>Pertanyaan</label><textarea id="q" placeholder="Satu kalimat. Apa yang ingin kamu cari tahu hari ini?"></textarea></div>
+  <div class="f"><label for="dugaan"><span class="dot"></span>Dugaan awal</label><textarea id="dugaan" placeholder="Dua sampai tiga kalimat. Jawabanmu sebelum mencari."></textarea></div>
+  <div class="f"><label for="dukung">Yang mendukung</label><textarea id="dukung" placeholder="Satu sumber, fakta, atau pengalaman."></textarea></div>
+  <div class="f"><label for="runtuh">Yang meruntuhkan</label><textarea id="runtuh" placeholder="Satu hal yang bisa membantah dugaanmu."></textarea></div>
+  <div class="f"><label for="simpul"><span class="dot"></span>Kesimpulan sementara</label><textarea id="simpul" placeholder="Dua kalimat. Boleh berubah besok."></textarea></div>
+  <div class="f"><label for="next">Pertanyaan berikutnya</label><textarea id="next" placeholder="Ini akan jadi pertanyaan awal besok."></textarea></div>
+
+  <div class="bar"><button id="save" type="button">Simpan halaman</button><span id="st" role="status" aria-live="polite"></span></div>
+</main>
+<script>
+(function(){
+  // isi dengan URL Web App /exec setelah deploy
+  var ENDPOINT='';
+  var F=['q','dugaan','dukung','runtuh','simpul','next'];
+  var REQ={q:'Pertanyaan',dugaan:'Dugaan awal',simpul:'Kesimpulan sementara'};
+  var K={e:'hh:entries',d:'hh:draft',n:'hh:next'};
+  var st=document.getElementById('st'),tag=document.getElementById('tag');
+  function get(k,def){try{var v=localStorage.getItem(k);return v===null?def:JSON.parse(v)}catch(e){return def}}
+  function put(k,v){try{localStorage.setItem(k,JSON.stringify(v));return true}catch(e){return false}}
+  function del(k){try{localStorage.removeItem(k)}catch(e){}}
+  function sget(k,def){try{var v=sessionStorage.getItem(k);return v===null?def:JSON.parse(v)}catch(e){return def}}
+  function sput(k,v){try{sessionStorage.setItem(k,JSON.stringify(v));return true}catch(e){return false}}
+  function sdel(k){try{sessionStorage.removeItem(k)}catch(e){}}
+  function el(id){return document.getElementById(id)}
+  function grow(t){t.style.height='auto';t.style.height=Math.max(72,t.scrollHeight+2)+'px'}
+  function msg(t,err){st.textContent=t;st.className=err?'err':''}
+
+  var d=new Date(),pad=function(n){return String(n).padStart(2,'0')};
+  var iso=d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate());
+  el('tgl').textContent=d.toLocaleDateString('id-ID',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+
+  function refreshTags(){
+    var seen={};get(K.e,[]).forEach(function(x){if(x.tag)seen[x.tag]=1});
+    el('tags').innerHTML='';
+    Object.keys(seen).forEach(function(t){var o=document.createElement('option');o.value=t;el('tags').appendChild(o)});
+  }
+  function fill(o){F.forEach(function(f){el(f).value=o[f]||'';grow(el(f))});tag.value=o.tag||tag.value||''}
+  function read(){var o={tag:tag.value.trim()};F.forEach(function(f){o[f]=el(f).value.trim()});return o}
+
+  var draft=sget(K.d,null);
+  if(draft){fill(draft);msg('Draf terakhir dipulihkan.')}
+  else{var nx=get(K.n,'');if(nx){el('q').value=nx;grow(el('q'));msg('Pertanyaan ini dari halaman terakhirmu.')}}
+  var ents=get(K.e,[]);
+  if(ents.length&&!tag.value)tag.value=ents[ents.length-1].tag||'';
+  refreshTags();
+
+  F.forEach(function(f){el(f).addEventListener('input',function(){grow(this);sput(K.d,read())})});
+  tag.addEventListener('input',function(){sput(K.d,read())});
+
+  el('save').addEventListener('click',function(){
+    var btn=el('save');
+    var o=read(),miss=[];
+    if(!o.tag)miss.push('Tag');
+    Object.keys(REQ).forEach(function(k){if(!o[k])miss.push(REQ[k])});
+    if(miss.length){msg('Isi dulu: '+miss.join(', ')+'.',true);return}
+    if(!ENDPOINT){msg('Endpoint belum diatur',true);return}
+    o.date=iso;o.saved=Date.now();
+    sput(K.d,read());
+    btn.disabled=true;
+    msg('Menyimpan...');
+    fetch(ENDPOINT,{
+      method:'POST',
+      headers:{'Content-Type':'text/plain;charset=utf-8'},
+      body:JSON.stringify({tag:o.tag,q:o.q,dugaan:o.dugaan,dukung:o.dukung,runtuh:o.runtuh,simpul:o.simpul,next:o.next,date:o.date})
+    }).then(function(r){return r.json()})
+      .then(function(res){
+        if(res&&res.ok){
+          var all=get(K.e,[]);all.push(o);
+          if(!put(K.e,all)){msg('Gagal menyimpan. Penyimpanan browser mungkin dinonaktifkan.',true);return}
+          put(K.n,o.next);sdel(K.d);
+          F.forEach(function(f){el(f).value=''});
+          el('q').value=o.next;F.forEach(function(f){grow(el(f))});
+          refreshTags();
+          msg('Halaman tersimpan. Total '+all.length+' halaman.');
+          window.scrollTo(0,0);
+        }else{
+          msg('Gagal menyimpan: '+((res&&res.error)||'respons server tidak dikenal'),true);
+        }
+      })
+      .catch(function(){msg('Gagal menyimpan. Periksa jaringan, lalu coba lagi.',true)})
+      .then(function(){btn.disabled=false});
+  });
+})();
+</script>
+</body>
+</html>
