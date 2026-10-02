@@ -84,14 +84,19 @@
     "ast_hash": "cb2ad0c4cf05216b55834c5413fd133e",
     "semantic_hash": ""
   },
-  "Menulis/code.gs.js": {
-    "mtime": 1790878707.1039932,
-    "ast_hash": "9a3160dddcc54bdf9502c1786f36c8fb",
+  "Menulis/index.html": {
+    "mtime": 1790914867.3890634,
+    "ast_hash": "f05144f6c66e13090827c89fbf893d6d",
     "semantic_hash": ""
   },
-  "Menulis/index.html": {
-    "mtime": 1790879782.6999645,
-    "ast_hash": "9160d1ecec017e32e2b9e0122727839f",
+  "Menulis/Apps-Script/code.gs.js": {
+    "mtime": 1790914680.6390562,
+    "ast_hash": "3f586f381b68d5f94e2537dc2629e4fe",
+    "semantic_hash": ""
+  },
+  "Menulis/script.js": {
+    "mtime": 1790915101.9157388,
+    "ast_hash": "18f7c91b5d237bc13b685b69a97d1acf",
     "semantic_hash": ""
   }
 }

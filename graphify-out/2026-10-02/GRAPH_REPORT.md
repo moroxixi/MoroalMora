@@ -1,16 +1,16 @@
-# Graph Report - MoroalMora  (2026-09-06)
+# Graph Report - MoroalMora  (2026-10-02)
 
 ## Corpus Check
-- 11 files · ~20,842 words
+- 12 files · ~22,577 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 105 nodes · 188 edges · 9 communities (8 shown, 1 thin omitted)
-- Extraction: 99% EXTRACTED · 1% INFERRED · 0% AMBIGUOUS · INFERRED: 1 edges (avg confidence: 0.5)
+- 120 nodes · 216 edges · 10 communities (9 shown, 1 thin omitted)
+- Extraction: 100% EXTRACTED · 0% INFERRED · 0% AMBIGUOUS · INFERRED: 1 edges (avg confidence: 0.5)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `598096c8`
+- Built from commit: `05039569`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -21,20 +21,21 @@
 - editor.js
 - server.py
 - appsscript.json
+- code.gs.js
 - Tiga Kisah dari Babylon
 - MoroalMora-push.sh
 
 ## God Nodes (most connected - your core abstractions)
 1. `loadAll()` - 8 edges
-2. `Catatan Haid · MAO — Pencatat Siklus + Kalkulator Masa Subur` - 8 edges
-3. `fmtTanggal()` - 7 edges
-4. `showToast()` - 7 edges
-5. `renderSiklus()` - 7 edges
-6. `h()` - 7 edges
-7. `buildControl()` - 7 edges
-8. `buildArrayEditor()` - 7 edges
-9. `Handler` - 7 edges
-10. `Setup manual Google Sheets + Apps Script (WAJIB 1x)` - 7 edges
+2. `doPost()` - 8 edges
+3. `Catatan Haid · MAO — Pencatat Siklus + Kalkulator Masa Subur` - 8 edges
+4. `fmtTanggal()` - 7 edges
+5. `showToast()` - 7 edges
+6. `renderSiklus()` - 7 edges
+7. `h()` - 7 edges
+8. `buildControl()` - 7 edges
+9. `buildArrayEditor()` - 7 edges
+10. `Handler` - 7 edges
 
 ## Surprising Connections (you probably didn't know these)
 - None detected - all connections are within the same source files.
@@ -42,7 +43,7 @@
 ## Import Cycles
 - None detected.
 
-## Communities (9 total, 1 thin omitted)
+## Communities (10 total, 1 thin omitted)
 
 ### Community 0 - "Catatan Haid · MAO — Pencatat Siklus + Kalkulator Masa Subur"
 Cohesion: 0.13
@@ -67,6 +68,10 @@ Nodes (11): BaseHTTPRequestHandler, find_free_port(), Handler, is_safe_folder_na
 ### Community 5 - "appsscript.json"
 Cohesion: 0.40
 Nodes (4): dependencies, exceptionLogging, runtimeVersion, timeZone
+
+### Community 6 - "code.gs.js"
+Cohesion: 0.27
+Nodes (14): doGet(), doPost(), findSheet_(), getOrCreateTagSheet_(), hariIndonesia(), isEmptySheet_(), isValidIso_(), json_() (+6 more)
 
 ### Community 7 - "Tiga Kisah dari Babylon"
 Cohesion: 0.33

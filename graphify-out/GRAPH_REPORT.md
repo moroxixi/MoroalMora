@@ -1,16 +1,16 @@
 # Graph Report - MoroalMora  (2026-10-02)
 
 ## Corpus Check
-- 12 files · ~22,577 words
+- 13 files · ~23,561 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 120 nodes · 216 edges · 10 communities (9 shown, 1 thin omitted)
+- 148 nodes · 277 edges · 11 communities (10 shown, 1 thin omitted)
 - Extraction: 100% EXTRACTED · 0% INFERRED · 0% AMBIGUOUS · INFERRED: 1 edges (avg confidence: 0.5)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `05039569`
+- Built from commit: `8091d8c8`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -21,13 +21,14 @@
 - editor.js
 - server.py
 - appsscript.json
-- code.gs.js
+- Menulis/script.js
 - Tiga Kisah dari Babylon
 - MoroalMora-push.sh
+- code.gs.js
 
 ## God Nodes (most connected - your core abstractions)
-1. `loadAll()` - 8 edges
-2. `doPost()` - 8 edges
+1. `doPost()` - 12 edges
+2. `loadAll()` - 8 edges
 3. `Catatan Haid · MAO — Pencatat Siklus + Kalkulator Masa Subur` - 8 edges
 4. `fmtTanggal()` - 7 edges
 5. `showToast()` - 7 edges
@@ -43,7 +44,7 @@
 ## Import Cycles
 - None detected.
 
-## Communities (10 total, 1 thin omitted)
+## Communities (11 total, 1 thin omitted)
 
 ### Community 0 - "Catatan Haid · MAO — Pencatat Siklus + Kalkulator Masa Subur"
 Cohesion: 0.13
@@ -69,13 +70,17 @@ Nodes (11): BaseHTTPRequestHandler, find_free_port(), Handler, is_safe_folder_na
 Cohesion: 0.40
 Nodes (4): dependencies, exceptionLogging, runtimeVersion, timeZone
 
-### Community 6 - "code.gs.js"
-Cohesion: 0.27
-Nodes (14): doGet(), doPost(), findSheet_(), getOrCreateTagSheet_(), hariIndonesia(), isEmptySheet_(), isValidIso_(), json_() (+6 more)
+### Community 6 - "Menulis/script.js"
+Cohesion: 0.16
+Nodes (17): applyMin(), el(), fill(), get(), grow(), itemNode(), muat(), onHapus() (+9 more)
 
 ### Community 7 - "Tiga Kisah dari Babylon"
 Cohesion: 0.33
 Nodes (5): Benang Merah dari Tiga Kisah, Kisah Kedua: Idin, Sang Guru Tua, dan Bel yang Tidak Peduli, Kisah Ketiga: Ur-Nanshe dan Kebun yang Tak Pernah Dilihat, Kisah Pertama: Naran dan Sungai yang Tidak Peduli, Tiga Kisah dari Babylon
+
+### Community 10 - "code.gs.js"
+Cohesion: 0.25
+Nodes (19): daftarPertanyaan_(), doGet(), doPost(), findSheet_(), getOrCreateDaftarSheet_(), getOrCreateTagSheet_(), hapusPertanyaan_(), hariIndonesia() (+11 more)
 
 ## Knowledge Gaps
 - **22 isolated node(s):** `timeZone`, `dependencies`, `exceptionLogging`, `runtimeVersion`, `state` (+17 more)

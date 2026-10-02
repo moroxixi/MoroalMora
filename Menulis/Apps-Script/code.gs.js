@@ -49,6 +49,11 @@ var RESERVED_PREFIX = '_';
 var TAG_MAX_LEN = 100;
 var LOCK_WAIT_MS = 10000;
 
+// Tab sistem untuk fitur "Daftar Pertanyaan" (bukan tab tag).
+var DAFTAR_SHEET = 'Daftar Pertanyaan';
+var DAFTAR_HEADERS = ['ID', 'Pertanyaan', 'Dibuat (ISO)'];
+var PERTANYAAN_MAX_LEN = 1000;
+
 var HARI = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
 
 /* ==========================================================================
@@ -183,6 +188,16 @@ function findSheet_(ss, name) {
   return null;
 }
 
+/**
+ * true bila nama tab == tab reserved "Daftar Pertanyaan"
+ * (trim + case-insensitive).
+ */
+function isDaftarSheetName_(name) {
+  if (name === null || typeof name === 'undefined') return false;
+  var s = String(name).replace(/^\s+|\s+$/g, '');
+  return s.toLowerCase() === DAFTAR_SHEET.toLowerCase();
+}
+
 /* ==========================================================================
  * 3. getOrCreateTagSheet_(tag) - cari case-insensitive, kalau belum ada buat.
  * ========================================================================== */
@@ -213,6 +228,133 @@ function getOrCreateTagSheet_(tag) {
 }
 
 /* ==========================================================================
+ * 3b. getOrCreateDaftarSheet_() - tab "Daftar Pertanyaan" (pola sama dengan
+ *     getOrCreateTagSheet_): cari case-insensitive, kalau belum ada buat
+ *     lengkap dengan header baris 1.
+ * ========================================================================== */
+
+function getOrCreateDaftarSheet_() {
+  var ss = SpreadsheetApp.getActiveSpreadsheet();
+  var existing = findSheet_(ss, DAFTAR_SHEET);
+  if (existing) return existing;
+
+  var sh = ss.insertSheet(DAFTAR_SHEET);
+
+  var head = sh.getRange(1, 1, 1, DAFTAR_HEADERS.length);
+  head.setValues([DAFTAR_HEADERS]);
+  head.setFontWeight('bold');
+  sh.setFrozenRows(1);
+
+  sh.setColumnWidth(1, 280);  // ID
+  sh.setColumnWidth(2, 520);  // Pertanyaan
+  sh.setColumnWidth(3, 180);  // Dibuat (ISO)
+
+  return sh;
+}
+
+/* ==========================================================================
+ * 3c. Aksi "Daftar Pertanyaan" (ADDITIVE): daftar | tambah | hapus.
+ *     Tidak mengubah perilaku submit harian di doPost.
+ * ========================================================================== */
+
+/** Ambil semua baris pertanyaan sebagai [{id, text, created}]. */
+function daftarPertanyaan_() {
+  try {
+    var sh = getOrCreateDaftarSheet_();
+    var items = [];
+    var last = sh.getLastRow();
+    if (last >= 2) {
+      var values = sh.getRange(2, 1, last - 1, DAFTAR_HEADERS.length).getValues();
+      for (var i = 0; i < values.length; i++) {
+        var id = str_(values[i][0]);
+        var text = str_(values[i][1]);
+        if (!id && !text) continue;
+        items.push({ id: id, text: text, created: str_(values[i][2]) });
+      }
+    }
+    return json_({ ok: true, items: items });
+  } catch (err) {
+    if (typeof console !== 'undefined' && console.error) console.error('daftarPertanyaan_ error: ' + err);
+    return json_({ ok: false, error: 'Gagal memuat daftar pertanyaan' });
+  }
+}
+
+/** Tambah satu pertanyaan (trim, wajib non-kosong, maks PERTANYAAN_MAX_LEN). */
+function tambahPertanyaan_(payload) {
+  try {
+    var text = str_(payload.pertanyaan);
+    if (!text) {
+      return json_({ ok: false, error: 'Pertanyaan tidak boleh kosong.' });
+    }
+    if (text.length > PERTANYAAN_MAX_LEN) {
+      return json_({ ok: false, error: 'Pertanyaan maksimal ' + PERTANYAAN_MAX_LEN + ' karakter.' });
+    }
+
+    var lock = LockService.getScriptLock();
+    try {
+      lock.waitLock(LOCK_WAIT_MS);
+    } catch (lockErr) {
+      return json_({ ok: false, error: 'Sedang ada proses simpan lain, coba lagi sebentar.' });
+    }
+
+    try {
+      var sh = getOrCreateDaftarSheet_();
+      var id = Utilities.getUuid();
+      var created = new Date().toISOString();
+      var row = sh.getLastRow() + 1;
+      sh.getRange(row, 1, 1, DAFTAR_HEADERS.length).setValues([[
+        neutralizeCell(id),
+        neutralizeCell(text),
+        neutralizeCell(created)
+      ]]);
+      return json_({ ok: true, item: { id: id, text: text, created: created } });
+    } finally {
+      lock.releaseLock();
+    }
+  } catch (err) {
+    if (typeof console !== 'undefined' && console.error) console.error('tambahPertanyaan_ error: ' + err);
+    return json_({ ok: false, error: 'Gagal menambah pertanyaan' });
+  }
+}
+
+/** Hapus satu pertanyaan berdasarkan ID (bukan nomor baris). */
+function hapusPertanyaan_(payload) {
+  try {
+    var id = str_(payload.id);
+    if (!id) {
+      return json_({ ok: false, error: 'ID pertanyaan wajib diisi.' });
+    }
+
+    var lock = LockService.getScriptLock();
+    try {
+      lock.waitLock(LOCK_WAIT_MS);
+    } catch (lockErr) {
+      return json_({ ok: false, error: 'Sedang ada proses simpan lain, coba lagi sebentar.' });
+    }
+
+    try {
+      var sh = getOrCreateDaftarSheet_();
+      var last = sh.getLastRow();
+      if (last >= 2) {
+        var ids = sh.getRange(2, 1, last - 1, 1).getValues();
+        for (var i = 0; i < ids.length; i++) {
+          if (str_(ids[i][0]) === id) {
+            sh.deleteRow(i + 2);
+            return json_({ ok: true, id: id });
+          }
+        }
+      }
+      return json_({ ok: false, error: 'Pertanyaan tidak ditemukan.' });
+    } finally {
+      lock.releaseLock();
+    }
+  } catch (err) {
+    if (typeof console !== 'undefined' && console.error) console.error('hapusPertanyaan_ error: ' + err);
+    return json_({ ok: false, error: 'Gagal menghapus pertanyaan' });
+  }
+}
+
+/* ==========================================================================
  * 4. doPost(e) - simpan satu halaman ke tab sesuai tag.
  * ========================================================================== */
 
@@ -227,10 +369,22 @@ function doPost(e) {
     }
     if (!payload || typeof payload !== 'object') payload = {};
 
+    // Routing aksi (ADDITIVE): payload tanpa "action" = submit harian,
+    // persis seperti perilaku lama. Aksi baru: daftar | tambah | hapus.
+    var action = str_(payload.action);
+    if (action === 'daftar') return daftarPertanyaan_();
+    if (action === 'tambah') return tambahPertanyaan_(payload);
+    if (action === 'hapus') return hapusPertanyaan_(payload);
+    if (action) return json_({ ok: false, error: 'Aksi tidak dikenal: ' + action });
+
     // Validasi server-side (sama dengan REQ di client: tag, q, dugaan, simpul)
     var tag = sanitizeTagName(payload.tag);
     if (!tag) {
       return json_({ ok: false, error: 'Tag wajib diisi (tidak boleh kosong atau diawali "_")' });
+    }
+    // Tab "Daftar Pertanyaan" RESERVED: tidak boleh dipakai sebagai tag harian.
+    if (isDaftarSheetName_(tag)) {
+      return json_({ ok: false, error: 'Tag "' + tag + '" dipakai untuk tab sistem "Daftar Pertanyaan". Gunakan tag lain.' });
     }
     var q = str_(payload.q);
     var dugaan = str_(payload.dugaan);

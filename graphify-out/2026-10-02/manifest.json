@@ -83,5 +83,15 @@
     "mtime": 1788697783.5912693,
     "ast_hash": "cb2ad0c4cf05216b55834c5413fd133e",
     "semantic_hash": ""
+  },
+  "Menulis/code.gs.js": {
+    "mtime": 1790878707.1039932,
+    "ast_hash": "9a3160dddcc54bdf9502c1786f36c8fb",
+    "semantic_hash": ""
+  },
+  "Menulis/index.html": {
+    "mtime": 1790879782.6999645,
+    "ast_hash": "9160d1ecec017e32e2b9e0122727839f",
+    "semantic_hash": ""
   }
 }
