@@ -1,6 +1,6 @@
 
 // isi dengan URL Web App /exec setelah deploy
-var ENDPOINT='https://script.google.com/macros/s/AKfycbwkTEjvIqGvNl_YJPt9BcacKnd-NFkvbdE2JIP8TJYjsH2bXtw_wuGsbxAYhdcP08IO/exec';
+var ENDPOINT='https://script.google.com/macros/s/AKfycbxCydpQaAoUNsBDDAOOTZwfJ0f8kvrU_PtmYGt4Rx4LYEWzqO5TFT6JNuJgr6tvCi8n/exec';
 (function(){
   var F=['q','dugaan','dukung','runtuh','simpul','next'];
   var REQ={q:'Pertanyaan',dugaan:'Dugaan awal',simpul:'Kesimpulan sementara'};
