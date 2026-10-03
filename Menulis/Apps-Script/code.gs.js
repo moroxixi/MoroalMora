@@ -438,10 +438,58 @@ function doPost(e) {
 }
 
 /* ==========================================================================
- * 5. doGet(e) - health check saja. TIDAK PERNAH mengembalikan isi data.
+ * 4d. daftarTag_() - baca-saja: daftar nama tab tag (untuk saran tag front-end).
+ * ========================================================================== */
+
+/**
+ * Kumpulkan nama tab yang merupakan tab tag: semua tab KECUALI tab sistem
+ * "Daftar Pertanyaan", tab berawalan "_" (mis. _Panduan), dan tab default
+ * bawaan "Sheet1" (lihat setupSheet - tab default yang berisi dipertahankan,
+ * jadi bukan tab tag).
+ * HANYA membaca (getSheets / getName): tidak pernah getOrCreate*, insertSheet,
+ * appendRow, setValue, setValues, atau menulis apa pun.
+ * Nama dikembalikan persis seperti tersimpan di Sheet (tanpa normalisasi),
+ * diurut alfabet case-insensitive.
+ * TIDAK menangkap error - pemanggil (doGet) yang membungkus try/catch.
+ */
+function daftarTag_() {
+  var ss = SpreadsheetApp.getActiveSpreadsheet();
+  var sheets = ss.getSheets();
+  var tags = [];
+  for (var i = 0; i < sheets.length; i++) {
+    var name = String(sheets[i].getName());
+    var key = name.replace(/^\s+|\s+$/g, '').toLowerCase();
+    if (!key) continue;                               // nama kosong
+    if (key === DAFTAR_SHEET.toLowerCase()) continue; // tab sistem "Daftar Pertanyaan"
+    if (key.charAt(0) === RESERVED_PREFIX) continue;  // tab sistem berawalan "_"
+    if (key === 'sheet1') continue;                   // tab default bawaan
+    tags.push(name);
+  }
+  tags.sort(function (a, b) {
+    var la = String(a).toLowerCase();
+    var lb = String(b).toLowerCase();
+    if (la < lb) return -1;
+    if (la > lb) return 1;
+    return 0;
+  });
+  return tags;
+}
+
+/* ==========================================================================
+ * 5. doGet(e) - health check + daftar tag (read-only).
+ *    TIDAK PERNAH mengembalikan isi sheet.
  * ========================================================================== */
 
 function doGet(e) {
+  var action = e && e.parameter ? str_(e.parameter.action) : '';
+  if (action === 'daftarTag') {
+    try {
+      return json_({ ok: true, tags: daftarTag_() });
+    } catch (err) {
+      if (typeof console !== 'undefined' && console.error) console.error('daftarTag_ error: ' + err);
+      return json_({ ok: false, error: 'Gagal memuat daftar tag' });
+    }
+  }
   return json_({ ok: true, service: 'menulis' });
 }
 
