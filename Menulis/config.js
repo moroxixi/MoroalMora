@@ -15,4 +15,4 @@
  * ========================================================================== */
 
 // isi dengan URL Web App /exec setelah deploy
-var ENDPOINT = 'https://script.google.com/macros/s/AKfycbxCydpQaAoUNsBDDAOOTZwfJ0f8kvrU_PtmYGt4Rx4LYEWzqO5TFT6JNuJgr6tvCi8n/exec';
+var ENDPOINT = 'https://script.google.com/macros/s/AKfycbzcheOywBtIy_RQ-WDTyM3NQm3FHHiC1Dee4vYID3uDrrmFeHu_aG1zH6a6r860C2kJ/exec';
