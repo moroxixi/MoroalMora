@@ -5,6 +5,9 @@
  * Kontrak dengan Apps-Script/code.gs.js (harus konsisten):
  *   GET  ?action=list         -> {ok:true, data:[{id,judul,preview,tipe,dibuat,diubah}]}
  *   GET  ?action=get&id=...   -> {ok:true, data:{id,judul,isi,tipe,dibuat,diubah}}
+ *   GET  ?action=search&q=... -> {ok:true, data:{items:[...],total,terpotong}}
+ *     (action=search hanya ada setelah backend di-deploy ulang; lihat
+ *      fallback "Backend belum diperbarui" di script.js)
  *   POST body JSON {action:create|update|delete, ...}
  *   Selalu JSON: {ok:true, data:...} atau {ok:false, error:"pesan"}.
  *
@@ -134,6 +137,16 @@
     },
     get: function (id) {
       return do_GET({ action: "get", id: id });
+    },
+    /**
+     * Cari judul+isi (GET ?action=search&q=...).
+     * BARU — ditambahkan tanpa mengubah fungsi lain, agar halaman Edit/
+     * dan Read/ yang memuat api.js tetap berjalan seperti sebelumnya.
+     * Bila backend lama membalas error "action tidak dikenal",
+     * script.js menjatuhkan pencarian ke filter lokal (lihat fallback).
+     */
+    search: function (q) {
+      return do_GET({ action: "search", q: q });
     },
     create: function (doc) {
       return do_POST({

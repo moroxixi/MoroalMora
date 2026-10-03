@@ -73,6 +73,49 @@
     <section class="panel" aria-labelledby="list-title">
       <h2 id="list-title" class="panel-title">Dokumen</h2>
 
+      <div class="search-wrap">
+        <label class="sr-only" for="search-input">
+          Cari dokumen (judul dan isi)
+        </label>
+        <input
+          id="search-input"
+          class="search-input"
+          type="search"
+          autocomplete="off"
+          spellcheck="false"
+          placeholder="Cari judul dan isi…"
+        />
+        <button
+          id="search-clear"
+          type="button"
+          class="search-clear"
+          aria-label="Hapus kata kunci pencarian"
+          hidden
+        >
+          ✕
+        </button>
+      </div>
+
+      <p
+        id="search-status"
+        class="search-status"
+        role="status"
+        aria-live="polite"
+      ></p>
+
+      <div id="state-searching" class="state" hidden>Mencari…</div>
+
+      <div id="state-noresult" class="state" hidden>
+        <p id="noresult-msg" class="state-msg"></p>
+      </div>
+
+      <div id="state-search-error" class="state" hidden>
+        <p id="search-error-msg" class="state-msg"></p>
+        <button id="search-retry-btn" type="button" class="btn">
+          Coba lagi
+        </button>
+      </div>
+
       <div id="state-loading" class="state">Memuat dokumen…</div>
 
       <div id="state-empty" class="state" hidden>

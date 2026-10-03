@@ -43,12 +43,21 @@
   var deleteDialogText = document.getElementById("delete-dialog-text");
   var deleteCancel = document.getElementById("delete-cancel");
   var deleteConfirm = document.getElementById("delete-confirm");
+  var searchInput = document.getElementById("search-input");
+  var searchClear = document.getElementById("search-clear");
+  var searchStatus = document.getElementById("search-status");
+  var searchErrorMsg = document.getElementById("search-error-msg");
+  var searchRetryBtn = document.getElementById("search-retry-btn");
+  var noresultMsg = document.getElementById("noresult-msg");
 
   var STATE_IDS = {
     loading: "state-loading",
     empty: "state-empty",
     error: "state-error",
     setup: "state-setup",
+    searching: "state-searching",
+    noresult: "state-noresult",
+    searchError: "state-search-error",
     list: "doc-list"
   };
 
@@ -102,6 +111,8 @@
       document.getElementById(STATE_IDS[key]).hidden = key !== name;
     });
     if (name === "error" && message) errorMsg.textContent = message;
+    if (name === "searchError" && message) searchErrorMsg.textContent = message;
+    if (name === "noresult" && message) noresultMsg.textContent = message;
   }
 
   function setBusy(on) {
@@ -135,11 +146,12 @@
     showState("loading");
     try {
       var docs = await ReadDashAPI.list();
-      if (!docs || docs.length === 0) {
+      lastDocs = docs || [];
+      if (!lastDocs || lastDocs.length === 0) {
         showState("empty");
         return;
       }
-      renderList(docs);
+      renderList(lastDocs);
       showState("list");
     } catch (err) {
       showState("error", errText(err));
@@ -153,7 +165,7 @@
     });
   }
 
-  function buildCard(doc) {
+  function buildCard(doc, opts) {
     var id = String(doc.id || "");
     var judul = String(doc.judul || "Tanpa judul");
     var readHref = "Read/index.html?id=" + encodeURIComponent(id);
@@ -163,8 +175,14 @@
 
     var row = el("div", "card-row");
 
-    var title = el("a", "card-title", judul);
+    var title = el("a", "card-title");
     title.href = readHref;
+    // Hasil pencarian: sorot token lewat <mark> buatan DOM (bukan innerHTML).
+    if (opts && opts.tokens && opts.tokens.length) {
+      fillHighlighted(title, judul, opts.tokens);
+    } else {
+      title.textContent = judul;
+    }
 
     var menuWrap = el("div", "card-menu");
     var menuBtn = el("button", "menu-btn", "\u22EE"); // ⋮
@@ -214,8 +232,16 @@
     row.appendChild(title);
     row.appendChild(menuWrap);
 
-    var preview = el("p", "card-preview", String(doc.preview || ""));
-    if (!String(doc.preview || "").trim()) preview.hidden = true;
+    // Pencarian: cuplikan menggantikan preview bila ada.
+    var previewText =
+      opts && opts.cuplikan ? String(opts.cuplikan) : String(doc.preview || "");
+    var preview = el("p", "card-preview");
+    if (opts && opts.tokens && opts.tokens.length) {
+      fillHighlighted(preview, previewText, opts.tokens);
+    } else {
+      preview.textContent = previewText;
+    }
+    if (!previewText.trim()) preview.hidden = true;
 
     var meta = el("div", "card-meta");
     var time = el("time", null, formatDate(doc.diubah));
@@ -262,6 +288,228 @@
     if (e.key === "Escape") closeMenus(true);
   });
 
+  /* --------------------------------------------------------- Pencarian */
+
+  var SEARCH_DEBOUNCE_MS = 300;
+  var SEARCH_MIN = 2;
+  var FALLBACK_NOTE =
+    "Backend belum diperbarui: mencari di judul dan cuplikan saja";
+
+  var lastDocs = null;
+  var searchActive = false;
+  var searchQuery = "";
+  /** Penghitung request: hanya respons terbaru yang dirender. */
+  var searchSeq = 0;
+  var searchTimer = null;
+
+  /** Normalisasi + token yang SAMA dengan searchCore_ di code.gs.js. */
+  function searchTokens(raw) {
+    var norm = String(raw === null || raw === undefined ? "" : raw)
+      .replace(/\s+/g, " ")
+      .replace(/^\s+|\s+$/g, "");
+    var tokens = [];
+    if (norm.length >= SEARCH_MIN) {
+      tokens = norm.split(" ").slice(0, 5).map(function (t) {
+        return t.toLowerCase();
+      });
+    }
+    return { norm: norm, tokens: tokens };
+  }
+
+  /**
+   * Isi node dengan teks + elemen <mark> hasil buatan DOM
+   * (textContent / createTextNode) — TIDAK PERNAH innerHTML dari data.
+   */
+  function fillHighlighted(node, text, tokens) {
+    var s = String(text === null || text === undefined ? "" : text);
+    if (!tokens || tokens.length === 0 || !s) {
+      node.textContent = s;
+      return;
+    }
+    var lower = s.toLowerCase();
+    var at = 0;
+    while (at < s.length) {
+      var best = -1;
+      var bestLen = 0;
+      for (var i = 0; i < tokens.length; i++) {
+        var p = lower.indexOf(tokens[i], at);
+        if (p === -1) continue;
+        if (
+          best === -1 ||
+          p < best ||
+          (p === best && tokens[i].length > bestLen)
+        ) {
+          best = p;
+          bestLen = tokens[i].length;
+        }
+      }
+      if (best === -1) break;
+      if (best > at) {
+        node.appendChild(document.createTextNode(s.slice(at, best)));
+      }
+      var mark = document.createElement("mark");
+      mark.textContent = s.slice(best, best + bestLen);
+      node.appendChild(mark);
+      at = best + bestLen;
+    }
+    if (at < s.length) node.appendChild(document.createTextNode(s.slice(at)));
+  }
+
+  /** Render hasil pencarian ke kartu yang sama (menu ⋮ Edit/Hapus ikut). */
+  function renderSearchItems(items, tokens) {
+    docList.replaceChildren();
+    items.forEach(function (doc) {
+      docList.appendChild(
+        buildCard(doc, { tokens: tokens, cuplikan: doc.cuplikan || "" })
+      );
+    });
+  }
+
+  /** Kembali ke daftar normal dari data yang sudah dimuat. */
+  function showNormalList() {
+    if (lastDocs === null) {
+      loadList();
+      return;
+    }
+    if (lastDocs.length === 0) {
+      showState("empty");
+      return;
+    }
+    renderList(lastDocs);
+    showState("list");
+  }
+
+  /** Backend lama membalas "Action GET tidak dikenal: search...". */
+  function isBackendTooOld(err) {
+    return errText(err).toLowerCase().indexOf("tidak dikenal") !== -1;
+  }
+
+  function renderSearchData(data, q) {
+    var items = (data && data.items) || [];
+    var total =
+      data && typeof data.total === "number" ? data.total : items.length;
+    var terpotong = !!(data && data.terpotong);
+    var statusText = total + " hasil";
+    if (terpotong) {
+      statusText +=
+        " \u00B7 menampilkan " + items.length + " dari " + total + " hasil";
+    }
+    searchStatus.textContent = statusText;
+    if (items.length === 0) {
+      showState("noresult", 'Tidak ada hasil untuk "' + q.norm + '"');
+      return;
+    }
+    renderSearchItems(items, q.tokens);
+    showState("list");
+  }
+
+  /** Fallback bila backend belum di-deploy ulang: filter judul + preview. */
+  function renderLocalFallback(q, seq) {
+    var docs = lastDocs || [];
+    var found = docs.filter(function (d) {
+      var hay =
+        (String(d.judul || "") + "\n" + String(d.preview || "")).toLowerCase();
+      for (var i = 0; i < q.tokens.length; i++) {
+        if (hay.indexOf(q.tokens[i]) === -1) return false;
+      }
+      return true;
+    });
+    if (seq !== searchSeq) return;
+    searchStatus.textContent = found.length + " hasil \u00B7 " + FALLBACK_NOTE;
+    if (found.length === 0) {
+      showState("noresult", 'Tidak ada hasil untuk "' + q.norm + '"');
+      return;
+    }
+    renderSearchItems(found, q.tokens);
+    showState("list");
+  }
+
+  async function runSearch(rawQuery) {
+    var seq = ++searchSeq;
+    var q = searchTokens(rawQuery);
+    searchActive = true;
+    searchQuery = rawQuery;
+    searchStatus.textContent = "";
+
+    if (!ReadDashAPI.isConfigured()) {
+      showState("setup");
+      setStatus(ReadDashAPI.SETUP_MESSAGE, true);
+      return;
+    }
+
+    showState("searching");
+    try {
+      var data = await ReadDashAPI.search(q.norm);
+      if (seq !== searchSeq) return; // respons usang — buang
+      renderSearchData(data, q);
+    } catch (err) {
+      if (seq !== searchSeq) return; // respons usang — buang
+      if (!isBackendTooOld(err)) {
+        showState("searchError", errText(err));
+        return;
+      }
+      // Fallback: backend lama -> filter lokal judul + preview.
+      try {
+        if (!lastDocs) lastDocs = (await ReadDashAPI.list()) || [];
+      } catch (err2) {
+        if (seq !== searchSeq) return;
+        showState("searchError", errText(err2));
+        return;
+      }
+      renderLocalFallback(q, seq);
+    }
+  }
+
+  /** Sesudah tambah/hapus dokumen: pencarian aktif -> jalankan ulang. */
+  function refreshList() {
+    var q = searchTokens(searchQuery);
+    if (searchActive && q.norm.length >= SEARCH_MIN) {
+      lastDocs = null; // agar fallback mengambil daftar segar bila perlu
+      return runSearch(searchQuery);
+    }
+    return loadList();
+  }
+
+  function handleSearchInput() {
+    var raw = searchInput.value;
+    searchClear.hidden = raw.length === 0;
+    if (searchTimer) {
+      clearTimeout(searchTimer);
+      searchTimer = null;
+    }
+    if (searchTokens(raw).norm.length < SEARCH_MIN) {
+      searchSeq++; // batalkan request yang sedang berjalan
+      searchActive = false;
+      searchQuery = "";
+      searchStatus.textContent = "";
+      showNormalList();
+      return;
+    }
+    searchTimer = setTimeout(function () {
+      searchTimer = null;
+      runSearch(raw);
+    }, SEARCH_DEBOUNCE_MS);
+  }
+
+  searchInput.addEventListener("input", handleSearchInput);
+
+  searchInput.addEventListener("keydown", function (e) {
+    if (e.key === "Escape" || e.key === "Esc") {
+      searchInput.value = "";
+      handleSearchInput();
+    }
+  });
+
+  searchClear.addEventListener("click", function () {
+    searchInput.value = "";
+    handleSearchInput();
+    searchInput.focus();
+  });
+
+  searchRetryBtn.addEventListener("click", function () {
+    if (searchQuery) runSearch(searchQuery);
+  });
+
   /* ------------------------------------------------------- Dialog hapus */
 
   function openDeleteDialog(doc) {
@@ -294,7 +542,7 @@
     try {
       await ReadDashAPI.remove(doc.id);
       setStatus("Dokumen dihapus.", false);
-      await loadList();
+      await refreshList();
     } catch (err) {
       setStatus("Gagal menghapus: " + errText(err), true);
     } finally {
@@ -440,7 +688,7 @@
       okCount === 0
     );
 
-    if (okCount > 0) loadList();
+    if (okCount > 0) refreshList();
   }
 
   function renderSummary(results) {
@@ -545,7 +793,7 @@
       isiInput.value = "";
       summaryEl.hidden = true;
       setStatus('Tersimpan: "' + judul + '".', false);
-      await loadList();
+      await refreshList();
     } catch (err) {
       setStatus(errText(err), true);
     } finally {

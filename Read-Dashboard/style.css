@@ -493,6 +493,111 @@ select:hover {
   white-space: nowrap;
 }
 
+/* ---------------------------------------------------------- Pencarian */
+
+/* Label tersembunyi visual (tetap terbaca pembaca layar). */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.search-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+  margin-bottom: 6px;
+}
+
+.search-input {
+  width: 100%;
+  min-width: 0;
+  background: var(--bg);
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  /* Ruang di kanan untuk tombol hapus (40px) + jarak. */
+  padding: 10px 50px 10px 12px;
+  font: inherit;
+}
+
+.search-input:hover {
+  border-color: var(--border-hover);
+}
+
+/* Tombol hapus bawaan browser disembunyikan; pakai tombol sendiri. */
+.search-input::-webkit-search-cancel-button,
+.search-input::-webkit-search-decoration {
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.search-clear {
+  position: absolute;
+  right: 5px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 40px;
+  height: 40px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  color: var(--text-dim);
+  font-size: 1.05rem;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.search-clear:hover {
+  color: var(--text);
+  border-color: var(--border);
+}
+
+/* [hidden] harus mengalahkan display: inline-flex di atas. */
+.search-clear[hidden] {
+  display: none;
+}
+
+.search-status {
+  margin: 0 0 10px;
+  color: var(--text-dim);
+  font-size: 0.85rem;
+  overflow-wrap: anywhere;
+}
+
+/* Saat kosong: rapatkan supaya tidak menyisakan jarak mati,
+   TETAP tampil (display tetap ada) agar aria-live tidak rusak. */
+.search-status:empty {
+  min-height: 0;
+  margin-bottom: 0;
+}
+
+/*
+ * [hidden] pada .doc-grid: deklarasi display: grid di bawah membuat
+ * atribut hidden kalah dari stylesheet author, sehingga kartu lama ikut
+ * tampil di state error/no-result. Rule ini mengembalikan perilaku hidden.
+ */
+.doc-grid[hidden] {
+  display: none;
+}
+
+/* Sorot kata cocok: kontras jelas di tema dark OLED, bukan putih terang. */
+.card mark {
+  background: var(--accent);
+  color: var(--accent-contrast);
+  border-radius: 3px;
+  padding: 0 1px;
+}
+
 /* -------------------------------------------------------- Dialog hapus */
 
 dialog {

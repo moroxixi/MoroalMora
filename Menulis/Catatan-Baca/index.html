@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Catatan baca</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&family=Instrument+Sans:wght@400;500;600&display=swap">
+<style>
+:root{--bg:#000;--panel:#0b0b0d;--line:#222228;--text:#ebe8e2;--mute:#8c8a92;--acc:#8fb3ff;--serif:"Newsreader",Georgia,"Times New Roman",serif;--sans:"Instrument Sans",system-ui,-apple-system,"Segoe UI",sans-serif;color-scheme:dark;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*,*::before,*::after{box-sizing:inherit}
+body{margin:0;background:var(--bg);color:var(--text);font-family:var(--serif);font-size:18px;line-height:1.6}
+.wrap{max-width:1100px;margin:0 auto;padding:32px 20px 64px;display:grid;grid-template-columns:minmax(0,560px) minmax(0,1fr);gap:48px}
+@media(max-width:860px){.wrap{grid-template-columns:minmax(0,1fr);gap:40px}}
+h1{font-size:34px;font-weight:500;margin:0 0 4px;letter-spacing:-.01em}
+.sub{color:var(--mute);margin:0 0 28px;font-style:italic}
+h2{font-family:var(--sans);font-size:15px;font-weight:600;margin:0 0 16px;color:var(--mute)}
+label.f{display:block;margin-bottom:20px}
+.l{display:block;font-family:var(--sans);font-size:14px;font-weight:600;margin-bottom:2px}
+.h{display:block;font-family:var(--sans);font-size:13px;color:var(--mute);margin-bottom:6px}
+input[type=text],textarea{width:100%;background:var(--panel);color:var(--text);border:1px solid var(--line);border-radius:6px;padding:10px 12px;font:inherit;font-size:17px;line-height:1.5}
+textarea{resize:vertical;min-height:96px}
+input::placeholder,textarea::placeholder{color:#55535a}
+:focus-visible{outline:2px solid var(--acc);outline-offset:2px}
+.row{display:grid;grid-template-columns:1fr 110px;gap:12px}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin:6px 0 10px}
+.chips input{position:absolute;opacity:0;pointer-events:none}
+.chips span{display:inline-block;font-family:var(--sans);font-size:14px;padding:6px 14px;border:1px solid var(--line);border-radius:999px;cursor:pointer;color:var(--mute)}
+.chips input:checked+span{border-color:var(--acc);color:var(--acc)}
+.chips input:focus-visible+span{outline:2px solid var(--acc);outline-offset:2px}
+button{font-family:var(--sans);font-size:15px;font-weight:600;border-radius:6px;cursor:pointer;padding:10px 18px}
+.save{background:var(--acc);color:#000;border:0}
+.ghost{background:none;border:1px solid var(--line);color:var(--mute);padding:4px 10px;font-size:13px;font-weight:500}
+.ghost.warn{border-color:#d46b6b;color:#e58a8a}
+.msg{font-family:var(--sans);font-size:14px;margin-left:12px;color:var(--mute)}
+.entry{border-top:1px solid var(--line);padding:20px 0}
+.entry:first-of-type{border-top:0;padding-top:0}
+.meta{font-family:var(--sans);font-size:13px;color:var(--mute);display:flex;flex-wrap:wrap;gap:6px 14px;align-items:center;margin-bottom:8px}
+.tag{color:var(--acc)}
+.entry p{margin:0 0 10px;white-space:pre-wrap}
+.k{font-family:var(--sans);font-size:13px;color:var(--mute);display:block}
+.empty{color:var(--mute);font-style:italic}
+.bar{display:flex;justify-content:space-between;align-items:center}
+</style>
+</head>
+<body>
+<div class="wrap">
+<main>
+<h1>Catatan baca</h1>
+<p class="sub">Berhenti sebentar, tulis apa yang bikin kamu berhenti.</p>
+<div id="form">
+<div class="row">
+<label class="f"><span class="l">Buku</span><input type="text" id="buku" autocomplete="off" placeholder="Judul buku"></label>
+<label class="f"><span class="l">Halaman</span><input type="text" id="hal" autocomplete="off" placeholder="19"></label>
+</div>
+<label class="f"><span class="l">Topik</span><span class="h">Satu tag saja.</span><input type="text" id="topik" autocomplete="off" placeholder="misal: genius, uang, kebiasaan"></label>
+<label class="f"><span class="l">Yang kutemukan</span><span class="h">Tulis ulang dengan kata sendiri, jangan salin kalimat bukunya.</span><textarea id="temuan" placeholder="Penulis bilang bahwa..."></textarea></label>
+<div class="f">
+<span class="l">Reaksiku</span>
+<div class="chips" role="radiogroup" aria-label="Reaksi">
+<label><input type="radio" name="reaksi" value="Setuju"><span>Setuju</span></label>
+<label><input type="radio" name="reaksi" value="Ragu"><span>Ragu</span></label>
+<label><input type="radio" name="reaksi" value="Teringat hal lain"><span>Teringat hal lain</span></label>
+</div>
+<textarea id="alasan" placeholder="Kenapa? Apa yang kamu rasakan atau ingat?"></textarea>
+</div>
+<label class="f"><span class="l">Nyambung ke apa</span><span class="h">Pertanyaan di daftarmu, pengalamanmu, atau buku lain.</span><textarea id="hubungan" placeholder="Ini mirip dengan..."></textarea></label>
+<label class="f"><span class="l">Pertanyaan yang muncul</span><span class="h">Apa yang sekarang ingin kamu cari tahu?</span><textarea id="tanya" placeholder="Kalau begitu, apakah..."></textarea></label>
+<button class="save" id="simpan" type="button">Simpan catatan</button><span class="msg" id="msg" role="status"></span>
+</div>
+</main>
+<section aria-label="Catatan tersimpan">
+<div class="bar"><h2>Catatan tersimpan</h2></div>
+<div id="list"></div>
+</section>
+</div>
+<script>
+(function(){
+var KEY="catatan-baca-v1",DKEY="catatan-baca-draft-v1";
+var ids=["buku","hal","topik","temuan","alasan","hubungan","tanya"];
+function load(k,def){try{var v=localStorage.getItem(k);return v?JSON.parse(v):def}catch(e){return def}}
+function store(k,v){try{localStorage.setItem(k,JSON.stringify(v));return true}catch(e){return false}}
+var items=load(KEY,[]);
+var msg=document.getElementById("msg");
+function el(t,c,x){var e=document.createElement(t);if(c)e.className=c;if(x!=null)e.textContent=x;return e}
+function getReaksi(){var r=document.querySelector('input[name=reaksi]:checked');return r?r.value:""}
+function saveDraft(){var d={reaksi:getReaksi()};ids.forEach(function(i){d[i]=document.getElementById(i).value});store(DKEY,d)}
+function loadDraft(){var d=load(DKEY,null);if(!d)return;ids.forEach(function(i){document.getElementById(i).value=d[i]||""});if(d.reaksi){var r=document.querySelector('input[name=reaksi][value="'+d.reaksi+'"]');if(r)r.checked=true}}
+function clearForm(){ids.forEach(function(i){document.getElementById(i).value=""});var r=document.querySelector('input[name=reaksi]:checked');if(r)r.checked=false;store(DKEY,{})}
+function field(parent,label,text){if(!text)return;var p=el("p");p.appendChild(el("span","k",label));p.appendChild(document.createTextNode(text));parent.appendChild(p)}
+function render(){
+var box=document.getElementById("list");box.textContent="";
+if(!items.length){box.appendChild(el("p","empty","Belum ada catatan. Saat kamu menemukan sesuatu yang bikin berhenti membaca, tulis di form ini."));return}
+items.slice().reverse().forEach(function(it){
+var d=el("article","entry");
+var m=el("div","meta");
+m.appendChild(el("span",null,it.buku+(it.hal?", hlm. "+it.hal:"")));
+if(it.topik)m.appendChild(el("span","tag",it.topik));
+m.appendChild(el("span",null,new Date(it.ts).toLocaleDateString("id-ID",{day:"numeric",month:"short",year:"numeric"})));
+var b=el("button","ghost","Hapus");b.type="button";
+b.addEventListener("click",function(){
+if(!b.dataset.sure){b.dataset.sure="1";b.textContent="Yakin hapus?";b.className="ghost warn";setTimeout(function(){b.dataset.sure="";b.textContent="Hapus";b.className="ghost"},3000);return}
+items=items.filter(function(x){return x.id!==it.id});store(KEY,items);render()});
+m.appendChild(b);d.appendChild(m);
+field(d,"Yang kutemukan",it.temuan);
+field(d,"Reaksiku"+(it.reaksi?" ("+it.reaksi.toLowerCase()+")":""),it.alasan);
+field(d,"Nyambung ke",it.hubungan);
+field(d,"Pertanyaan yang muncul",it.tanya);
+box.appendChild(d)})}
+document.getElementById("simpan").addEventListener("click",function(){
+var v={};ids.forEach(function(i){v[i]=document.getElementById(i).value.trim()});
+if(!v.buku||!v.temuan){msg.textContent="Isi nama buku dan yang kamu temukan dulu.";return}
+var it={id:Date.now(),ts:Date.now(),buku:v.buku,hal:v.hal,topik:v.topik,temuan:v.temuan,reaksi:getReaksi(),alasan:v.alasan,hubungan:v.hubungan,tanya:v.tanya};
+items.push(it);
+if(store(KEY,items)){msg.textContent="Tersimpan."}else{msg.textContent="Gagal menyimpan di browser ini."}
+var buku=v.buku;clearForm();document.getElementById("buku").value=buku;render()});
+document.getElementById("form").addEventListener("input",saveDraft);
+document.getElementById("form").addEventListener("change",saveDraft);
+loadDraft();render();
+})();
+</script>
+</body>
+</html>
