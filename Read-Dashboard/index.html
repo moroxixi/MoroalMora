@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover"
+    />
+    <meta name="theme-color" content="#000000" />
+    <title>Read-Dashboard</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <header class="app-header">
+      <h1>Read-Dashboard</h1>
+      <p class="app-sub">Simpan dokumen teks ke Sheet, baca, edit, hapus.</p>
+    </header>
+
+    <section class="panel" aria-labelledby="add-title">
+      <h2 id="add-title" class="panel-title">Tambah dokumen</h2>
+
+      <div
+        id="dropzone"
+        class="dropzone"
+        role="button"
+        tabindex="0"
+        aria-label="Tambah dokumen lewat file: klik untuk memilih file teks, atau seret file ke sini"
+      >
+        <p class="dropzone-title">Seret file teks ke sini</p>
+        <p class="dropzone-hint">
+          atau klik untuk memilih file (boleh banyak sekaligus)
+        </p>
+      </div>
+      <input id="file-input" type="file" multiple hidden />
+
+      <form id="paste-form" class="paste-form" novalidate>
+        <div class="field">
+          <label for="judul-input">Judul (opsional)</label>
+          <input
+            id="judul-input"
+            type="text"
+            maxlength="200"
+            autocomplete="off"
+            placeholder="Kalau kosong, diambil dari baris pertama isinya"
+          />
+        </div>
+        <div class="field">
+          <label for="isi-input">Isi</label>
+          <textarea
+            id="isi-input"
+            rows="6"
+            placeholder="Tempel teks di sini…"
+          ></textarea>
+        </div>
+        <div class="form-row">
+          <div class="field">
+            <label for="tipe-input">Tipe</label>
+            <select id="tipe-input">
+              <option value="md" selected>Markdown</option>
+              <option value="txt">Teks</option>
+            </select>
+          </div>
+          <button id="save-btn" type="submit" class="btn btn-primary">
+            Simpan
+          </button>
+        </div>
+      </form>
+
+      <p id="status" class="status" role="status" aria-live="polite"></p>
+      <ul id="summary" class="summary" aria-live="polite" hidden></ul>
+    </section>
+
+    <section class="panel" aria-labelledby="list-title">
+      <h2 id="list-title" class="panel-title">Dokumen</h2>
+
+      <div id="state-loading" class="state">Memuat dokumen…</div>
+
+      <div id="state-empty" class="state" hidden>
+        Belum ada dokumen. Tambahkan lewat area di atas.
+      </div>
+
+      <div id="state-error" class="state" hidden>
+        <p id="error-msg" class="state-msg"></p>
+        <button id="retry-btn" type="button" class="btn">Coba lagi</button>
+      </div>
+
+      <div id="state-setup" class="state" hidden>
+        <p id="setup-msg" class="state-msg"></p>
+      </div>
+
+      <div id="doc-list" class="doc-grid" hidden></div>
+    </section>
+
+    <dialog id="delete-dialog" aria-labelledby="delete-dialog-title">
+      <h2 id="delete-dialog-title" class="dialog-title">Hapus dokumen?</h2>
+      <p id="delete-dialog-text" class="dialog-text"></p>
+      <div class="dialog-actions">
+        <button id="delete-cancel" type="button" class="btn btn-ghost">
+          Batal
+        </button>
+        <button id="delete-confirm" type="button" class="btn btn-primary">
+          Hapus
+        </button>
+      </div>
+    </dialog>
+
+    <script src="config.js"></script>
+    <script src="api.js"></script>
+    <script src="script.js"></script>
+  </body>
+</html>

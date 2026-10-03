@@ -98,50 +98,5 @@
     "mtime": 1790915797.1934624,
     "ast_hash": "ece9093e6234e26e5833ef890a8999ea",
     "semantic_hash": ""
-  },
-  "Read-Dashboard/Apps-Script/code.gs.js": {
-    "mtime": 1791044940.574858,
-    "ast_hash": "1446fb6963aefd80fb50efa91be242bc",
-    "semantic_hash": ""
-  },
-  "Read-Dashboard/Edit/edit.js": {
-    "mtime": 1791044696.888182,
-    "ast_hash": "1563109218b6f89c91a404568d360d1c",
-    "semantic_hash": ""
-  },
-  "Read-Dashboard/Read/read.js": {
-    "mtime": 1791044671.1215143,
-    "ast_hash": "e0e2da53c97178208ebe1dd235b0ac45",
-    "semantic_hash": ""
-  },
-  "Read-Dashboard/api.js": {
-    "mtime": 1791044502.2081747,
-    "ast_hash": "eb2c05804bc5c890aee8d46cc4c6982d",
-    "semantic_hash": ""
-  },
-  "Read-Dashboard/config.js": {
-    "mtime": 1791044502.1881747,
-    "ast_hash": "82a9e4d4439c45c238abb56f546388cf",
-    "semantic_hash": ""
-  },
-  "Read-Dashboard/script.js": {
-    "mtime": 1791044637.631513,
-    "ast_hash": "e87029ff7e617d853b26fcccac8062fe",
-    "semantic_hash": ""
-  },
-  "Read-Dashboard/Edit/index.html": {
-    "mtime": 1791044696.8748486,
-    "ast_hash": "7c2dda46622c6ada999dea2ff113e26b",
-    "semantic_hash": ""
-  },
-  "Read-Dashboard/Read/index.html": {
-    "mtime": 1791044671.1115143,
-    "ast_hash": "276504c1c6c1f0dc29f36614832f4932",
-    "semantic_hash": ""
-  },
-  "Read-Dashboard/index.html": {
-    "mtime": 1791044594.3048449,
-    "ast_hash": "e3fbb3f57b4ca7033b447a3d336c3acb",
-    "semantic_hash": ""
   }
 }

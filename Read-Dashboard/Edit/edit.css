@@ -1,0 +1,72 @@
+/**
+ * edit.css — tata letak halaman Edit.
+ * Dimuat SETELAH ../style.css sehingga bisa menimpa gaya dasar.
+ */
+
+.page-edit {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.page-edit .toolbar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.page-edit .toolbar .spacer {
+  flex: 1 1 auto;
+}
+
+/* Form mengisi sisa tinggi layar yang tersedia. */
+.edit-form {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.edit-form .field {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 0;
+}
+
+.edit-form .field-grow {
+  flex: 1 1 auto;
+  min-height: 0;
+}
+
+.edit-form .field-grow textarea {
+  flex: 1 1 auto;
+  min-height: 200px;
+  font-family: var(--font-mono);
+  font-size: 0.95rem;
+  line-height: 1.6;
+  resize: vertical;
+}
+
+.edit-tipe-line {
+  margin: 12px 0;
+  color: var(--text-dim);
+  font-size: 0.85rem;
+}
+
+.draft-notice {
+  margin: 10px 0 0;
+  color: var(--text-dim);
+  font-size: 0.85rem;
+}
+
+.draft-notice::before {
+  content: "✎ ";
+  color: var(--accent);
+}
+
+.edit-hint {
+  margin: 4px 0 0;
+  color: var(--text-dim);
+  font-size: 0.8rem;
+}

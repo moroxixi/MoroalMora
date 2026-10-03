@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover"
+    />
+    <meta name="theme-color" content="#000000" />
+    <title>Edit — Read-Dashboard</title>
+    <link rel="stylesheet" href="../style.css" />
+    <link rel="stylesheet" href="edit.css" />
+  </head>
+  <body class="page-edit">
+    <nav class="toolbar" aria-label="Navigasi dokumen">
+      <a class="btn btn-ghost" href="../index.html">&larr; Batal</a>
+      <span class="spacer"></span>
+      <button id="save-btn" type="button" class="btn btn-primary">
+        Simpan
+      </button>
+    </nav>
+
+    <div id="state-loading" class="state">Memuat dokumen…</div>
+
+    <div id="state-error" class="state" hidden>
+      <p id="error-msg" class="state-msg"></p>
+      <button id="retry-btn" type="button" class="btn">Coba lagi</button>
+    </div>
+
+    <div id="state-setup" class="state" hidden>
+      <p id="setup-msg" class="state-msg"></p>
+    </div>
+
+    <form id="edit-form" class="edit-form" novalidate hidden>
+      <div class="field">
+        <label for="edit-judul">Judul</label>
+        <input
+          id="edit-judul"
+          type="text"
+          maxlength="200"
+          autocomplete="off"
+        />
+      </div>
+
+      <p class="edit-tipe-line">
+        Tipe (tidak bisa diubah):
+        <span id="edit-tipe" class="badge">-</span>
+      </p>
+
+      <div class="field field-grow">
+        <label for="edit-isi">Isi</label>
+        <textarea id="edit-isi" spellcheck="false"></textarea>
+      </div>
+
+      <p id="draft-notice" class="draft-notice" hidden>
+        Draf perubahan dari sesi sebelumnya dipulihkan.
+      </p>
+      <p id="edit-error" class="status is-error" role="alert" hidden></p>
+      <p class="edit-hint">Pintasan: Ctrl/Cmd + S untuk menyimpan.</p>
+    </form>
+
+    <script src="../config.js"></script>
+    <script src="../api.js"></script>
+    <script src="edit.js"></script>
+  </body>
+</html>

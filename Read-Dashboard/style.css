@@ -1,0 +1,541 @@
+/**
+ * style.css — token tema + style dasar bersama untuk SEMUA halaman
+ * (index.html, Read/, Edit/). Halaman Read dan Edit memuat file ini lebih
+ * dulu, lalu read.css / edit.css masing-masing.
+ *
+ * Tema: Dark OLED murni — background #000, SATU warna aksen.
+ */
+
+:root {
+  color-scheme: dark;
+
+  /* Palet Dark OLED */
+  --bg: #000000;
+  --surface-1: #0a0a0a;
+  --surface-2: #121212;
+  --border: #1f1f1f;
+  --border-hover: #2e2e2e;
+  --text: #e6e6e6;
+  --text-dim: #8a8a8a;
+  /* Satu-satunya warna aksen */
+  --accent: #5b9dff;
+  --accent-contrast: #000000;
+
+  --radius: 12px;
+  --gap: 12px;
+  --font-sans: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue",
+    Arial, sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono",
+    monospace;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  min-height: 100dvh;
+  /* Body tidak boleh bisa di-scroll ke samping (tabel/kode panjang harus
+     scroll di kontainernya sendiri). */
+  overflow-x: hidden;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-sans);
+  font-size: clamp(0.95rem, 0.9rem + 0.25vw, 1.05rem);
+  line-height: 1.5;
+  /* Padding aman untuk notch / rounded corner HP */
+  padding-top: max(16px, env(safe-area-inset-top));
+  padding-right: max(16px, env(safe-area-inset-right));
+  padding-bottom: max(16px, env(safe-area-inset-bottom));
+  padding-left: max(16px, env(safe-area-inset-left));
+}
+
+h1,
+h2,
+h3 {
+  line-height: 1.25;
+}
+
+a {
+  color: var(--accent);
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* ------------------------------------------------------------ Header */
+
+.app-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 8px 14px;
+  margin-bottom: 18px;
+}
+
+.app-header h1 {
+  margin: 0;
+  font-size: clamp(1.3rem, 1.1rem + 1vw, 1.8rem);
+}
+
+.app-sub {
+  margin: 0;
+  color: var(--text-dim);
+  font-size: 0.9rem;
+}
+
+.panel {
+  background: var(--surface-1);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 16px;
+  margin-bottom: 18px;
+}
+
+.panel-title {
+  margin: 0 0 14px;
+  font-size: 1rem;
+  color: var(--text-dim);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+/* ------------------------------------------------------- Tombol & form */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-height: 44px;
+  min-width: 44px;
+  padding: 0 16px;
+  background: var(--surface-2);
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  font: inherit;
+  font-weight: 500;
+  text-decoration: none;
+  cursor: pointer;
+  transition: border-color 0.15s ease, background-color 0.15s ease;
+}
+
+.btn:hover {
+  border-color: var(--accent);
+}
+
+.btn-primary {
+  background: var(--accent);
+  color: var(--accent-contrast);
+  border-color: var(--accent);
+  font-weight: 600;
+}
+
+.btn-primary:hover {
+  filter: brightness(1.08);
+}
+
+.btn-ghost {
+  background: transparent;
+}
+
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.field {
+  margin-bottom: 14px;
+}
+
+.field label {
+  display: block;
+  margin-bottom: 6px;
+  font-size: 0.85rem;
+  color: var(--text-dim);
+}
+
+input[type="text"],
+textarea,
+select {
+  width: 100%;
+  background: var(--bg);
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 10px 12px;
+  font: inherit;
+}
+
+textarea {
+  font-family: var(--font-mono);
+  resize: vertical;
+}
+
+input[type="text"]:hover,
+textarea:hover,
+select:hover {
+  border-color: var(--border-hover);
+}
+
+.form-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 12px;
+}
+
+.form-row .field {
+  margin-bottom: 0;
+  flex: 1 1 160px;
+}
+
+.form-row .btn {
+  flex: 0 0 auto;
+}
+
+.status {
+  margin: 12px 0 0;
+  min-height: 1.2em;
+  color: var(--text-dim);
+  font-size: 0.9rem;
+}
+
+.status.is-error {
+  color: var(--text);
+}
+
+.status.is-error::before {
+  content: "⚠ ";
+  color: var(--accent);
+}
+
+/* ------------------------------------------------------------ Dropzone */
+
+.dropzone {
+  border: 1px dashed var(--border);
+  border-radius: var(--radius);
+  background: var(--bg);
+  padding: 26px 16px;
+  text-align: center;
+  cursor: pointer;
+  transition: border-color 0.15s ease, background-color 0.15s ease;
+}
+
+.dropzone:hover {
+  border-color: var(--border-hover);
+}
+
+.dropzone.is-over {
+  border-color: var(--accent);
+  border-style: solid;
+  background: var(--surface-2);
+}
+
+.dropzone-title {
+  margin: 0 0 4px;
+  font-weight: 600;
+}
+
+.dropzone-hint {
+  margin: 0;
+  color: var(--text-dim);
+  font-size: 0.85rem;
+}
+
+.paste-form {
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid var(--border);
+}
+
+/* ------------------------------------------------------ Ringkasan hasil */
+
+.summary {
+  margin: 14px 0 0;
+  padding: 12px 14px;
+  list-style: none;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+
+.summary[hidden] {
+  display: none;
+}
+
+.summary-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 5px 0;
+  font-size: 0.9rem;
+}
+
+.summary-mark {
+  flex-shrink: 0;
+  font-weight: 700;
+}
+
+.summary-item.is-ok .summary-mark {
+  color: var(--accent);
+}
+
+.summary-item.is-fail .summary-mark {
+  color: var(--text-dim);
+}
+
+.summary-body {
+  min-width: 0;
+}
+
+.summary-name {
+  overflow-wrap: anywhere;
+  font-weight: 600;
+}
+
+.summary-reason {
+  display: block;
+  color: var(--text-dim);
+  overflow-wrap: anywhere;
+}
+
+/* --------------------------------------------------------- State area */
+
+.state {
+  text-align: center;
+  padding: 36px 12px;
+  color: var(--text-dim);
+}
+
+.state-msg {
+  margin: 0 0 14px;
+  max-width: 56ch;
+  margin-inline: auto;
+  overflow-wrap: anywhere;
+}
+
+/* ------------------------------------------------------ Grid dokumen */
+
+.doc-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--gap);
+}
+
+@media (min-width: 640px) {
+  .doc-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1024px) {
+  .doc-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+/* ------------------------------------------------------------- Kartu */
+
+.card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+  background: var(--surface-1);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 14px;
+  cursor: pointer;
+}
+
+.card:hover {
+  border-color: var(--border-hover);
+}
+
+/*
+ * Baris kartu: judul + tombol ⋮.
+ * - .card-row   : flexbox, anak tak menyusut bebas.
+ * - .card-title : flex: 1 + min-width: 0 (judul panjang/satu kata tetap
+ *                 membelah diri dengan overflow-wrap, tidak menabrak).
+ * - .card-menu  : flex-shrink: 0 (tombol ⋮ tidak pernah menyusut/dipadatkan).
+ * Tidak ada lebar fixed di elemen mana pun.
+ */
+.card-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+.card-title {
+  flex: 1 1 auto;
+  min-width: 0;
+  margin: 0;
+  font-size: 1.05rem;
+  font-weight: 600;
+  line-height: 1.35;
+  color: var(--text);
+  text-decoration: none;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+.card-title:hover {
+  color: var(--accent);
+}
+
+.card-menu {
+  position: relative;
+  flex-shrink: 0;
+}
+
+.menu-btn {
+  flex-shrink: 0;
+  min-width: 44px;
+  min-height: 44px;
+  margin: -10px -8px 0 0;
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  color: var(--text-dim);
+  border: 1px solid transparent;
+  border-radius: 8px;
+  font-size: 1.2rem;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.menu-btn:hover {
+  color: var(--text);
+  border-color: var(--border);
+}
+
+.menu {
+  position: absolute;
+  top: calc(100% + 4px);
+  right: 0;
+  z-index: 30;
+  min-width: 168px;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: 0 10px 26px rgba(0, 0, 0, 0.65);
+  overflow: hidden;
+}
+
+.menu[hidden] {
+  display: none;
+}
+
+.menu button {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  min-height: 44px;
+  padding: 0 14px;
+  background: none;
+  border: 0;
+  color: var(--text);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.menu button:hover {
+  background: var(--surface-1);
+}
+
+.card-preview {
+  margin: 0;
+  color: var(--text-dim);
+  font-size: 0.9rem;
+  line-height: 1.55;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  overflow-wrap: anywhere;
+}
+
+.card-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  color: var(--text-dim);
+  font-size: 0.8rem;
+}
+
+.badge {
+  display: inline-block;
+  padding: 2px 9px;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  color: var(--accent);
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+/* -------------------------------------------------------- Dialog hapus */
+
+dialog {
+  background: var(--surface-2);
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px;
+  width: 100%;
+  max-width: min(92vw, 420px);
+}
+
+dialog::backdrop {
+  background: rgba(0, 0, 0, 0.72);
+}
+
+.dialog-title {
+  margin: 0 0 8px;
+  font-size: 1.1rem;
+}
+
+.dialog-text {
+  margin: 0;
+  color: var(--text-dim);
+  overflow-wrap: anywhere;
+}
+
+.dialog-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 18px;
+}
+
+/* ------------------------------------------------------- Reduced motion */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

@@ -1,16 +1,16 @@
-# Graph Report - MoroalMora  (2026-10-03)
+# Graph Report - MoroalMora  (2026-10-02)
 
 ## Corpus Check
-- 19 files · ~28,930 words
+- 13 files · ~23,561 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 211 nodes · 411 edges · 17 communities (16 shown, 1 thin omitted)
+- 148 nodes · 277 edges · 11 communities (10 shown, 1 thin omitted)
 - Extraction: 100% EXTRACTED · 0% INFERRED · 0% AMBIGUOUS · INFERRED: 1 edges (avg confidence: 0.5)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `d55489b5`
+- Built from commit: `8091d8c8`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -25,23 +25,18 @@
 - Tiga Kisah dari Babylon
 - MoroalMora-push.sh
 - code.gs.js
-- Read-Dashboard/Apps-Script/code.gs.js
-- Read-Dashboard/script.js
-- edit.js
-- api.js
-- read.js
 
 ## God Nodes (most connected - your core abstractions)
 1. `doPost()` - 12 edges
-2. `str_()` - 10 edges
-3. `loadAll()` - 8 edges
-4. `ensureSheet_()` - 8 edges
-5. `updateDoc_()` - 8 edges
-6. `processFiles()` - 8 edges
-7. `Catatan Haid · MAO — Pencatat Siklus + Kalkulator Masa Subur` - 8 edges
-8. `fmtTanggal()` - 7 edges
-9. `showToast()` - 7 edges
-10. `renderSiklus()` - 7 edges
+2. `loadAll()` - 8 edges
+3. `Catatan Haid · MAO — Pencatat Siklus + Kalkulator Masa Subur` - 8 edges
+4. `fmtTanggal()` - 7 edges
+5. `showToast()` - 7 edges
+6. `renderSiklus()` - 7 edges
+7. `h()` - 7 edges
+8. `buildControl()` - 7 edges
+9. `buildArrayEditor()` - 7 edges
+10. `Handler` - 7 edges
 
 ## Surprising Connections (you probably didn't know these)
 - None detected - all connections are within the same source files.
@@ -49,7 +44,7 @@
 ## Import Cycles
 - None detected.
 
-## Communities (17 total, 1 thin omitted)
+## Communities (11 total, 1 thin omitted)
 
 ### Community 0 - "Catatan Haid · MAO — Pencatat Siklus + Kalkulator Masa Subur"
 Cohesion: 0.13
@@ -86,26 +81,6 @@ Nodes (5): Benang Merah dari Tiga Kisah, Kisah Kedua: Idin, Sang Guru Tua, dan B
 ### Community 10 - "code.gs.js"
 Cohesion: 0.25
 Nodes (19): daftarPertanyaan_(), doGet(), doPost(), findSheet_(), getOrCreateDaftarSheet_(), getOrCreateTagSheet_(), hapusPertanyaan_(), hariIndonesia() (+11 more)
-
-### Community 11 - "Read-Dashboard/Apps-Script/code.gs.js"
-Cohesion: 0.28
-Nodes (20): createDoc_(), deleteDoc_(), doGet(), doPost(), ensureSheet_(), errMessage_(), findRow_(), getDoc_() (+12 more)
-
-### Community 12 - "Read-Dashboard/script.js"
-Cohesion: 0.24
-Nodes (15): buildCard(), closeMenus(), el(), errText(), extOf(), formatDate(), loadList(), openDeleteDialog() (+7 more)
-
-### Community 13 - "edit.js"
-Cohesion: 0.38
-Nodes (7): clearDraft(), errText(), load(), readDraft(), save(), showError(), showState()
-
-### Community 14 - "api.js"
-Cohesion: 0.57
-Nodes (7): do_GET(), do_POST(), endpoint(), fetchText(), isConfigured(), unwrap(), withQuery()
-
-### Community 15 - "read.js"
-Cohesion: 0.60
-Nodes (5): errText(), formatDate(), load(), renderDoc(), showState()
 
 ## Knowledge Gaps
 - **22 isolated node(s):** `timeZone`, `dependencies`, `exceptionLogging`, `runtimeVersion`, `state` (+17 more)
