@@ -1,0 +1,89 @@
+/* ==========================================================================
+ *  Catatan-Baca - style.css
+ *  Token warna, tipografi & pola kelas diambil dari
+ *  Menulis/Jawab-Pertanyaan/style.css (acuan, read-only, tidak diubah).
+ *  Tata letak dua kolom / field / chips / daftar catatan = rancangan asli.
+ * ========================================================================== */
+
+:root{
+  color-scheme:dark;
+  --bg:#000;
+  --ink:#e9e6df;
+  --muted:#7d7a74;
+  --line:#1c1c1c;
+  --field:#070707;
+  --accent:#9db8ff;
+  --serif:"Newsreader",Georgia,"Times New Roman",serif;
+  --sans:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+*,*::before,*::after{box-sizing:inherit}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--serif);font-size:19px;line-height:1.6}
+
+/* ===== Layout dua kolom (rancangan asli) ===== */
+.wrap{max-width:1100px;margin:0 auto;padding:48px 24px 96px;display:grid;grid-template-columns:minmax(0,560px) minmax(0,1fr);gap:48px}
+main,.wrap section{min-width:0}
+@media(max-width:860px){.wrap{grid-template-columns:minmax(0,1fr);gap:40px}}
+@media(max-width:520px){body{font-size:18px}.wrap{padding:32px 18px 72px}}
+
+h1{font-size:30px;font-weight:500;margin:0;letter-spacing:-.01em}
+.sub{color:var(--muted);margin:8px 0 32px;font-style:italic}
+h2{font-size:17px;font-weight:500;margin:0;letter-spacing:-.01em}
+
+/* ===== Field (label + input/textarea) ===== */
+label.f,.f{display:block;margin-bottom:32px;min-width:0}
+.l{display:block;font-family:var(--sans);font-size:14px;font-weight:600;margin-bottom:2px}
+.h{display:block;font-family:var(--sans);font-size:13px;color:var(--muted);margin-bottom:6px}
+input[type=text],textarea{width:100%;min-width:0;background:var(--field);color:var(--ink);border:1px solid var(--line);border-radius:6px;padding:12px 14px;font:inherit}
+textarea{resize:vertical;min-height:96px;overflow-wrap:anywhere}
+input::placeholder,textarea::placeholder{color:#44423f;font-style:italic}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+/* Baris Buku + Halaman: keduanya elastis (tanpa width fixed) */
+.row{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,110px);gap:12px}
+.row .f{margin-bottom:0}
+
+/* Chip reaksi */
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin:6px 0 10px}
+.chips input{position:absolute;opacity:0;pointer-events:none}
+.chips span{display:inline-block;font-family:var(--sans);font-size:14px;padding:6px 14px;border:1px solid var(--line);border-radius:999px;cursor:pointer;color:var(--muted);max-width:100%;overflow-wrap:anywhere}
+.chips input:checked+span{border-color:var(--accent);color:var(--accent)}
+.chips input:focus-visible+span{outline:2px solid var(--accent);outline-offset:2px}
+
+/* ===== Tombol + baris status (pola .bar acuan) ===== */
+.bar{display:flex;align-items:center;justify-content:space-between;gap:12px 16px;flex-wrap:wrap;margin-top:8px}
+button{font-family:var(--sans);font-size:16px;font-weight:500;background:var(--accent);color:#000;border:0;border-radius:6px;padding:12px 22px;cursor:pointer}
+button:hover{filter:brightness(1.1)}
+button:focus-visible{outline:2px solid var(--ink);outline-offset:3px}
+.msg{font-family:var(--sans);font-size:14px;color:var(--muted);min-width:0;overflow-wrap:anywhere}
+.msg.err{color:#ff9a8a}
+
+/* Baris petunjuk saran tag */
+.hint{font-family:var(--sans);font-size:14px;color:var(--muted);margin:0 0 12px;overflow-wrap:anywhere}
+.hint[hidden]{display:none}
+.dot{display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--accent);vertical-align:middle;margin-right:6px;flex-shrink:0}
+.tagbtn{background:none;border:1px solid var(--line);color:var(--accent);padding:4px 10px;font-size:13px;font-weight:500;max-width:100%;overflow-wrap:anywhere;margin:4px 6px 0 0;white-space:normal}
+.tagbtn:hover{filter:none;background:#111;border-color:var(--accent)}
+
+/* ===== Daftar catatan tersimpan ===== */
+.ghost{background:none;border:1px solid var(--line);color:var(--muted);padding:4px 10px;font-size:13px;font-weight:500;filter:none;flex-shrink:0}
+.ghost:hover{filter:none;background:#111}
+.ghost.warn{border-color:#d46b6b;color:#e58a8a}
+.entry{border-top:1px solid var(--line);padding:20px 0}
+.entry:first-of-type{border-top:0;padding-top:0}
+.meta{font-family:var(--sans);font-size:13px;color:var(--muted);display:flex;flex-wrap:wrap;gap:6px 14px;align-items:center;margin-bottom:8px}
+.meta>span{min-width:0;overflow-wrap:anywhere}
+.meta .tag{color:var(--accent)}
+.entry p{margin:0 0 10px;white-space:pre-wrap;overflow-wrap:anywhere}
+.k{font-family:var(--sans);font-size:13px;color:var(--muted);display:block;overflow-wrap:anywhere}
+.empty{color:var(--muted);font-style:italic}
+
+@media(pointer:coarse){
+  button{min-height:44px}
+}
+@media(prefers-reduced-motion:no-preference){
+  input[type=text],textarea{transition:border-color .15s}
+}

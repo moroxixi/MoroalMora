@@ -1,16 +1,16 @@
 # Graph Report - MoroalMora  (2026-10-04)
 
 ## Corpus Check
-- 19 files · ~31,048 words
+- 19 files · ~31,307 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 223 nodes · 451 edges · 17 communities (16 shown, 1 thin omitted)
+- 224 nodes · 454 edges · 17 communities (16 shown, 1 thin omitted)
 - Extraction: 100% EXTRACTED · 0% INFERRED · 0% AMBIGUOUS · INFERRED: 1 edges (avg confidence: 0.5)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `78671cd8`
+- Built from commit: `d95cd387`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -24,7 +24,7 @@
 - Jawab-Pertanyaan/script.js
 - Tiga Kisah dari Babylon
 - MoroalMora-push.sh
-- code.gs.js
+- Menulis/Apps-Script/code.gs.js
 - Read-Dashboard/Apps-Script/code.gs.js
 - Read-Dashboard/script.js
 - edit.js
@@ -83,9 +83,9 @@ Nodes (17): applyMin(), el(), fill(), get(), grow(), itemNode(), muat(), onHapus
 Cohesion: 0.33
 Nodes (5): Benang Merah dari Tiga Kisah, Kisah Kedua: Idin, Sang Guru Tua, dan Bel yang Tidak Peduli, Kisah Ketiga: Ur-Nanshe dan Kebun yang Tak Pernah Dilihat, Kisah Pertama: Naran dan Sungai yang Tidak Peduli, Tiga Kisah dari Babylon
 
-### Community 10 - "code.gs.js"
-Cohesion: 0.25
-Nodes (19): daftarPertanyaan_(), doGet(), doPost(), findSheet_(), getOrCreateDaftarSheet_(), getOrCreateTagSheet_(), hapusPertanyaan_(), hariIndonesia() (+11 more)
+### Community 10 - "Menulis/Apps-Script/code.gs.js"
+Cohesion: 0.24
+Nodes (20): daftarPertanyaan_(), daftarTag_(), doGet(), doPost(), findSheet_(), getOrCreateDaftarSheet_(), getOrCreateTagSheet_(), hapusPertanyaan_() (+12 more)
 
 ### Community 11 - "Read-Dashboard/Apps-Script/code.gs.js"
 Cohesion: 0.26

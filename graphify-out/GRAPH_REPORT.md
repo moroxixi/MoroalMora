@@ -1,16 +1,16 @@
 # Graph Report - MoroalMora  (2026-10-04)
 
 ## Corpus Check
-- 19 files · ~31,307 words
+- 21 files · ~33,050 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 224 nodes · 454 edges · 17 communities (16 shown, 1 thin omitted)
-- Extraction: 100% EXTRACTED · 0% INFERRED · 0% AMBIGUOUS · INFERRED: 1 edges (avg confidence: 0.5)
+- 250 nodes · 507 edges · 19 communities (18 shown, 1 thin omitted)
+- Extraction: 99% EXTRACTED · 1% INFERRED · 0% AMBIGUOUS · INFERRED: 6 edges (avg confidence: 0.5)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `d95cd387`
+- Built from commit: `eb35b6c3`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -30,6 +30,7 @@
 - edit.js
 - api.js
 - read.js
+- Catatan-Baca/script.js
 
 ## God Nodes (most connected - your core abstractions)
 1. `doPost()` - 12 edges
@@ -49,7 +50,7 @@
 ## Import Cycles
 - None detected.
 
-## Communities (17 total, 1 thin omitted)
+## Communities (19 total, 1 thin omitted)
 
 ### Community 0 - "Catatan Haid · MAO — Pencatat Siklus + Kalkulator Masa Subur"
 Cohesion: 0.13
@@ -106,6 +107,10 @@ Nodes (7): do_GET(), do_POST(), endpoint(), fetchText(), isConfigured(), unwrap(
 ### Community 15 - "read.js"
 Cohesion: 0.60
 Nodes (5): errText(), formatDate(), load(), renderDoc(), showState()
+
+### Community 17 - "Catatan-Baca/script.js"
+Cohesion: 0.18
+Nodes (23): appendTagBtn(), berurutanUtuh_(), clearForm(), clearHint(), el(), field(), fillDatalist(), getReaksi() (+15 more)
 
 ## Knowledge Gaps
 - **22 isolated node(s):** `timeZone`, `dependencies`, `exceptionLogging`, `runtimeVersion`, `state` (+17 more)

@@ -85,8 +85,8 @@
     "semantic_hash": ""
   },
   "Menulis/Apps-Script/code.gs.js": {
-    "mtime": 1791054724.3218958,
-    "ast_hash": "b01938b79376d2d709d149ff471f1bfd",
+    "mtime": 1791056525.358631,
+    "ast_hash": "a97585ed2548ec7d24d9f0aadfb135de",
     "semantic_hash": ""
   },
   "Read-Dashboard/Apps-Script/code.gs.js": {
@@ -140,13 +140,23 @@
     "semantic_hash": ""
   },
   "Menulis/Catatan-Baca/index.html": {
-    "mtime": 1791049536.5488043,
-    "ast_hash": "3ff2287977d637fda0de63f994d9b043",
+    "mtime": 1791056399.708626,
+    "ast_hash": "e83568883f6559dd4cc90f5c6614b6ff",
     "semantic_hash": ""
   },
   "Menulis/Jawab-Pertanyaan/index.html": {
     "mtime": 1790914867.3890634,
     "ast_hash": "f05144f6c66e13090827c89fbf893d6d",
+    "semantic_hash": ""
+  },
+  "Menulis/Catatan-Baca/script.js": {
+    "mtime": 1791056608.5553007,
+    "ast_hash": "3bc508270d4a1bff3f1a2aadbaabd530",
+    "semantic_hash": ""
+  },
+  "Menulis/config.js": {
+    "mtime": 1791056399.6852927,
+    "ast_hash": "ebf2eba2b8112dae0976a9696457028f",
     "semantic_hash": ""
   }
 }

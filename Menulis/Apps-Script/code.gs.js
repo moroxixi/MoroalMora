@@ -25,7 +25,8 @@
  *      Pertanyaan Berikutnya
  *  - Jangan rename / hapus baris header (baris 1) di tab tag.
  *  - Tab sistem diawali "_" (mis. _Panduan) jangan diubah atau dihapus.
- *  - doGet hanya health check, tidak pernah mengembalikan isi sheet.
+ *  - doGet: health check + ?action=daftarTag (baca-saja daftar nama tab),
+ *    tidak pernah mengembalikan isi sheet.
  * ==========================================================================
  */
 
