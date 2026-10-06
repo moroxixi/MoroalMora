@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Baca tulisan</title>
+<link rel="stylesheet" href="../style.css">
+</head>
+<body>
+<div class="wrap">
+<main>
+<div class="state" id="loading" role="status">Memuat tulisan&hellip;</div>
+<div class="state err" id="error" hidden>
+<span id="errmsg" role="alert"></span>
+<br>
+<button type="button" id="retry">Coba lagi</button>
+</div>
+<div id="view" hidden>
+<div class="meta" id="meta"></div>
+<h1 class="title" id="judul"></h1>
+<div id="isi"></div>
+</div>
+<div class="nav">
+<a class="btn-sec" href="../index.html">&larr; Kembali ke daftar</a>
+<a class="btn" id="edit" href="#" hidden>Edit</a>
+</div>
+</main>
+</div>
+<script src="../../config.js" defer></script>
+<script src="script.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Edit tulisan</title>
+<link rel="stylesheet" href="../../style.css">
+</head>
+<body>
+<div class="wrap">
+<main>
+<h1>Edit tulisan</h1>
+<p class="sub" id="sub">Memuat&hellip;</p>
+<div class="state err" id="error" hidden>
+<span id="errmsg" role="alert"></span>
+<br>
+<button type="button" id="retry">Coba lagi</button>
+</div>
+<form id="form" hidden>
+<div class="meta" id="ro" aria-label="Tag terkunci"></div>
+<div id="fields"></div>
+<div class="bar">
+<button type="button" id="simpan">Simpan perubahan</button>
+<span class="msg" id="msg" role="status" aria-live="polite"></span>
+</div>
+</form>
+<div class="nav" id="nav" hidden>
+<a class="btn-sec" id="batal" href="#">Batal</a>
+</div>
+</main>
+</div>
+<script src="../../../config.js" defer></script>
+<script src="script.js" defer></script>
+</body>
+</html>

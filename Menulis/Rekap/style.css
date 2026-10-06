@@ -1,0 +1,101 @@
+/* ==========================================================================
+ *  Rekap - style.css (SATU file dipakai ketiga halaman Rekap lewat path
+ *  relatif: Rekap/style.css, Baca -> ../style.css, Baca/Edit -> ../../style.css)
+ *  Token warna, tipografi & pola komponen (chip, tombol, kartu, field, .bar)
+ *  disalin dari Menulis/Catatan-Baca/style.css dan
+ *  Menulis/Jawab-Pertanyaan/style.css (acuan, read-only, tidak diubah).
+ *  Mobile-first (360-390px): tanpa lebar fixed, elemen elastis min-width:0,
+ *  elemen tetap flex-shrink:0 -> tidak ada scroll horizontal / tumpang tindih.
+ * ========================================================================== */
+
+:root{
+  color-scheme:dark;
+  --bg:#000;
+  --ink:#e9e6df;
+  --muted:#7d7a74;
+  --line:#1c1c1c;
+  --field:#070707;
+  --accent:#9db8ff;
+  --serif:"Newsreader",Georgia,"Times New Roman",serif;
+  --sans:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+*,*::before,*::after{box-sizing:inherit}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--serif);font-size:19px;line-height:1.6}
+
+.wrap{max-width:1100px;margin:0 auto;padding:48px 24px 96px;min-width:0}
+main{min-width:0}
+@media(max-width:520px){body{font-size:18px}.wrap{padding:32px 18px 72px}}
+
+h1{font-size:30px;font-weight:500;margin:0;letter-spacing:-.01em;overflow-wrap:anywhere}
+.sub{color:var(--muted);margin:8px 0 24px;font-style:italic;overflow-wrap:anywhere}
+h2{font-size:17px;font-weight:500;margin:0;letter-spacing:-.01em}
+
+/* ===== Chip filter tag (tombol) + chip label ===== */
+.filter{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 20px;min-width:0}
+.filter button{font-family:var(--sans);font-size:14px;font-weight:500;background:none;border:1px solid var(--line);border-radius:999px;padding:6px 14px;color:var(--muted);cursor:pointer;min-width:0;max-width:100%;overflow-wrap:anywhere}
+.filter button[aria-pressed="true"]{border-color:var(--accent);color:var(--accent)}
+.filter button:hover{background:#111}
+.filter button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+.chip{font-family:var(--sans);font-size:12px;border:1px solid var(--line);border-radius:999px;padding:1px 9px;color:var(--accent);white-space:nowrap;flex:0 0 auto}
+.chip.jenis{color:var(--muted)}
+.meta{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:0 0 14px;min-width:0}
+
+/* ===== State: loading / kosong / error ===== */
+.state{font-family:var(--sans);font-size:15px;color:var(--muted);margin:16px 0;overflow-wrap:anywhere}
+.state.err{color:#ff9a8a}
+.state[hidden]{display:none}
+.state button{margin-top:8px}
+
+/* ===== Kartu daftar (satu tautan per tulisan) =====
+   Baris 1 = [chip tag] [judul] [tanggal] dalam SATU flex row:
+   chip & tanggal flex:0 0 auto (shrink:0), judul flex:1 min-width:0 +
+   ellipsis -> judul panjang terpotong, tidak pernah menimpa tetangganya. */
+.cards{min-width:0}
+.card{display:flex;flex-direction:column;gap:6px;border-top:1px solid var(--line);padding:16px 0;text-decoration:none;color:inherit;min-width:0}
+.card:first-child{border-top:0}
+.card:hover{background:#0a0a0a}
+.card:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.card .row1{display:flex;align-items:baseline;gap:10px;min-width:0}
+.card .judul{flex:1 1 auto;min-width:0;margin:0;font-size:18px;font-weight:500;letter-spacing:-.01em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.card .tgl{font-family:var(--sans);font-size:13px;color:var(--muted);white-space:nowrap;flex:0 0 auto}
+.card .prev{font-family:var(--sans);font-size:14px;color:var(--muted);margin:0;overflow-wrap:anywhere;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden}
+
+/* ===== Halaman Baca ===== */
+.title{font-size:26px;font-weight:500;margin:0 0 18px;letter-spacing:-.01em;overflow-wrap:anywhere}
+.blok{margin:0 0 16px;min-width:0}
+.k{display:block;font-family:var(--sans);font-size:13px;color:var(--muted);margin-bottom:2px;overflow-wrap:anywhere}
+.blok p{margin:0;white-space:pre-wrap;overflow-wrap:anywhere}
+.blok a{color:var(--accent);text-decoration:none;overflow-wrap:anywhere}
+.blok a:hover{text-decoration:underline}
+
+.nav{display:flex;flex-wrap:wrap;gap:10px;margin-top:24px;min-width:0}
+.nav a{font-family:var(--sans);font-size:16px;font-weight:500;border-radius:6px;padding:11px 20px;text-decoration:none;min-width:0;max-width:100%;overflow-wrap:anywhere}
+.nav a.btn{background:var(--accent);color:#000}
+.nav a.btn-sec{background:none;border:1px solid var(--line);color:var(--muted)}
+.nav a.btn-sec:hover{background:#111}
+.nav a:focus-visible{outline:2px solid var(--ink);outline-offset:3px}
+
+/* ===== Field form (pola sibling: .f / .l / .h + input + .bar + button + .msg) ===== */
+label.f,.f{display:block;margin-bottom:24px;min-width:0}
+.l{display:block;font-family:var(--sans);font-size:14px;font-weight:600;margin-bottom:2px}
+.h{display:block;font-family:var(--sans);font-size:13px;color:var(--muted);margin-bottom:6px}
+input[type=text],input[type=url],textarea{width:100%;min-width:0;background:var(--field);color:var(--ink);border:1px solid var(--line);border-radius:6px;padding:12px 14px;font:inherit}
+textarea{resize:vertical;min-height:96px;overflow-wrap:anywhere}
+input::placeholder,textarea::placeholder{color:#44423f;font-style:italic}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+.bar{display:flex;align-items:center;justify-content:space-between;gap:12px 16px;flex-wrap:wrap;margin-top:8px;min-width:0}
+button{font-family:var(--sans);font-size:16px;font-weight:500;background:var(--accent);color:#000;border:0;border-radius:6px;padding:12px 22px;cursor:pointer;min-width:0}
+button:hover{filter:brightness(1.1)}
+button:disabled{opacity:.6;cursor:default;filter:none}
+button:focus-visible{outline:2px solid var(--ink);outline-offset:3px}
+.msg{font-family:var(--sans);font-size:14px;color:var(--muted);min-width:0;overflow-wrap:anywhere}
+.msg.err{color:#ff9a8a}
+
+@media(pointer:coarse){button,.nav a{min-height:44px}}
+@media(prefers-reduced-motion:no-preference){input[type=text],input[type=url],textarea{transition:border-color .15s}}

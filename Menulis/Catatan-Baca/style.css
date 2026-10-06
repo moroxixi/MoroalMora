@@ -77,7 +77,7 @@ button:focus-visible{outline:2px solid var(--ink);outline-offset:3px}
 .ghost{background:none;border:1px solid var(--line);color:var(--muted);padding:4px 10px;font-size:13px;font-weight:500;filter:none;flex-shrink:0}
 .ghost:hover{filter:none;background:#111}
 .ghost.warn{border-color:#d46b6b;color:#e58a8a}
-.entry{border-top:1px solid var(--line);padding:20px 0}
+.entry{border-top:1px solid var(--line);padding:20px 0;display:flex;flex-direction:column;min-width:0}
 .entry:first-of-type{border-top:0;padding-top:0}
 .meta{font-family:var(--sans);font-size:13px;color:var(--muted);display:flex;flex-wrap:wrap;gap:6px 14px;align-items:center;margin-bottom:8px}
 .meta>span{min-width:0;overflow-wrap:anywhere}
@@ -89,6 +89,17 @@ button:focus-visible{outline:2px solid var(--ink);outline-offset:3px}
 .entry p{margin:0 0 10px;white-space:pre-wrap;overflow-wrap:anywhere}
 .k{font-family:var(--sans);font-size:13px;color:var(--muted);display:block;overflow-wrap:anywhere}
 .empty{color:var(--muted);font-style:italic}
+
+/* ===== P3: mode preview catatan (kelas baru khusus fitur ini) =====
+   Kartu = satu kesatuan flex column (min-width:0); baris .meta sudah flex:
+   elemen tetap (.jenis, .tgl, .ghost) shrink:0, elemen teks min-width:0. */
+.entry .prev{color:var(--muted);margin-bottom:6px;min-width:0}
+.entry .exp{align-self:flex-start;flex:0 0 auto;background:none;border:1px solid var(--line);color:var(--accent);font-family:var(--sans);font-size:13px;font-weight:500;padding:6px 12px;margin:0 0 4px;min-width:0;max-width:100%;overflow-wrap:anywhere}
+.entry .exp:hover{filter:none;background:#111}
+.entry .isi{min-width:0}
+.entry:not(.buka) .isi{display:none} /* kolaps: hanya preview */
+.entry.buka .prev{display:none}       /* terbuka: isi lengkap mengganti preview */
+.meta .tgl{flex-shrink:0;white-space:nowrap}
 
 @media(pointer:coarse){
   button{min-height:44px}

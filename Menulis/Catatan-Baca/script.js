@@ -39,6 +39,22 @@ function norm_(s) {
   return trim_(String(s).replace(/\s+/g, ' '));
 }
 
+/**
+ * P3 - preview daftar catatan: potong `teks` maksimal `batas` (default 160)
+ * karakter. Dipotong di batas kata bila memungkinkan (fallback: keras),
+ * dan hanya diberi "\u2026" bila benar-benar terpotong. Teks yang sudah
+ * <= batas dikembalikan apa adanya (tanpa "\u2026"). Murni, tanpa DOM.
+ */
+function potongPreview(teks, batas) {
+  var s = teks === null || typeof teks === 'undefined' ? '' : String(teks);
+  var n = typeof batas === 'number' && batas > 0 ? batas : 160;
+  if (s.length <= n) return s;
+  var pot = s.slice(0, n);
+  var i = pot.lastIndexOf(' ');
+  if (i > Math.floor(n / 2)) pot = pot.slice(0, i); // hindari memotong di tengah kata
+  return pot.replace(/\s+$/, '') + '\u2026';
+}
+
 /** Pecah jadi daftar kata huruf kecil (kata kosong dibuang). */
 function kata_(s) {
   var n = norm_(s).toLowerCase();
@@ -226,6 +242,7 @@ if (typeof module !== 'undefined' && module.exports) {
     petaKePayload: petaKePayload,
     parseDaftarTag: parseDaftarTag,
     kapitalAwal: kapitalAwal,
+    potongPreview: potongPreview,
     JENIS: JENIS,
     JENIS_URUT: JENIS_URUT
   };
@@ -326,7 +343,7 @@ if (typeof document !== 'undefined') {
             }
           }
           if (it.topik) m.appendChild(el('span', 'tag', it.topik));
-          m.appendChild(el('span', null, new Date(it.ts).toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' })));
+          m.appendChild(el('span', 'tgl', new Date(it.ts).toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' })));
           var b = el('button', 'ghost', 'Hapus'); b.type = 'button';
           b.addEventListener('click', function () {
             if (!b.dataset.sure) {
@@ -340,10 +357,32 @@ if (typeof document !== 'undefined') {
           });
           m.appendChild(b);
           d.appendChild(m);
-          field(d, 'Yang kutemukan', it.temuan);
-          field(d, 'Reaksiku' + (it.reaksi ? ' (' + it.reaksi.toLowerCase() + ')' : ''), it.alasan);
-          field(d, 'Nyambung ke', it.hubungan);
-          field(d, 'Pertanyaan yang muncul', it.tanya);
+
+          // P3: isi lengkap dibungkus .isi (default tersembunyi = mode preview).
+          var isi = el('div', 'isi');
+          field(isi, 'Yang kutemukan', it.temuan);
+          field(isi, 'Reaksiku' + (it.reaksi ? ' (' + it.reaksi.toLowerCase() + ')' : ''), it.alasan);
+          field(isi, 'Nyambung ke', it.hubungan);
+          field(isi, 'Pertanyaan yang muncul', it.tanya);
+
+          // P3: preview ~160 karakter dari isi yang sama, dibuat di sisi klien.
+          var isiTeks = [it.temuan, it.alasan, it.hubungan, it.tanya].filter(function (v) {
+            return v && String(v).replace(/\s+/g, '');
+          }).join(' ');
+          var prev = potongPreview(isiTeks, 160);
+          if (prev) {
+            d.appendChild(el('p', 'prev', prev)); // SELALU textContent (bukan innerHTML)
+            var exp = el('button', 'exp', 'Tampilkan lengkap');
+            exp.type = 'button';
+            exp.setAttribute('aria-expanded', 'false');
+            exp.addEventListener('click', function () {
+              var buka = d.classList.toggle('buka');
+              exp.textContent = buka ? 'Sembunyikan' : 'Tampilkan lengkap';
+              exp.setAttribute('aria-expanded', buka ? 'true' : 'false');
+            });
+            d.appendChild(exp);
+          }
+          d.appendChild(isi);
           listBox.appendChild(d);
         });
       }

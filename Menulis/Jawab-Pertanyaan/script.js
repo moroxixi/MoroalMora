@@ -78,7 +78,6 @@ var ENDPOINT='https://script.google.com/macros/s/AKfycbxCydpQaAoUNsBDDAOOTZwfJ0f
  *  memengaruhi form harian di atas.
  * ========================================================================== */
 (function(){
-  var PK='hh:dp';        // status minimize panel (sessionStorage)
   var MAX=1000;          // batas karakter, sama dengan server
   var panel=document.getElementById('dp-panel');
   var toggle=document.getElementById('dp-toggle');
@@ -88,8 +87,6 @@ var ENDPOINT='https://script.google.com/macros/s/AKfycbxCydpQaAoUNsBDDAOOTZwfJ0f
   var list=document.getElementById('dp-list');
   var empty=document.getElementById('dp-empty');
 
-  function sget(k,def){try{var v=sessionStorage.getItem(k);return v===null?def:JSON.parse(v)}catch(e){return def}}
-  function sput(k,v){try{sessionStorage.setItem(k,JSON.stringify(v));return true}catch(e){return false}}
   function show(t,err){status.textContent=t;status.className=err?'dp-status err':'dp-status'}
   function setEmpty(n){empty.hidden=n>0}
   function post(payload){
@@ -216,15 +213,15 @@ var ENDPOINT='https://script.google.com/macros/s/AKfycbxCydpQaAoUNsBDDAOOTZwfJ0f
 
   function applyMin(min){
     if(min){panel.classList.add('min')}else{panel.classList.remove('min')}
+    var label=min?'Tampilkan daftar pertanyaan':'Sembunyikan daftar pertanyaan';
     toggle.setAttribute('aria-expanded',min?'false':'true');
-    toggle.textContent=min?'+':'\u2212';
-    toggle.setAttribute('aria-label',min?'Perluas panel Daftar Pertanyaan':'Minimalkan panel Daftar Pertanyaan');
-    sput(PK,min);
+    toggle.textContent=label;
+    toggle.setAttribute('aria-label',label);
   }
 
   try{
     if(!panel||!toggle||!input||!addBtn||!status||!list||!empty)return;
-    applyMin(sget(PK,false)===true);
+    applyMin(true); // P3: selalu tersembunyi saat halaman dimuat (tanpa persistensi)
     toggle.addEventListener('click',function(){applyMin(!panel.classList.contains('min'))});
     addBtn.addEventListener('click',tambah);
     input.addEventListener('keydown',function(ev){

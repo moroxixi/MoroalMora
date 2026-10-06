@@ -44,7 +44,7 @@ button:focus-visible{outline:2px solid var(--ink);outline-offset:3px}
 .panel{min-width:0;order:-1;border:1px solid var(--line);border-radius:8px;background:var(--field)}
 .panel-head{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:8px 14px;border-bottom:1px solid var(--line)}
 .panel h2{font-size:17px;font-weight:500;margin:0;letter-spacing:-.01em}
-#dp-toggle{min-width:44px;min-height:44px;padding:4px 10px;font-size:20px;line-height:1;background:transparent;color:var(--accent);border:1px solid var(--line);border-radius:6px}
+#dp-toggle{min-width:44px;min-height:44px;padding:6px 10px;font-family:var(--sans);font-size:13px;font-weight:500;line-height:1.3;text-align:right;background:transparent;color:var(--accent);border:1px solid var(--line);border-radius:6px}
 #dp-toggle:hover{filter:none;background:#111}
 .panel-body{padding:14px}
 .dp-add{display:flex;gap:10px;align-items:stretch;flex-wrap:wrap}

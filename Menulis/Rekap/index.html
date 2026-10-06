@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Rekap</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="wrap">
+<main>
+<h1>Rekap</h1>
+<p class="sub">Semua tulisanmu, dari halaman mana pun asalnya.</p>
+<nav class="filter" id="filter" aria-label="Saring per tag"></nav>
+<div class="state" id="loading" role="status">Memuat tulisan&hellip;</div>
+<div class="state err" id="error" hidden>
+<span id="errmsg" role="alert"></span>
+<br>
+<button type="button" id="retry">Coba lagi</button>
+</div>
+<div class="state" id="empty" hidden>Belum ada tulisan.</div>
+<div class="state" id="fempty" hidden>Tidak ada tulisan dengan tag ini.</div>
+<div class="cards" id="list" aria-label="Daftar tulisan"></div>
+</main>
+</div>
+<script src="../config.js" defer></script>
+<script src="script.js" defer></script>
+</body>
+</html>
