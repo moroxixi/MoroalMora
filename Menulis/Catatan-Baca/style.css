@@ -37,17 +37,22 @@ h2{font-size:17px;font-weight:500;margin:0;letter-spacing:-.01em}
 label.f,.f{display:block;margin-bottom:32px;min-width:0}
 .l{display:block;font-family:var(--sans);font-size:14px;font-weight:600;margin-bottom:2px}
 .h{display:block;font-family:var(--sans);font-size:13px;color:var(--muted);margin-bottom:6px}
-input[type=text],textarea{width:100%;min-width:0;background:var(--field);color:var(--ink);border:1px solid var(--line);border-radius:6px;padding:12px 14px;font:inherit}
+input[type=text],input[type=url],textarea{width:100%;min-width:0;background:var(--field);color:var(--ink);border:1px solid var(--line);border-radius:6px;padding:12px 14px;font:inherit}
 textarea{resize:vertical;min-height:96px;overflow-wrap:anywhere}
 input::placeholder,textarea::placeholder{color:#44423f;font-style:italic}
 :focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 
-/* Baris Buku + Halaman: keduanya elastis (tanpa width fixed) */
-.row{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,110px);gap:12px}
-.row .f{margin-bottom:0}
+/* Baris Judul + Detail: elastis & benar-benar reflow.
+   auto-fit + minmax(min(100%,240px),1fr): dua kolom kalau muat (mis. 1024px),
+   otomatis jadi satu kolom penuh saat sempit (mis. 360px). Tanpa width fixed. */
+.row{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr));gap:12px;margin-bottom:32px}
+.row .f{margin-bottom:0;min-width:0}
 
 /* Chip reaksi */
-.chips{display:flex;flex-wrap:wrap;gap:8px;margin:6px 0 10px}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin:6px 0 10px;min-width:0}
+.chips label{min-width:0;max-width:100%}
+/* Chip sebagai anak terakhir (mis. baris Sumber): tanpa jarak ganda */
+.f>.chips:last-child{margin-bottom:0}
 .chips input{position:absolute;opacity:0;pointer-events:none}
 .chips span{display:inline-block;font-family:var(--sans);font-size:14px;padding:6px 14px;border:1px solid var(--line);border-radius:999px;cursor:pointer;color:var(--muted);max-width:100%;overflow-wrap:anywhere}
 .chips input:checked+span{border-color:var(--accent);color:var(--accent)}
@@ -77,6 +82,10 @@ button:focus-visible{outline:2px solid var(--ink);outline-offset:3px}
 .meta{font-family:var(--sans);font-size:13px;color:var(--muted);display:flex;flex-wrap:wrap;gap:6px 14px;align-items:center;margin-bottom:8px}
 .meta>span{min-width:0;overflow-wrap:anywhere}
 .meta .tag{color:var(--accent)}
+/* Tag jenis sumber (Buku/Podcast/...) - pil kecil netral */
+.meta .jenis{border:1px solid var(--line);border-radius:999px;padding:1px 9px;font-size:12px;color:var(--muted);white-space:nowrap;flex-shrink:0}
+.meta a{color:var(--accent);text-decoration:none;min-width:0;max-width:100%;overflow-wrap:anywhere}
+.meta a:hover{text-decoration:underline}
 .entry p{margin:0 0 10px;white-space:pre-wrap;overflow-wrap:anywhere}
 .k{font-family:var(--sans);font-size:13px;color:var(--muted);display:block;overflow-wrap:anywhere}
 .empty{color:var(--muted);font-style:italic}
@@ -85,5 +94,5 @@ button:focus-visible{outline:2px solid var(--ink);outline-offset:3px}
   button{min-height:44px}
 }
 @media(prefers-reduced-motion:no-preference){
-  input[type=text],textarea{transition:border-color .15s}
+  input[type=text],input[type=url],textarea{transition:border-color .15s}
 }

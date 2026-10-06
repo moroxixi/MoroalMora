@@ -10,7 +10,11 @@
  *
  *  Pemetaan field -> kolom Sheet (disepakati):
  *    topik        -> tag        (tab per tag; WAJIB)
- *    buku + hal   -> q          ("Judul" / "Judul, hlm. 19"; buku WAJIB)
+ *    buku         -> q          (judul saja; WAJIB)
+ *    hal          -> detail     (per jenis sumber: halaman/platform/menit/ket.)
+ *    jenis        -> jenis      (label: Buku | Media sosial | Podcast | Video |
+ *                               Lainnya; opsional, default Buku)
+ *    link         -> link       (opsional; http(s) dirender sebagai link)
  *    temuan       -> dugaan     (WAJIB)
  *    reaksi       -> simpul     baris 1 "Reaksi: <reaksi>" (WAJIB)
  *    alasan       -> simpul     baris 2 "Alasan: <alasan>" (opsional, dilewati
@@ -106,27 +110,66 @@ var LABEL_WAJIB_ = {
 };
 
 /**
+ * Jenis sumber catatan.
+ *   nama   : label yang tampil (chip, tag di daftar, dan kolom Sheet).
+ *   judul  : label + placeholder adaptif untuk field judul (id "buku").
+ *   detail : label adaptif untuk field Detail (id "hal").
+ *   ph     : placeholder field Detail.
+ *   def    : nilai awal Detail per jenis (hanya Media sosial yang punya
+ *            default: "Substack"); diingat per jenis selama sesi.
+ */
+var JENIS_URUT = ['buku', 'sosial', 'podcast', 'video', 'lainnya'];
+var JENIS = {
+  buku:    { nama: 'Buku',         judul: 'Judul buku',    detail: 'Halaman',               ph: '19',         def: '' },
+  sosial:  { nama: 'Media sosial', judul: 'Judul post',    detail: 'Platform',              ph: 'misal: Substack', def: 'Substack' },
+  podcast: { nama: 'Podcast',      judul: 'Judul episode', detail: 'Menit ke-',             ph: '12',         def: '' },
+  video:   { nama: 'Video',        judul: 'Judul video',   detail: 'Menit ke-',             ph: '12',         def: '' },
+  lainnya: { nama: 'Lainnya',      judul: 'Judul sumber',  detail: 'Keterangan (opsional)', ph: 'opsional',   def: '' }
+};
+
+/**
+ * Kapitalisasi huruf PERTAMA judul, sisa karakter TIDAK disentuh
+ * (tidak di-lowercase) supaya "iPhone"/"AI" aman dari "Iphone"/"Ai".
+ *   trimDepan : true -> spasi depan dibuang dulu (dipakai saat blur dan
+ *                sebelum kirim); false -> tanpa trim (dipakai saat mengetik
+ *                supaya panjang string tidak berubah dan kursor tidak lompat).
+ * Hanya char index 0 yang boleh berubah; "" dan input non-huruf balik apa adanya.
+ */
+function kapitalAwal(s, trimDepan) {
+  var t = (s === null || typeof s === 'undefined') ? '' : String(s);
+  if (trimDepan) t = t.replace(/^\s+/, '');
+  if (!t) return t;
+  var awal = t.charAt(0);
+  var atas = awal.toLocaleUpperCase('id');
+  return atas === awal ? t : atas + t.slice(1);
+}
+
+/**
  * Bentuk payload POST (lihat bagian header file untuk pemetaan lengkap).
  * Semua nilai di-trim; spasi saja dianggap kosong.
+ * Input opsional tambahan: v.jenis (id jenis, default 'buku'),
+ * v.detail (nilai field Detail), v.link, v.lblJudul (label error judul).
  * Return {ok:true, payload:{...}} atau {ok:false, errors:[label, ...]}.
  * Murni: tidak menyentuh DOM dan tidak mengirim apa pun.
  */
 function petaKePayload(v) {
   v = v || {};
+  var jenisId = (v.jenis && JENIS[v.jenis]) ? v.jenis : 'buku';
   var f = {
     buku: trim_(v.buku),
-    hal: trim_(v.hal),
+    hal: trim_(v.detail !== null && typeof v.detail !== 'undefined' ? v.detail : v.hal),
     topik: trim_(v.topik),
     temuan: trim_(v.temuan),
     reaksi: trim_(v.reaksi),
     alasan: trim_(v.alasan),
     hubungan: trim_(v.hubungan),
-    tanya: trim_(v.tanya)
+    tanya: trim_(v.tanya),
+    link: trim_(v.link)
   };
 
   var errors = [];
   if (!f.topik) errors.push(LABEL_WAJIB_.topik);
-  if (!f.buku) errors.push(LABEL_WAJIB_.buku);
+  if (!f.buku) errors.push(v.lblJudul || LABEL_WAJIB_.buku);
   if (!f.temuan) errors.push(LABEL_WAJIB_.temuan);
   if (!f.reaksi) errors.push(LABEL_WAJIB_.reaksi);
   if (errors.length) return { ok: false, errors: errors };
@@ -143,7 +186,10 @@ function petaKePayload(v) {
     ok: true,
     payload: {
       tag: f.topik,
-      q: f.hal ? f.buku + ', hlm. ' + f.hal : f.buku,
+      q: f.buku,
+      detail: f.hal,
+      jenis: JENIS[jenisId].nama,
+      link: f.link,
       dugaan: f.temuan,
       dukung: f.hubungan,
       runtuh: '',
@@ -178,7 +224,10 @@ if (typeof module !== 'undefined' && module.exports) {
     norm_: norm_,
     tagMirip: tagMirip,
     petaKePayload: petaKePayload,
-    parseDaftarTag: parseDaftarTag
+    parseDaftarTag: parseDaftarTag,
+    kapitalAwal: kapitalAwal,
+    JENIS: JENIS,
+    JENIS_URUT: JENIS_URUT
   };
 }
 
@@ -189,14 +238,26 @@ if (typeof module !== 'undefined' && module.exports) {
 if (typeof document !== 'undefined') {
   (function () {
     var KEY = 'catatan-baca-v1', DKEY = 'catatan-baca-draft-v1';
-    var ids = ['buku', 'hal', 'topik', 'temuan', 'alasan', 'hubungan', 'tanya'];
+    // Field teks biasa. "hal" (Detail) TIDAK di sini: nilainya diingat per
+    // jenis sumber lewat detailMap (lihat saveDraft/loadDraft/clearForm).
+    var ids = ['buku', 'topik', 'temuan', 'alasan', 'hubungan', 'tanya', 'link'];
     var url = (typeof ENDPOINT !== 'undefined' && ENDPOINT) ? String(ENDPOINT) : '';
     var daftarTag = [];
+
+    var jenisKini = 'buku';
+    var detailMap = defaultDetail_();
 
     function el(t, c, x) { var e = document.createElement(t); if (c) e.className = c; if (x != null) e.textContent = x; return e; }
     function load(k, def) { try { var v = localStorage.getItem(k); return v ? JSON.parse(v) : def; } catch (e) { return def; } }
     function store(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); return true; } catch (e) { return false; } }
+    function drop(k) { try { localStorage.removeItem(k); } catch (e) {} }
     function getReaksi() { var r = document.querySelector('input[name=reaksi]:checked'); return r ? r.value : ''; }
+    function getJenis() { var r = document.querySelector('input[name=sumber]:checked'); return (r && JENIS[r.value]) ? r.value : 'buku'; }
+    function defaultDetail_() {
+      var m = {};
+      for (var i = 0; i < JENIS_URUT.length; i++) m[JENIS_URUT[i]] = JENIS[JENIS_URUT[i]].def;
+      return m;
+    }
 
     try {
       var msgEl = document.getElementById('msg');
@@ -207,10 +268,23 @@ if (typeof document !== 'undefined') {
       var datalist = document.getElementById('tags');
       var tagsInfo = document.getElementById('tagsinfo');
       var tagHint = document.getElementById('taghint');
-      if (!msgEl || !form || !listBox || !btn || !topikEl) return;
+      var bukuEl = document.getElementById('buku');
+      var halEl = document.getElementById('hal');
+      var lblJudul = document.getElementById('lbl-judul');
+      var lblDetail = document.getElementById('lbl-detail');
+      if (!msgEl || !form || !listBox || !btn || !topikEl || !bukuEl || !halEl) return;
 
       function msg(t, err) { msgEl.textContent = t; msgEl.className = err ? 'msg err' : 'msg'; }
       function setInfo(t) { if (!tagsInfo) return; tagsInfo.textContent = t || ''; tagsInfo.hidden = !t; }
+
+      /** Sinkronkan label/placeholder Judul & Detail dengan chip yang aktif. */
+      function updateLabel_() {
+        var j = JENIS[jenisKini] || JENIS.buku;
+        if (lblJudul) lblJudul.textContent = j.judul;
+        bukuEl.placeholder = j.judul;
+        if (lblDetail) lblDetail.textContent = j.detail;
+        halEl.placeholder = j.ph;
+      }
 
       /* ---------- daftar catatan tersimpan (localStorage) ---------- */
       var items = load(KEY, []);
@@ -232,7 +306,25 @@ if (typeof document !== 'undefined') {
         items.slice().reverse().forEach(function (it) {
           var d = el('article', 'entry');
           var m = el('div', 'meta');
-          m.appendChild(el('span', null, it.buku + (it.hal ? ', hlm. ' + it.hal : '')));
+          // Catatan lama tanpa jenis dianggap "Buku" (Detail lama = halaman).
+          var jenisKey = (it.jenis && JENIS[it.jenis]) ? it.jenis : 'buku';
+          m.appendChild(el('span', 'jenis', JENIS[jenisKey].nama));
+          m.appendChild(el('span', null, it.buku));
+          var det = trim_(it.hal);
+          if (det) m.appendChild(el('span', null, det));
+          var link = trim_(it.link);
+          if (link) {
+            if (/^https?:\/\//i.test(link)) {
+              var a = document.createElement('a');
+              a.href = link;
+              a.textContent = link;
+              a.target = '_blank';
+              a.rel = 'noopener noreferrer';
+              m.appendChild(a);
+            } else {
+              m.appendChild(el('span', null, link));
+            }
+          }
           if (it.topik) m.appendChild(el('span', 'tag', it.topik));
           m.appendChild(el('span', null, new Date(it.ts).toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' })));
           var b = el('button', 'ghost', 'Hapus'); b.type = 'button';
@@ -258,24 +350,53 @@ if (typeof document !== 'undefined') {
 
       /* ---------- draf ---------- */
       function saveDraft() {
-        var d = { reaksi: getReaksi() };
-        ids.forEach(function (i) { var e = document.getElementById(i); if (e) d[i] = e.value; });
+        if (halEl) detailMap[jenisKini] = halEl.value;
+        var d = { sumber: jenisKini, reaksi: getReaksi(), detail: {} };
+        for (var i = 0; i < JENIS_URUT.length; i++) d.detail[JENIS_URUT[i]] = detailMap[JENIS_URUT[i]];
+        ids.forEach(function (x) { var e = document.getElementById(x); if (e) d[x] = e.value; });
         store(DKEY, d);
       }
+
       function loadDraft() {
         var d = load(DKEY, null);
-        if (!d) return;
-        ids.forEach(function (i) { var e = document.getElementById(i); if (e) e.value = d[i] || ''; });
-        if (d.reaksi) {
-          var r = document.querySelector('input[name=reaksi][value="' + d.reaksi + '"]');
-          if (r) r.checked = true;
+        if (!d || typeof d !== 'object') return;
+        ids.forEach(function (x) { var e = document.getElementById(x); if (e && typeof d[x] === 'string') e.value = d[x]; });
+
+        detailMap = defaultDetail_();
+        if (d.detail && typeof d.detail === 'object') {
+          for (var i = 0; i < JENIS_URUT.length; i++) {
+            var k = JENIS_URUT[i];
+            if (typeof d.detail[k] === 'string') detailMap[k] = d.detail[k];
+          }
+        } else if (typeof d.hal === 'string' && d.hal) {
+          detailMap.buku = d.hal; // draf lama (sebelum ada chip jenis)
         }
+
+        jenisKini = (d.sumber && JENIS[d.sumber]) ? d.sumber : getJenis();
+        var r = document.querySelector('input[name=sumber][value="' + jenisKini + '"]');
+        if (r) r.checked = true;
+        updateLabel_();
+        halEl.value = detailMap[jenisKini];
+
+        if (d.reaksi) {
+          var rk = document.querySelector('input[name=reaksi][value="' + d.reaksi + '"]');
+          if (rk) rk.checked = true;
+        }
+        // Judul yang dipulihkan dari draf tetap kapital huruf pertamanya.
+        bukuEl.value = kapitalAwal(bukuEl.value, true);
       }
+
       function clearForm() {
         ids.forEach(function (i) { var e = document.getElementById(i); if (e) e.value = ''; });
+        // Detail kembali ke default jenis yang sedang aktif
+        // (Substack untuk Media sosial, kosong untuk lainnya).
+        detailMap = defaultDetail_();
+        halEl.value = detailMap[jenisKini];
         var r = document.querySelector('input[name=reaksi]:checked');
         if (r) r.checked = false;
-        store(DKEY, {});
+        // Draf dibuang total: refresh tidak memunculkan isian lama lagi.
+        // Chip sumber TIDAK diubah (tetap di pilihan terakhir).
+        drop(DKEY);
       }
 
       /* ---------- saran tag ---------- */
@@ -348,8 +469,14 @@ if (typeof document !== 'undefined') {
 
       /* ---------- simpan ---------- */
       btn.addEventListener('click', function () {
+        // Kapital huruf pertama dipastikan lagi tepat sebelum kirim.
+        bukuEl.value = kapitalAwal(bukuEl.value, true);
+
         var v = {};
         ids.forEach(function (i) { var e = document.getElementById(i); v[i] = e ? e.value : ''; });
+        v.detail = halEl.value;
+        v.jenis = jenisKini;
+        v.lblJudul = (JENIS[jenisKini] || JENIS.buku).judul;
         v.reaksi = getReaksi();
 
         var r = petaKePayload(v);
@@ -368,27 +495,32 @@ if (typeof document !== 'undefined') {
             if (res && res.ok) {
               var it = {
                 id: Date.now(), ts: Date.now(),
-                buku: trim_(v.buku), hal: trim_(v.hal), topik: trim_(v.topik),
+                buku: trim_(v.buku), hal: trim_(v.detail),
+                jenis: JENIS[v.jenis] ? v.jenis : 'buku', link: trim_(v.link),
+                topik: trim_(v.topik),
                 temuan: trim_(v.temuan), reaksi: v.reaksi, alasan: trim_(v.alasan),
                 hubungan: trim_(v.hubungan), tanya: trim_(v.tanya)
               };
               items.push(it);
-              var buku = it.buku;
               if (!store(KEY, items)) {
                 render();
                 msg('Tersimpan di server, tetapi daftar browser ini penuh/dinonaktifkan.', true);
                 return;
               }
+              // SUKSES: bersihkan semua field + buang draf.
+              // Judul tidak ditulis balik ke sini (dulu penyebab bug reset).
               clearForm();
-              document.getElementById('buku').value = buku;
-              saveDraft();
               render();
               msg('Tersimpan. Total ' + items.length + ' catatan.');
             } else {
+              // GAGAL: form dan draf tidak disentuh, isian tetap utuh.
               msg('Gagal menyimpan: ' + ((res && res.error) || 'respons server tidak dikenal'), true);
             }
           })
-          .catch(function () { msg('Gagal menyimpan. Periksa jaringan, lalu coba lagi.', true); })
+          .catch(function () {
+            // GAGAL: form dan draf tidak disentuh, isian tetap utuh.
+            msg('Gagal menyimpan. Periksa jaringan, lalu coba lagi.', true);
+          })
           .then(function () { btn.disabled = false; });
       });
 
@@ -396,6 +528,41 @@ if (typeof document !== 'undefined') {
       form.addEventListener('input', saveDraft);
       form.addEventListener('change', saveDraft);
       topikEl.addEventListener('input', function () { saveDraft(); renderTagHint(); });
+
+      // Pergantian chip sumber: simpan Detail jenis lama, muat Detail jenis baru.
+      var sumberRadios = document.querySelectorAll('input[name=sumber]');
+      for (var si = 0; si < sumberRadios.length; si++) {
+        sumberRadios[si].addEventListener('change', function () {
+          if (!this.checked) return;
+          if (halEl) detailMap[jenisKini] = halEl.value;
+          jenisKini = JENIS[this.value] ? this.value : 'buku';
+          updateLabel_();
+          if (halEl) halEl.value = detailMap[jenisKini];
+          saveDraft();
+        });
+      }
+
+      // Kapital huruf pertama judul SAAT mengetik (hanya char index 0,
+      // panjang tidak berubah -> posisi kursor dipertahankan).
+      bukuEl.addEventListener('input', function () {
+        var lama = bukuEl.value;
+        var baru = kapitalAwal(lama, false);
+        if (baru === lama) return;
+        var pos = bukuEl.selectionStart;
+        bukuEl.value = baru;
+        if (typeof pos === 'number' && bukuEl.setSelectionRange) bukuEl.setSelectionRange(pos, pos);
+      });
+
+      // Sekali lagi saat blur: trim spasi depan + kapital.
+      bukuEl.addEventListener('blur', function () {
+        var baru = kapitalAwal(bukuEl.value, true);
+        if (baru !== bukuEl.value) { bukuEl.value = baru; saveDraft(); }
+      });
+
+      jenisKini = getJenis();
+      detailMap = defaultDetail_();
+      updateLabel_();
+      halEl.value = detailMap[jenisKini];
 
       loadDraft();
       render();

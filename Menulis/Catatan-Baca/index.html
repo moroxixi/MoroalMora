@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Catatan baca</title>
+<title>Catatan</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
@@ -11,18 +11,29 @@
 <body>
 <div class="wrap">
 <main>
-<h1>Catatan baca</h1>
+<h1>Catatan</h1>
 <p class="sub">Berhenti sebentar, tulis apa yang bikin kamu berhenti.</p>
 <div id="form">
-<div class="row">
-<label class="f"><span class="l">Buku</span><input type="text" id="buku" autocomplete="off" placeholder="Judul buku"></label>
-<label class="f"><span class="l">Halaman</span><input type="text" id="hal" autocomplete="off" placeholder="19"></label>
+<div class="f">
+<span class="l">Sumber</span>
+<div class="chips" role="radiogroup" aria-label="Sumber">
+<label><input type="radio" name="sumber" value="buku" checked><span>Buku</span></label>
+<label><input type="radio" name="sumber" value="sosial"><span>Media sosial</span></label>
+<label><input type="radio" name="sumber" value="podcast"><span>Podcast</span></label>
+<label><input type="radio" name="sumber" value="video"><span>Video</span></label>
+<label><input type="radio" name="sumber" value="lainnya"><span>Lainnya</span></label>
 </div>
+</div>
+<div class="row">
+<label class="f"><span class="l" id="lbl-judul">Judul buku</span><input type="text" id="buku" autocomplete="off" placeholder="Judul buku"></label>
+<label class="f"><span class="l" id="lbl-detail">Halaman</span><input type="text" id="hal" autocomplete="off" placeholder="19"></label>
+</div>
+<label class="f"><span class="l">Link</span><input type="url" id="link" autocomplete="off" placeholder="https://"></label>
 <label class="f"><span class="l">Topik</span><span class="h">Satu tag saja.</span><input type="text" id="topik" list="tags" autocomplete="off" placeholder="misal: genius, uang, kebiasaan"></label>
 <datalist id="tags"></datalist>
 <p class="hint" id="tagsinfo" hidden></p>
 <p class="hint" id="taghint" hidden></p>
-<label class="f"><span class="l">Yang kutemukan</span><span class="h">Tulis ulang dengan kata sendiri, jangan salin kalimat bukunya.</span><textarea id="temuan" placeholder="Penulis bilang bahwa..."></textarea></label>
+<label class="f"><span class="l">Yang kutemukan</span><span class="h">Tulis ulang dengan kata sendiri, jangan salin kalimat sumbernya.</span><textarea id="temuan" placeholder="Penulis bilang bahwa..."></textarea></label>
 <div class="f">
 <span class="l">Reaksiku</span>
 <div class="chips" role="radiogroup" aria-label="Reaksi">

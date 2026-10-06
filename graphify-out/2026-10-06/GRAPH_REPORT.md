@@ -1,16 +1,16 @@
-# Graph Report - MoroalMora  (2026-10-06)
+# Graph Report - MoroalMora  (2026-10-04)
 
 ## Corpus Check
-- 21 files · ~34,267 words
+- 21 files · ~33,050 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 256 nodes · 521 edges · 19 communities (18 shown, 1 thin omitted)
-- Extraction: 99% EXTRACTED · 1% INFERRED · 0% AMBIGUOUS · INFERRED: 7 edges (avg confidence: 0.5)
+- 250 nodes · 507 edges · 19 communities (18 shown, 1 thin omitted)
+- Extraction: 99% EXTRACTED · 1% INFERRED · 0% AMBIGUOUS · INFERRED: 6 edges (avg confidence: 0.5)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `dfc5de66`
+- Built from commit: `eb35b6c3`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -33,7 +33,7 @@
 - Catatan-Baca/script.js
 
 ## God Nodes (most connected - your core abstractions)
-1. `doPost()` - 13 edges
+1. `doPost()` - 12 edges
 2. `str_()` - 11 edges
 3. `runSearch()` - 10 edges
 4. `loadAll()` - 8 edges
@@ -85,8 +85,8 @@ Cohesion: 0.33
 Nodes (5): Benang Merah dari Tiga Kisah, Kisah Kedua: Idin, Sang Guru Tua, dan Bel yang Tidak Peduli, Kisah Ketiga: Ur-Nanshe dan Kebun yang Tak Pernah Dilihat, Kisah Pertama: Naran dan Sungai yang Tidak Peduli, Tiga Kisah dari Babylon
 
 ### Community 10 - "Menulis/Apps-Script/code.gs.js"
-Cohesion: 0.23
-Nodes (21): daftarPertanyaan_(), daftarTag_(), doGet(), doPost(), ensureTagHeaders_(), findSheet_(), getOrCreateDaftarSheet_(), getOrCreateTagSheet_() (+13 more)
+Cohesion: 0.24
+Nodes (20): daftarPertanyaan_(), daftarTag_(), doGet(), doPost(), findSheet_(), getOrCreateDaftarSheet_(), getOrCreateTagSheet_(), hapusPertanyaan_() (+12 more)
 
 ### Community 11 - "Read-Dashboard/Apps-Script/code.gs.js"
 Cohesion: 0.26
@@ -109,8 +109,8 @@ Cohesion: 0.60
 Nodes (5): errText(), formatDate(), load(), renderDoc(), showState()
 
 ### Community 17 - "Catatan-Baca/script.js"
-Cohesion: 0.15
-Nodes (28): appendTagBtn(), berurutanUtuh_(), clearForm(), clearHint(), defaultDetail_(), drop(), el(), field() (+20 more)
+Cohesion: 0.18
+Nodes (23): appendTagBtn(), berurutanUtuh_(), clearForm(), clearHint(), el(), field(), fillDatalist(), getReaksi() (+15 more)
 
 ## Knowledge Gaps
 - **22 isolated node(s):** `timeZone`, `dependencies`, `exceptionLogging`, `runtimeVersion`, `state` (+17 more)
@@ -124,5 +124,3 @@ _Questions this graph is uniquely positioned to answer:_
   _22 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `Catatan Haid · MAO — Pencatat Siklus + Kalkulator Masa Subur` be split into smaller, more focused modules?**
   _Cohesion score 0.13333333333333333 - nodes in this community are weakly interconnected._
-- **Should `Catatan-Baca/script.js` be split into smaller, more focused modules?**
-  _Cohesion score 0.1471264367816092 - nodes in this community are weakly interconnected._

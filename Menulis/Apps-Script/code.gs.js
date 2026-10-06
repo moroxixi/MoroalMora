@@ -22,7 +22,10 @@
  *  - Kolom tiap tab tag (urutan persis):
  *      Hari | Tanggal | Waktu Simpan | Tag | Pertanyaan | Dugaan Awal |
  *      Yang Mendukung | Yang Meruntuhkan | Kesimpulan Sementara |
- *      Pertanyaan Berikutnya
+ *      Pertanyaan Berikutnya | Detail | Jenis Sumber | Link
+ *    (Detail | Jenis Sumber | Link ditambahkan di UJUNG; kolom lama tidak
+ *     pernah di-rename/digeser. ensureTagHeaders_() melengkapi header tab
+ *     lama secara idempoten.)
  *  - Jangan rename / hapus baris header (baris 1) di tab tag.
  *  - Tab sistem diawali "_" (mis. _Panduan) jangan diubah atau dihapus.
  *  - doGet: health check + ?action=daftarTag (baca-saja daftar nama tab),
@@ -42,8 +45,15 @@ var HEADERS = [
   'Yang Mendukung',
   'Yang Meruntuhkan',
   'Kesimpulan Sementara',
-  'Pertanyaan Berikutnya'
+  'Pertanyaan Berikutnya',
+  'Detail',
+  'Jenis Sumber',
+  'Link'
 ];
+
+// Label jenis sumber yang diterima dari client (kolom "Jenis Sumber").
+// Nilai di luar daftar ini tidak ditulis (kolom dikosongkan).
+var JENIS_SUMBER = ['Buku', 'Media sosial', 'Podcast', 'Video', 'Lainnya'];
 
 var GUIDE_SHEET = '_Panduan';
 var RESERVED_PREFIX = '_';
@@ -94,7 +104,7 @@ function writeGuide_(sh) {
   var lines = [
     'Menulis - panduan singkat',
     'Cara kerja: SATU TAB (sheet) PER TAG. Tag baru otomatis membuat tab baru.',
-    'Kolom tiap tab tag: Hari | Tanggal | Waktu Simpan | Tag | Pertanyaan | Dugaan Awal | Yang Mendukung | Yang Meruntuhkan | Kesimpulan Sementara | Pertanyaan Berikutnya',
+    'Kolom tiap tab tag: Hari | Tanggal | Waktu Simpan | Tag | Pertanyaan | Dugaan Awal | Yang Mendukung | Yang Meruntuhkan | Kesimpulan Sementara | Pertanyaan Berikutnya | Detail | Jenis Sumber | Link',
     'Jangan rename atau hapus baris 1 (header) di tab tag.',
     'Tab sistem diawali "_" (termasuk tab ini) jangan diubah atau dihapus.',
     'Isi datang dari index.html lewat Web App (kode di code.gs). Baris baru selalu ditambah di bawah.',
@@ -215,7 +225,7 @@ function getOrCreateTagSheet_(tag) {
   head.setFontWeight('bold');
   sh.setFrozenRows(1);
 
-  // Wrap untuk kolom teks (Tag .. Pertanyaan Berikutnya = kolom 4..10)
+  // Wrap untuk kolom teks (Tag .. Link = kolom 4..HEADERS.length)
   sh.getRange(1, 4, 1, HEADERS.length - 3).setWrapStrategy(SpreadsheetApp.WrapStrategy.WRAP);
 
   // Lebar kolom wajar
@@ -356,6 +366,28 @@ function hapusPertanyaan_(payload) {
 }
 
 /* ==========================================================================
+ * 3d. ensureTagHeaders_(sheet) - lengkapi header kolom BARU di tab lama.
+ *     Idempoten: kolom yang header-nya sudah sesuai dilewati (tidak dobel),
+ *     kolom kosong diisi nama header, kolom yang sudah berisi teks lain
+ *     TIDAK ditimpa. Hanya menyentuh baris 1; tidak pernah menghapus data.
+ * ========================================================================== */
+
+function ensureTagHeaders_(sh) {
+  // Tab yang kolomnya pernah dikurangi: tambahkan kolom dulu (additive,
+  // tidak menyentuh data) supaya baca/tulis HEADERS.length kolom tidak gagal.
+  var maxCols = sh.getMaxColumns();
+  if (maxCols < HEADERS.length) sh.insertColumnsAfter(maxCols, HEADERS.length - maxCols);
+
+  var last = Math.max(sh.getLastColumn(), HEADERS.length);
+  var head = sh.getRange(1, 1, 1, last).getValues()[0];
+  for (var i = 0; i < HEADERS.length; i++) {
+    if (str_(head[i]) === HEADERS[i]) continue; // sudah ada - jangan dobel
+    if (str_(head[i]) !== '') continue;         // berisi teks lain - jangan ditimpa
+    sh.getRange(1, i + 1).setValue(HEADERS[i]).setFontWeight('bold');
+  }
+}
+
+/* ==========================================================================
  * 4. doPost(e) - simpan satu halaman ke tab sesuai tag.
  * ========================================================================== */
 
@@ -397,6 +429,12 @@ function doPost(e) {
     var dukung = str_(payload.dukung);
     var runtuh = str_(payload.runtuh);
     var next = str_(payload.next);
+    // Tiga kolom baru di ujung (Detail | Jenis Sumber | Link).
+    // Client lama (tanpa field ini) -> '' sehingga baris lama tetap utuh.
+    var detail = str_(payload.detail);
+    var jenis = str_(payload.jenis);
+    if (JENIS_SUMBER.indexOf(jenis) < 0) jenis = '';
+    var link = str_(payload.link);
 
     // Tanggal: pakai date (yyyy-MM-dd) dari client kalau valid, kalau tidak hari ini di TZ
     var now = new Date();
@@ -413,6 +451,7 @@ function doPost(e) {
 
     try {
       var sheet = getOrCreateTagSheet_(tag);
+      ensureTagHeaders_(sheet); // idempoten: tab lama dapat header kolom baru
       var row = sheet.getLastRow() + 1;
       var values = [[
         neutralizeCell(hari),
@@ -424,7 +463,10 @@ function doPost(e) {
         neutralizeCell(dukung),
         neutralizeCell(runtuh),
         neutralizeCell(simpul),
-        neutralizeCell(next)
+        neutralizeCell(next),
+        neutralizeCell(detail),
+        neutralizeCell(jenis),
+        neutralizeCell(link)
       ]];
       sheet.getRange(row, 1, 1, HEADERS.length).setValues(values);
       return json_({ ok: true, sheet: sheet.getName(), row: row });
