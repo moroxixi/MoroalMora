@@ -48,7 +48,8 @@ var HEADERS = [
   'Pertanyaan Berikutnya',
   'Detail',
   'Jenis Sumber',
-  'Link'
+  'Link',
+  'ID'
 ];
 
 // Label jenis sumber yang diterima dari client (kolom "Jenis Sumber").
@@ -408,6 +409,9 @@ function doPost(e) {
     if (action === 'daftar') return daftarPertanyaan_();
     if (action === 'tambah') return tambahPertanyaan_(payload);
     if (action === 'hapus') return hapusPertanyaan_(payload);
+    if (action === 'rekapDaftar') return rekapDaftar_(payload);
+    if (action === 'rekapBaca') return rekapBaca_(payload);
+    if (action === 'rekapUpdate') return rekapUpdate_(payload);
     if (action) return json_({ ok: false, error: 'Aksi tidak dikenal: ' + action });
 
     // Validasi server-side (sama dengan REQ di client: tag, q, dugaan, simpul)
@@ -466,7 +470,10 @@ function doPost(e) {
         neutralizeCell(next),
         neutralizeCell(detail),
         neutralizeCell(jenis),
-        neutralizeCell(link)
+        neutralizeCell(link),
+        // Kolom 14: ID unik baris (baru) - biar baris bisa dirujuk tanpa
+        // nomor baris (yang bisa bergeser kalau ada hapus).
+        Utilities.getUuid()
       ]];
       sheet.getRange(row, 1, 1, HEADERS.length).setValues(values);
       return json_({ ok: true, sheet: sheet.getName(), row: row });
@@ -516,6 +523,307 @@ function daftarTag_() {
     return 0;
   });
   return tags;
+}
+
+/* ==========================================================================
+ * 4e. Rekap (ADDITIVE): helper + tiga aksi.
+ *     sumberOf_ | rowToItem_ | backfillIds_ | previewOf_
+ *     rekapDaftar_ | rekapBaca_ | rekapUpdate_
+ *     Semua baca/tulis memakai INDEKS kolom (bukan nama header) karena tab
+ *     lama bisa punya teks header berbeda di kolom 11-14.
+ * ========================================================================== */
+
+/**
+ * Asal baris: 'Catatan' bila jenis terisi ATAU judul bergaya "<judul>, hlm. NN"
+ * (pola lama Catatan-Baca); selain itu 'Jawab-Pertanyaan'.
+ */
+function sumberOf_(jenis, judul) {
+  if (str_(jenis)) return 'Catatan';
+  if (/,\s*hlm\./i.test(str_(judul))) return 'Catatan';
+  return 'Jawab-Pertanyaan';
+}
+
+/**
+ * Peta satu baris data tag -> objek penuh, DARI INDEKS kolom:
+ * 1=hari, 2=tanggal, 3=waktu, 5=judul(q), 6=dugaan, 7=dukung, 8=runtuh,
+ * 9=simpul, 10=next, 11=detail, 12=jenis, 13=link, 14=id.
+ * `tag` = NAMA TAB (sheet.getName()), bukan isi kolom 4. Semua nilai lewat str_.
+ */
+function rowToItem_(sheetName, rowValues) {
+  var r = rowValues || [];
+  var judul = str_(r[4]);
+  var jenis = str_(r[11]);
+  return {
+    id: str_(r[13]),
+    tag: str_(sheetName),
+    sumber: sumberOf_(jenis, judul),
+    jenis: jenis,
+    hari: str_(r[0]),
+    tanggal: str_(r[1]),
+    waktu: str_(r[2]),
+    judul: judul,
+    dugaan: str_(r[5]),
+    dukung: str_(r[6]),
+    runtuh: str_(r[7]),
+    simpul: str_(r[8]),
+    next: str_(r[9]),
+    detail: str_(r[10]),
+    link: str_(r[12])
+  };
+}
+
+/**
+ * Isi kolom 14 (ID) dengan UUID untuk baris yang ID-nya kosong dan tidak
+ * seluruhnya kosong. SATU setValues di kolom 14 (bukan per baris); kolom 1-13
+ * tidak pernah ditulis; idempoten (panggilan kedua tidak mengubah apa pun).
+ * HANYA dipanggil di dalam lock. Return jumlah ID baru yang ditulis.
+ */
+function backfillIds_(sheet) {
+  var last = sheet.getLastRow();
+  if (last < 2) return 0;
+  var cols = Math.min(Math.max(sheet.getLastColumn(), HEADERS.length), sheet.getMaxColumns());
+  var values = sheet.getRange(2, 1, last - 1, cols).getValues();
+  var out = [];
+  var baru = 0;
+  for (var i = 0; i < values.length; i++) {
+    var row = values[i];
+    var id = str_(row[13]);
+    if (id) { out.push([id]); continue; }
+    var kosongSemua = true;
+    for (var j = 0; j < row.length; j++) {
+      if (str_(row[j]) !== '') { kosongSemua = false; break; }
+    }
+    if (kosongSemua) { out.push(['']); continue; } // baris seluruhnya kosong: jangan diisi
+    out.push([Utilities.getUuid()]);
+    baru++;
+  }
+  if (baru > 0) sheet.getRange(2, 14, out.length, 1).setValues(out);
+  return baru;
+}
+
+/**
+ * Preview daftar: isi pertama yang tidak kosong dari kolom
+ * simpul(9), dugaan(6), dukung(7), runtuh(8), next(10); spasi/newline
+ * dipadatkan jadi satu spasi; dipotong 160 karakter + '…' bila lebih.
+ */
+function previewOf_(rowValues) {
+  var urut = [8, 5, 6, 7, 9];
+  var r = rowValues || [];
+  for (var i = 0; i < urut.length; i++) {
+    var t = str_(r[urut[i]]).replace(/\s+/g, ' ');
+    if (!t) continue;
+    if (t.length > 160) return t.slice(0, 160) + '…';
+    return t;
+  }
+  return '';
+}
+
+/**
+ * rekapDaftar: daftar semua tulisan lintas tab tag (payload opsional {tag}).
+ * Dalam lock: lengkapi header -> backfill ID -> baca tiap tab SEKALI getValues.
+ * Respons: {ok:true, total, items:[{id, tag, sumber, jenis, judul, detail,
+ * link, tanggal, waktu, preview}]}, urut waktu menurun (kosong di akhir).
+ */
+function rekapDaftar_(payload) {
+  if (!payload || typeof payload !== 'object') payload = {};
+  var filter = str_(payload.tag).toLowerCase();
+
+  var lock = LockService.getScriptLock();
+  var got = false;
+  try {
+    lock.waitLock(LOCK_WAIT_MS);
+    got = true;
+  } catch (lockErr) {
+    return json_({ ok: false, error: 'Sedang ada proses simpan lain, coba lagi sebentar.' });
+  }
+
+  try {
+    var ss = SpreadsheetApp.getActiveSpreadsheet();
+    var names = daftarTag_();
+    var items = [];
+    for (var n = 0; n < names.length; n++) {
+      var name = names[n];
+      if (filter && String(name).toLowerCase() !== filter) continue; // filter satu tab
+      var sh = findSheet_(ss, name);
+      if (!sh) continue;
+      ensureTagHeaders_(sh);
+      backfillIds_(sh);
+      var last = sh.getLastRow();
+      if (last < 2) continue;
+      var cols = Math.max(sh.getLastColumn(), HEADERS.length); // aman: header sudah dipastikan
+      var rows = sh.getRange(2, 1, last - 1, cols).getValues();
+      for (var i = 0; i < rows.length; i++) {
+        var row = rows[i];
+        var adaIsi = false;
+        for (var j = 0; j < row.length; j++) {
+          if (str_(row[j]) !== '') { adaIsi = true; break; }
+        }
+        if (!adaIsi) continue; // baris seluruhnya kosong: dilewati
+        var it = rowToItem_(name, row);
+        items.push({
+          id: it.id, tag: it.tag, sumber: it.sumber, jenis: it.jenis,
+          judul: it.judul, detail: it.detail, link: it.link,
+          tanggal: it.tanggal, waktu: it.waktu, preview: previewOf_(row)
+        });
+      }
+    }
+    items.sort(function (a, b) {
+      var wa = str_(a.waktu), wb = str_(b.waktu);
+      if (wa === wb) return 0;
+      if (!wa) return 1;              // waktu kosong di paling akhir
+      if (!wb) return -1;
+      return wa < wb ? 1 : -1;        // menurun (baru ke atas)
+    });
+    return json_({ ok: true, total: items.length, items: items });
+  } catch (err) {
+    if (typeof console !== 'undefined' && console.error) console.error('rekapDaftar_ error: ' + err);
+    return json_({ ok: false, error: 'Gagal memuat daftar rekap' });
+  } finally {
+    if (got) lock.releaseLock();
+  }
+}
+
+/**
+ * rekapBaca: satu tulisan berdasar {id}. Baca-saja TANPA lock, TANPA tulis
+ * (termasuk tidak backfill). Item penuh = rowToItem_ (15 field).
+ */
+function rekapBaca_(payload) {
+  if (!payload || typeof payload !== 'object') payload = {};
+  var id = str_(payload.id);
+  if (!id) return json_({ ok: false, error: 'Parameter id wajib diisi.' });
+  try {
+    var ss = SpreadsheetApp.getActiveSpreadsheet();
+    var names = daftarTag_();
+    for (var n = 0; n < names.length; n++) {
+      var sh = findSheet_(ss, names[n]);
+      if (!sh) continue;
+      var last = sh.getLastRow();
+      if (last < 2) continue;
+      var cols = Math.min(Math.max(sh.getLastColumn(), HEADERS.length), sh.getMaxColumns());
+      if (cols < HEADERS.length) continue; // tanpa kolom 14: tidak mungkin ada ID
+      var rows = sh.getRange(2, 1, last - 1, cols).getValues();
+      for (var i = 0; i < rows.length; i++) {
+        if (str_(rows[i][13]) === id) {
+          return json_({ ok: true, item: rowToItem_(names[n], rows[i]) });
+        }
+      }
+    }
+    return json_({ ok: false, error: 'Tulisan tidak ditemukan.' });
+  } catch (err) {
+    if (typeof console !== 'undefined' && console.error) console.error('rekapBaca_ error: ' + err);
+    return json_({ ok: false, error: 'Gagal memuat tulisan' });
+  }
+}
+
+/**
+ * rekapUpdate: update parsial {id, fields:{...}} di dalam lock. ID dicari ulang
+ * di dalam lock (nomor baris bisa bergeser). Hanya kunci whitelist yang dipakai:
+ * judul, dugaan, dukung, runtuh, simpul, next, detail, link; kunci lain (tag,
+ * jenis, id, hari, tanggal, waktu, ...) DIABAIKAN diam-diam. Tulisan hanya ke
+ * kolom 5-11 (satu setValues) dan kolom 13 (satu setValues); kolom 12 (jenis)
+ * dan kolom lain TIDAK ditulis. Tanpa pengecekan versi -> last-write-wins.
+ */
+function rekapUpdate_(payload) {
+  var ISI_MAX = 45000;
+  if (!payload || typeof payload !== 'object') payload = {};
+  var id = str_(payload.id);
+  if (!id) return json_({ ok: false, error: 'Parameter id wajib diisi.' });
+
+  // Whitelist kunci: selain ini diabaikan diam-diam (tak pernah menulis kolomnya).
+  var BOLEH = ['judul', 'dugaan', 'dukung', 'runtuh', 'simpul', 'next', 'detail', 'link'];
+  var fields = payload.fields;
+  var masuk = {};
+  if (fields && typeof fields === 'object') {
+    for (var w = 0; w < BOLEH.length; w++) {
+      var key = BOLEH[w];
+      if (Object.prototype.hasOwnProperty.call(fields, key)) masuk[key] = str_(fields[key]);
+    }
+  }
+
+  // Validasi panjang SEBELUM lock/tulis: melebihi -> tidak ada tulisan sama sekali.
+  if (typeof masuk.judul === 'string' && masuk.judul.length > PERTANYAAN_MAX_LEN) {
+    return json_({ ok: false, error: 'Judul maksimal ' + PERTANYAAN_MAX_LEN + ' karakter.' });
+  }
+  for (var k2 in masuk) {
+    if (!Object.prototype.hasOwnProperty.call(masuk, k2) || k2 === 'judul') continue;
+    if (masuk[k2].length > ISI_MAX) {
+      return json_({ ok: false, error: 'Isi maksimal ' + ISI_MAX + ' karakter.' });
+    }
+  }
+
+  var lock = LockService.getScriptLock();
+  var got = false;
+  try {
+    lock.waitLock(LOCK_WAIT_MS);
+    got = true;
+  } catch (lockErr) {
+    return json_({ ok: false, error: 'Sedang ada proses simpan lain, coba lagi sebentar.' });
+  }
+
+  try {
+    var ss = SpreadsheetApp.getActiveSpreadsheet();
+    var names = daftarTag_();
+    var sh = null, rowIdx = -1, rows = null;
+    for (var n = 0; n < names.length && !sh; n++) {
+      var cand = findSheet_(ss, names[n]);
+      if (!cand) continue;
+      var last = cand.getLastRow();
+      if (last < 2) continue;
+      var cols = Math.min(Math.max(cand.getLastColumn(), HEADERS.length), cand.getMaxColumns());
+      if (cols < HEADERS.length) continue; // tanpa kolom 14: tidak mungkin ada ID
+      var vals = cand.getRange(2, 1, last - 1, cols).getValues();
+      for (var i = 0; i < vals.length; i++) {
+        if (str_(vals[i][13]) === id) {
+          sh = cand; rowIdx = i + 2; rows = vals[i];
+          break;
+        }
+      }
+    }
+    if (!sh) return json_({ ok: false, error: 'Tulisan tidak ditemukan.' });
+
+    // Nilai akhir per kolom: kunci tidak dikirim -> nilai lama dipertahankan;
+    // kunci dikirim string kosong -> kolom dikosongkan (untuk kolom opsional).
+    var nilai = {
+      judul: str_(rows[4]),
+      dugaan: str_(rows[5]),
+      dukung: str_(rows[6]),
+      runtuh: str_(rows[7]),
+      simpul: str_(rows[8]),
+      next: str_(rows[9]),
+      detail: str_(rows[10]),
+      link: str_(rows[12])
+    };
+    for (var k3 in masuk) {
+      if (Object.prototype.hasOwnProperty.call(masuk, k3)) nilai[k3] = masuk[k3];
+    }
+
+    // Salin persis aturan wajib-isi submit harian di doPost (q/dugaan/simpul).
+    if (!nilai.judul || !nilai.dugaan || !nilai.simpul) {
+      return json_({ ok: false, error: 'Isi dulu: Pertanyaan, Dugaan awal, Kesimpulan sementara.' });
+    }
+
+    // Tulis HANYA kolom 5-11 (satu setValues) dan kolom 13 (satu setValues).
+    sh.getRange(rowIdx, 5, 1, 7).setValues([[
+      neutralizeCell(nilai.judul),
+      neutralizeCell(nilai.dugaan),
+      neutralizeCell(nilai.dukung),
+      neutralizeCell(nilai.runtuh),
+      neutralizeCell(nilai.simpul),
+      neutralizeCell(nilai.next),
+      neutralizeCell(nilai.detail)
+    ]]);
+    sh.getRange(rowIdx, 13, 1, 1).setValues([[ neutralizeCell(nilai.link) ]]);
+
+    // Baca ulang baris terbaru untuk respons.
+    var colsAkhir = Math.min(Math.max(sh.getLastColumn(), HEADERS.length), sh.getMaxColumns());
+    var segar = sh.getRange(rowIdx, 1, 1, colsAkhir).getValues()[0];
+    return json_({ ok: true, item: rowToItem_(sh.getName(), segar) });
+  } catch (err) {
+    if (typeof console !== 'undefined' && console.error) console.error('rekapUpdate_ error: ' + err);
+    return json_({ ok: false, error: 'Gagal memperbarui tulisan' });
+  } finally {
+    if (got) lock.releaseLock();
+  }
 }
 
 /* ==========================================================================

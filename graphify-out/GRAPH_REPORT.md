@@ -1,16 +1,16 @@
 # Graph Report - MoroalMora  (2026-10-06)
 
 ## Corpus Check
-- 21 files · ~34,267 words
+- 22 files · ~40,558 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 256 nodes · 521 edges · 19 communities (18 shown, 1 thin omitted)
+- 272 nodes · 563 edges · 20 communities (19 shown, 1 thin omitted)
 - Extraction: 99% EXTRACTED · 1% INFERRED · 0% AMBIGUOUS · INFERRED: 7 edges (avg confidence: 0.5)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `dfc5de66`
+- Built from commit: `213c9f86`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -31,18 +31,19 @@
 - api.js
 - read.js
 - Catatan-Baca/script.js
+- Discovery "Rekap" — laporan read-only
 
 ## God Nodes (most connected - your core abstractions)
-1. `doPost()` - 13 edges
-2. `str_()` - 11 edges
-3. `runSearch()` - 10 edges
-4. `loadAll()` - 8 edges
-5. `ensureSheet_()` - 8 edges
-6. `updateDoc_()` - 8 edges
-7. `buildCard()` - 8 edges
-8. `processFiles()` - 8 edges
-9. `Catatan Haid · MAO — Pencatat Siklus + Kalkulator Masa Subur` - 8 edges
-10. `fmtTanggal()` - 7 edges
+1. `doPost()` - 16 edges
+2. `str_()` - 14 edges
+3. `str_()` - 11 edges
+4. `rekapDaftar_()` - 10 edges
+5. `runSearch()` - 10 edges
+6. `json_()` - 9 edges
+7. `loadAll()` - 8 edges
+8. `rekapUpdate_()` - 8 edges
+9. `ensureSheet_()` - 8 edges
+10. `updateDoc_()` - 8 edges
 
 ## Surprising Connections (you probably didn't know these)
 - None detected - all connections are within the same source files.
@@ -50,7 +51,7 @@
 ## Import Cycles
 - None detected.
 
-## Communities (19 total, 1 thin omitted)
+## Communities (20 total, 1 thin omitted)
 
 ### Community 0 - "Catatan Haid · MAO — Pencatat Siklus + Kalkulator Masa Subur"
 Cohesion: 0.13
@@ -85,8 +86,8 @@ Cohesion: 0.33
 Nodes (5): Benang Merah dari Tiga Kisah, Kisah Kedua: Idin, Sang Guru Tua, dan Bel yang Tidak Peduli, Kisah Ketiga: Ur-Nanshe dan Kebun yang Tak Pernah Dilihat, Kisah Pertama: Naran dan Sungai yang Tidak Peduli, Tiga Kisah dari Babylon
 
 ### Community 10 - "Menulis/Apps-Script/code.gs.js"
-Cohesion: 0.23
-Nodes (21): daftarPertanyaan_(), daftarTag_(), doGet(), doPost(), ensureTagHeaders_(), findSheet_(), getOrCreateDaftarSheet_(), getOrCreateTagSheet_() (+13 more)
+Cohesion: 0.22
+Nodes (28): backfillIds_(), daftarPertanyaan_(), daftarTag_(), doGet(), doPost(), ensureTagHeaders_(), findSheet_(), getOrCreateDaftarSheet_() (+20 more)
 
 ### Community 11 - "Read-Dashboard/Apps-Script/code.gs.js"
 Cohesion: 0.26
@@ -112,8 +113,12 @@ Nodes (5): errText(), formatDate(), load(), renderDoc(), showState()
 Cohesion: 0.15
 Nodes (28): appendTagBtn(), berurutanUtuh_(), clearForm(), clearHint(), defaultDetail_(), drop(), el(), field() (+20 more)
 
+### Community 19 - "Discovery "Rekap" — laporan read-only"
+Cohesion: 0.22
+Nodes (8): a. Daftar fungsi (543 baris total), b. doGet — parameter & bentuk respons, c. doPost — action, field payload, bentuk respons, d. Struktur sheet, Discovery "Rekap" — laporan read-only, e. Membedakan baris Jawab-Pertanyaan vs Catatan-Baca, f. Aksi hapus/edit yang sudah ada, g. Batasan (trim/limit/sanitasi/caching/lock)
+
 ## Knowledge Gaps
-- **22 isolated node(s):** `timeZone`, `dependencies`, `exceptionLogging`, `runtimeVersion`, `state` (+17 more)
+- **29 isolated node(s):** `timeZone`, `dependencies`, `exceptionLogging`, `runtimeVersion`, `state` (+24 more)
   These have ≤1 connection - possible missing edges or undocumented components.
 - **1 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
@@ -121,7 +126,7 @@ Nodes (28): appendTagBtn(), berurutanUtuh_(), clearForm(), clearHint(), defaultD
 _Questions this graph is uniquely positioned to answer:_
 
 - **What connects `timeZone`, `dependencies`, `exceptionLogging` to the rest of the system?**
-  _22 weakly-connected nodes found - possible documentation gaps or missing edges._
+  _29 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `Catatan Haid · MAO — Pencatat Siklus + Kalkulator Masa Subur` be split into smaller, more focused modules?**
   _Cohesion score 0.13333333333333333 - nodes in this community are weakly interconnected._
 - **Should `Catatan-Baca/script.js` be split into smaller, more focused modules?**
