@@ -1,16 +1,16 @@
 # Graph Report - MoroalMora  (2026-10-07)
 
 ## Corpus Check
-- 25 files · ~43,276 words
+- 25 files · ~44,726 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 304 nodes · 621 edges · 23 communities (22 shown, 1 thin omitted)
-- Extraction: 99% EXTRACTED · 1% INFERRED · 0% AMBIGUOUS · INFERRED: 8 edges (avg confidence: 0.5)
+- 319 nodes · 657 edges · 23 communities (22 shown, 1 thin omitted)
+- Extraction: 98% EXTRACTED · 2% INFERRED · 0% AMBIGUOUS · INFERRED: 12 edges (avg confidence: 0.5)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `0b6d11f1`
+- Built from commit: `f381c490`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -45,8 +45,8 @@
 6. `json_()` - 9 edges
 7. `loadAll()` - 8 edges
 8. `rekapUpdate_()` - 8 edges
-9. `ensureSheet_()` - 8 edges
-10. `updateDoc_()` - 8 edges
+9. `bangunCatatan()` - 8 edges
+10. `ensureSheet_()` - 8 edges
 
 ## Surprising Connections (you probably didn't know these)
 - None detected - all connections are within the same source files.
@@ -121,8 +121,8 @@ Cohesion: 0.22
 Nodes (8): a. Daftar fungsi (543 baris total), b. doGet — parameter & bentuk respons, c. doPost — action, field payload, bentuk respons, d. Struktur sheet, Discovery "Rekap" — laporan read-only, e. Membedakan baris Jawab-Pertanyaan vs Catatan-Baca, f. Aksi hapus/edit yang sudah ada, g. Batasan (trim/limit/sanitasi/caching/lock)
 
 ### Community 20 - "Edit/script.js"
-Cohesion: 0.33
-Nodes (11): apiPost(), bangunForm(), chip(), labelUntuk(), msg(), muat(), nilai(), show() (+3 more)
+Cohesion: 0.17
+Nodes (25): ambilFields(), apiPost(), bangunCatatan(), bangunForm(), bangunJawab(), chip(), dotEl(), fInput() (+17 more)
 
 ### Community 21 - "Rekap/script.js"
 Cohesion: 0.40

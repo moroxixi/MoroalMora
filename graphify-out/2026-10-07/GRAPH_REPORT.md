@@ -1,12 +1,12 @@
 # Graph Report - MoroalMora  (2026-10-07)
 
 ## Corpus Check
-- 25 files · ~43,063 words
+- 25 files · ~43,276 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 303 nodes · 620 edges · 23 communities (22 shown, 1 thin omitted)
-- Extraction: 99% EXTRACTED · 1% INFERRED · 0% AMBIGUOUS · INFERRED: 7 edges (avg confidence: 0.5)
+- 304 nodes · 621 edges · 23 communities (22 shown, 1 thin omitted)
+- Extraction: 99% EXTRACTED · 1% INFERRED · 0% AMBIGUOUS · INFERRED: 8 edges (avg confidence: 0.5)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
@@ -82,7 +82,7 @@ Nodes (4): dependencies, exceptionLogging, runtimeVersion, timeZone
 
 ### Community 6 - "Jawab-Pertanyaan/script.js"
 Cohesion: 0.16
-Nodes (17): applyMin(), el(), fill(), get(), grow(), itemNode(), muat(), onHapus() (+9 more)
+Nodes (15): el(), fill(), get(), grow(), itemNode(), muat(), onHapus(), onSalin() (+7 more)
 
 ### Community 7 - "Tiga Kisah dari Babylon"
 Cohesion: 0.33
@@ -113,8 +113,8 @@ Cohesion: 0.60
 Nodes (5): errText(), formatDate(), load(), renderDoc(), showState()
 
 ### Community 17 - "Catatan-Baca/script.js"
-Cohesion: 0.15
-Nodes (28): appendTagBtn(), berurutanUtuh_(), clearForm(), clearHint(), defaultDetail_(), drop(), el(), field() (+20 more)
+Cohesion: 0.14
+Nodes (29): appendTagBtn(), berurutanUtuh_(), clearForm(), clearHint(), defaultDetail_(), drop(), el(), field() (+21 more)
 
 ### Community 19 - "Discovery "Rekap" — laporan read-only"
 Cohesion: 0.22
@@ -145,4 +145,4 @@ _Questions this graph is uniquely positioned to answer:_
 - **Should `Catatan Haid · MAO — Pencatat Siklus + Kalkulator Masa Subur` be split into smaller, more focused modules?**
   _Cohesion score 0.13333333333333333 - nodes in this community are weakly interconnected._
 - **Should `Catatan-Baca/script.js` be split into smaller, more focused modules?**
-  _Cohesion score 0.1471264367816092 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.14193548387096774 - nodes in this community are weakly interconnected._

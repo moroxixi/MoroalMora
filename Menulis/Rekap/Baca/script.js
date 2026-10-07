@@ -28,6 +28,10 @@
   var viewEl = document.getElementById('view');
   var metaEl = document.getElementById('meta');
   var judulEl = document.getElementById('judul');
+  /* P4: label kecil di atas judul (kelas .k, sama dengan field lain);
+     disisipkan dari JS karena index.html tidak diubah. */
+  var judulLblEl = document.createElement('span');
+  judulLblEl.className = 'k';
   var isiEl = document.getElementById('isi');
   var editEl = document.getElementById('edit');
 
@@ -134,6 +138,14 @@
 
     judulEl.textContent = item.judul || '';
     show(judulEl, !!item.judul);
+
+    // P4: label di atas judul - "Pertanyaan" (Jawab) / "Judul" (Catatan)
+    if (item.judul) {
+      judulLblEl.textContent = sumber === 'Catatan' ? 'Judul' : 'Pertanyaan';
+      judulEl.parentNode.insertBefore(judulLblEl, judulEl);
+    } else if (judulLblEl.parentNode) {
+      judulLblEl.parentNode.removeChild(judulLblEl);
+    }
 
     while (isiEl.firstChild) isiEl.removeChild(isiEl.firstChild);
 

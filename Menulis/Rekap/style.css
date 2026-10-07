@@ -99,3 +99,39 @@ button:focus-visible{outline:2px solid var(--ink);outline-offset:3px}
 
 @media(pointer:coarse){button,.nav a{min-height:44px}}
 @media(prefers-reduced-motion:no-preference){input[type=text],input[type=url],textarea{transition:border-color .15s}}
+
+/* ==========================================================================
+ *  P4 - kelas BARU untuk varian form Edit per sumber (tambahan saja;
+ *  tidak ada aturan lama yang diubah karena dipakai tiga halaman Rekap).
+ *  Disalin dari Menulis/Jawab-Pertanyaan/style.css (.hint/.dot, label &
+ *  textarea varian Jawab) dan Menulis/Catatan-Baca/style.css
+ *  (.chips radio pil, .row Judul+Detail) - acuan, read-only.
+ * ========================================================================== */
+
+/* Petunjuk pembuka form Jawab-Pertanyaan */
+.hint{font-family:var(--sans);font-size:14px;color:var(--muted);margin:0 0 24px;overflow-wrap:anywhere}
+
+/* Titik penanda kolom wajib (varian Jawab) */
+.dot{display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--accent);vertical-align:middle;margin-right:6px;flex-shrink:0}
+
+/* Varian Jawab-Pertanyaan: label muted 14px + textarea auto-grow min 72px
+   (persis gaya form aslinya; grow() ada di Edit/script.js) */
+.f.jwb label{display:block;font-family:var(--sans);font-size:14px;font-weight:400;color:var(--muted);margin-bottom:6px}
+.f.jwb textarea{min-height:72px;resize:none;overflow:hidden}
+
+/* Varian Catatan: chip radio pil (grup Reaksi) - pola sibling */
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin:6px 0 10px;min-width:0}
+.chips label{min-width:0;max-width:100%}
+.chips input{position:absolute;opacity:0;pointer-events:none}
+.chips span{display:inline-block;font-family:var(--sans);font-size:14px;padding:6px 14px;border:1px solid var(--line);border-radius:999px;cursor:pointer;color:var(--muted);max-width:100%;overflow-wrap:anywhere}
+.chips input:checked+span{border-color:var(--accent);color:var(--accent)}
+.chips input:focus-visible+span{outline:2px solid var(--accent);outline-offset:2px}
+
+/* Varian Catatan: baris Judul + Detail - auto-fit, dua kolom kalau muat,
+   satu kolom penuh di layar 360-390px (tanpa lebar fixed) */
+.row{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr));gap:12px;margin-bottom:24px}
+.row .f{margin-bottom:0;min-width:0}
+
+/* Keterangan kecil "Jenis tidak bisa diubah." di baris chip terkunci
+   (flex-basis 100% -> selalu turun ke baris sendiri, tidak menimpa chip) */
+.meta .note{flex:1 0 100%;font-family:var(--sans);font-size:13px;color:var(--muted);margin:0;overflow-wrap:anywhere}
