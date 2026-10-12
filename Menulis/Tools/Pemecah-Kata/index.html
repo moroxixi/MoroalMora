@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="dark">
+<title>Pemecah Teks 5000</title>
+<style>
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
+--bg:#000;--card:#0a0a0a;--line:#1c1c1c;--text:#e8e8e8;--dim:#7a7a7a;--accent:#7cf5c4;--accent-d:#0d2a20}
+html{scroll-padding-top:env(safe-area-inset-top,0px);background:#000}
+*,*:before,*:after{box-sizing:inherit}
+body{margin:0;background:var(--bg);color:var(--text);font:15px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+main{max-width:760px;margin:0 auto;padding:20px 16px 48px}
+h1{font-size:20px;margin:0 0 4px;font-weight:650}
+.sub{color:var(--dim);margin:0 0 16px;font-size:13px}
+textarea{width:100%;background:var(--card);color:var(--text);border:1px solid var(--line);border-radius:12px;padding:12px;font:13px/1.5 ui-monospace,Menlo,Consolas,monospace;resize:vertical;outline:none}
+textarea:focus{border-color:#2f6f57}
+#src{min-height:200px}
+.bar{display:flex;gap:10px;align-items:center;justify-content:space-between;margin:10px 0 18px;flex-wrap:wrap}
+.stat{color:var(--dim);font-size:13px}.stat b{color:var(--accent);font-weight:600}
+button{font:inherit;cursor:pointer;border-radius:10px;border:1px solid var(--line);background:#111;color:var(--text);padding:8px 14px}
+button:active{transform:scale(.97)}
+.btn-copy{background:var(--accent);color:#00130c;border-color:var(--accent);font-weight:650;min-width:96px}
+.btn-copy.done{background:var(--accent-d);color:var(--accent);border-color:#1d5a42}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px;margin-bottom:10px}
+.card.done{border-color:#1d5a42}
+.head{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.title{font-weight:600}.meta{color:var(--dim);font-size:12px}
+.prev{margin:8px 0 0;color:var(--dim);font:12px/1.5 ui-monospace,Menlo,Consolas,monospace;word-break:break-all;white-space:pre-wrap;max-height:3.2em;overflow:hidden}
+.empty{color:var(--dim);text-align:center;padding:24px 0;font-size:13px}
+</style>
+</head>
+<body>
+<main>
+  <h1>Pemecah Teks</h1>
+  <p class="sub">Tempel teks panjang, otomatis dipecah maksimal 5000 karakter per bagian, tanpa memotong kata. Salin berurutan, gabungkan lagi = utuh persis.</p>
+  <textarea id="src" placeholder="Tempel teks di sini..." spellcheck="false"></textarea>
+  <div class="bar">
+    <div class="stat" id="stat">0 karakter · 0 bagian</div>
+    <div style="display:flex;gap:8px">
+      <button id="clr">Bersihkan</button>
+    </div>
+  </div>
+  <div id="list"><div class="empty">Belum ada teks.</div></div>
+</main>
+<script>
+(function(){
+  var SIZE=5000;
+  var src=document.getElementById('src'),list=document.getElementById('list'),stat=document.getElementById('stat');
+
+  function fmt(n){return n.toLocaleString('id-ID');}
+
+  function copyText(t){
+    if(navigator.clipboard&&window.isSecureContext){
+      return navigator.clipboard.writeText(t).catch(function(){return fallback(t);});
+    }
+    return fallback(t);
+  }
+  function fallback(t){
+    return new Promise(function(res,rej){
+      var ta=document.createElement('textarea');
+      ta.value=t;ta.style.position='fixed';ta.style.opacity='0';
+      document.body.appendChild(ta);ta.focus();ta.select();
+      try{document.execCommand('copy')?res():rej();}catch(e){rej(e);}
+      document.body.removeChild(ta);
+    });
+  }
+
+  function render(){
+    var chars=Array.from(src.value); // aman untuk emoji
+    var total=chars.length;
+    var chunks=[],pos=0;
+    while(pos<total){
+      var end=Math.min(pos+SIZE,total);
+      // kalau batas jatuh di tengah kata, mundur ke spasi/baris terakhir
+      if(end<total&&!/\s/.test(chars[end])&&!/\s/.test(chars[end-1])){
+        var k=end-1;
+        while(k>pos&&!/\s/.test(chars[k]))k--;
+        if(k>pos)end=k+1;
+      }
+      chunks.push(chars.slice(pos,end).join(''));
+      pos=end;
+    }
+    var parts=chunks.length;
+    stat.innerHTML='<b>'+fmt(total)+'</b> karakter · <b>'+parts+'</b> bagian';
+    list.innerHTML='';
+    if(!parts){list.innerHTML='<div class="empty">Belum ada teks.</div>';return;}
+    for(var i=0;i<parts;i++){
+      (function(i){
+        var chunk=chunks[i];
+        var len=Array.from(chunk).length;
+        var card=document.createElement('div');card.className='card';
+        var head=document.createElement('div');head.className='head';
+        var left=document.createElement('div');
+        var t=document.createElement('div');t.className='title';t.textContent='Bagian '+(i+1)+' / '+parts;
+        var m=document.createElement('div');m.className='meta';m.textContent=fmt(len)+' karakter';
+        left.appendChild(t);left.appendChild(m);
+        var b=document.createElement('button');b.className='btn-copy';b.textContent='Salin';
+        b.addEventListener('click',function(){
+          copyText(chunk).then(function(){
+            b.textContent='Tersalin ✓';b.classList.add('done');card.classList.add('done');
+          }).catch(function(){b.textContent='Gagal, coba lagi';});
+        });
+        head.appendChild(left);head.appendChild(b);
+        var p=document.createElement('div');p.className='prev';p.textContent=chunk.slice(0,160);
+        card.appendChild(head);card.appendChild(p);
+        list.appendChild(card);
+      })(i);
+    }
+  }
+
+  src.addEventListener('input',render);
+  document.getElementById('clr').addEventListener('click',function(){src.value='';render();src.focus();});
+  render();
+})();
+</script>
+</body>
+</html>

@@ -1,16 +1,16 @@
-# Graph Report - MoroalMora  (2026-10-07)
+# Graph Report - MoroalMora  (2026-10-12)
 
 ## Corpus Check
-- 25 files · ~44,726 words
+- 31 files · ~72,026 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 319 nodes · 657 edges · 23 communities (22 shown, 1 thin omitted)
+- 359 nodes · 692 edges · 28 communities (26 shown, 2 thin omitted)
 - Extraction: 98% EXTRACTED · 2% INFERRED · 0% AMBIGUOUS · INFERRED: 12 edges (avg confidence: 0.5)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `f381c490`
+- Built from commit: `b9f8a8f9`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -35,18 +35,22 @@
 - Edit/script.js
 - Rekap/script.js
 - Baca/script.js
+- Integrity and its counterfeits: Shakespeare's Henriad
+- Integritas dan bentuk-bentuk palsunya: *Henriad* karya Shakespeare
+- Richard II
+- IntegrityandItsConterfeitsPV-ROBINSON.refs.md
 
 ## God Nodes (most connected - your core abstractions)
 1. `doPost()` - 16 edges
 2. `str_()` - 14 edges
-3. `str_()` - 11 edges
-4. `rekapDaftar_()` - 10 edges
-5. `runSearch()` - 10 edges
-6. `json_()` - 9 edges
-7. `loadAll()` - 8 edges
-8. `rekapUpdate_()` - 8 edges
-9. `bangunCatatan()` - 8 edges
-10. `ensureSheet_()` - 8 edges
+3. `Integrity and its counterfeits: Shakespeare's Henriad` - 12 edges
+4. `str_()` - 11 edges
+5. `Integritas dan bentuk-bentuk palsunya: *Henriad* karya Shakespeare` - 11 edges
+6. `rekapDaftar_()` - 10 edges
+7. `runSearch()` - 10 edges
+8. `json_()` - 9 edges
+9. `loadAll()` - 8 edges
+10. `rekapUpdate_()` - 8 edges
 
 ## Surprising Connections (you probably didn't know these)
 - None detected - all connections are within the same source files.
@@ -54,7 +58,7 @@
 ## Import Cycles
 - None detected.
 
-## Communities (23 total, 1 thin omitted)
+## Communities (28 total, 2 thin omitted)
 
 ### Community 0 - "Catatan Haid · MAO — Pencatat Siklus + Kalkulator Masa Subur"
 Cohesion: 0.13
@@ -132,16 +136,28 @@ Nodes (9): apiPost(), filtered(), kartu(), muat(), render(), renderFilter(), set
 Cohesion: 0.47
 Nodes (8): apiPost(), blok(), blokLink(), chip(), muat(), render(), show(), tampilkanError()
 
+### Community 23 - "Integrity and its counterfeits: Shakespeare's Henriad"
+Cohesion: 0.15
+Nodes (12): Additional information, Conclusion, Counterfeit integrity, Data availability, Developing integrity, Falstaff, Henry V, Hotspur (+4 more)
+
+### Community 24 - "Integritas dan bentuk-bentuk palsunya: *Henriad* karya Shakespeare"
+Cohesion: 0.17
+Nodes (11): Catatan, Falstaff, Henry V, Hotspur, Informasi tambahan, Integritas dan bentuk-bentuk palsunya: *Henriad* karya Shakespeare, Integritas palsu, Kesimpulan (+3 more)
+
+### Community 25 - "Richard II"
+Cohesion: 0.17
+Nodes (11): Additional information, ARTICLE, Counterfeit integrity, Data availability, Developing integrity, Falstaff, Henry V, Hotspur (+3 more)
+
 ## Knowledge Gaps
-- **29 isolated node(s):** `timeZone`, `dependencies`, `exceptionLogging`, `runtimeVersion`, `state` (+24 more)
+- **60 isolated node(s):** `timeZone`, `dependencies`, `exceptionLogging`, `runtimeVersion`, `state` (+55 more)
   These have ≤1 connection - possible missing edges or undocumented components.
-- **1 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+- **2 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
 - **What connects `timeZone`, `dependencies`, `exceptionLogging` to the rest of the system?**
-  _29 weakly-connected nodes found - possible documentation gaps or missing edges._
+  _60 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `Catatan Haid · MAO — Pencatat Siklus + Kalkulator Masa Subur` be split into smaller, more focused modules?**
   _Cohesion score 0.13333333333333333 - nodes in this community are weakly interconnected._
 - **Should `Catatan-Baca/script.js` be split into smaller, more focused modules?**

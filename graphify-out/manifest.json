@@ -193,5 +193,60 @@
     "mtime": 1791308211.8378904,
     "ast_hash": "7aec489000d86606fdac3b91b9201e35",
     "semantic_hash": ""
+  },
+  "Menulis/Doc/Output/IntegrityandItsConterfeitsPV-ROBINSON/IntegrityandItsConterfeitsPV-ROBINSON_meta.json": {
+    "mtime": 1791804301.285379,
+    "ast_hash": "6fd136afc024cee4123f0799fd95228a",
+    "semantic_hash": ""
+  },
+  "Menulis/Doc/Output/IntegrityandItsConterfeitsPV-ROBINSON/IntegrIntegritas-id.md": {
+    "mtime": 1791809750.4722047,
+    "ast_hash": "679c02ecf3499c2ce3940fc2b87d1f7b",
+    "semantic_hash": ""
+  },
+  "Menulis/Doc/Output/IntegrityandItsConterfeitsPV-ROBINSON/Integritas-id.md": {
+    "mtime": 1791806935.6687646,
+    "ast_hash": "d41d8cd98f00b204e9800998ecf8427e",
+    "semantic_hash": ""
+  },
+  "Menulis/Doc/Output/IntegrityandItsConterfeitsPV-ROBINSON/IntegrityandItsConterfeitsPV-ROBINSON.md": {
+    "mtime": 1791804302.86819,
+    "ast_hash": "3ec5b73e215074e47df62b3222baf1d1",
+    "semantic_hash": ""
+  },
+  "Menulis/Doc/Output/IntegrityandItsConterfeitsPV-ROBINSON/IntegrityandItsConterfeitsPV-ROBINSON.raw.md": {
+    "mtime": 1791804302.8572872,
+    "ast_hash": "f76d2df5abf6b30498283c41788f160f",
+    "semantic_hash": ""
+  },
+  "Menulis/Doc/Output/IntegrityandItsConterfeitsPV-ROBINSON/IntegrityandItsConterfeitsPV-ROBINSON.refs.md": {
+    "mtime": 1791804302.8683827,
+    "ast_hash": "aef3299e8bb9eca76a01ba0d8fae14d7",
+    "semantic_hash": ""
+  },
+  "Menulis/Tools/Pemecah-Kata/index.html": {
+    "mtime": 1791809768.8455389,
+    "ast_hash": "8a8a2241bcb308985abebe9021a19968",
+    "semantic_hash": ""
+  },
+  "Menulis/Doc/925518538 id.pdf": {
+    "mtime": 1791737815.8904607,
+    "ast_hash": "23021019a75eadade3a3890e951c7546",
+    "semantic_hash": ""
+  },
+  "Menulis/Doc/925518538.pdf": {
+    "mtime": 1791737737.9443283,
+    "ast_hash": "595e7d598e8ac3ac970f1824ca324b9f",
+    "semantic_hash": ""
+  },
+  "Menulis/Doc/Input/IntegrityandItsConterfeitsPV-ROBINSON.pdf": {
+    "mtime": 1791802480.2085955,
+    "ast_hash": "6d0c0f65fc03bcde7ca791909028d1a5",
+    "semantic_hash": ""
+  },
+  "Menulis/Doc/IntegrityandItsConterfeitsPV-ROBINSON.pdf": {
+    "mtime": 1791802480.2085955,
+    "ast_hash": "6d0c0f65fc03bcde7ca791909028d1a5",
+    "semantic_hash": ""
   }
 }

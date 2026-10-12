@@ -1,0 +1,197 @@
+{
+  "Catatan-Haid/config.js": {
+    "mtime": 1785785346.7646432,
+    "ast_hash": "68f55da79bfb1adb1d883d37b7b298a2",
+    "semantic_hash": ""
+  },
+  "Catatan-Haid/gas/.clasp.json": {
+    "mtime": 1785785346.7646432,
+    "ast_hash": "b6fda9c004b0972cc6bf80f2584053a2",
+    "semantic_hash": ""
+  },
+  "Catatan-Haid/gas/appsscript.json": {
+    "mtime": 1785785346.7649848,
+    "ast_hash": "8bf9522ce136d8c75ee1d9d0887f5983",
+    "semantic_hash": ""
+  },
+  "Catatan-Haid/script.js": {
+    "mtime": 1785785346.7649848,
+    "ast_hash": "0d2071a5b9e63c7ab163e3860caedfcf",
+    "semantic_hash": ""
+  },
+  "MoroalMora-push.sh": {
+    "mtime": 1785954641.943445,
+    "ast_hash": "a9149f5c6991c337f04c34a405a23749",
+    "semantic_hash": ""
+  },
+  "Catatan-Haid/README.md": {
+    "mtime": 1785785346.7633927,
+    "ast_hash": "0a5a8e100d32134c8361e83310cc87b3",
+    "semantic_hash": ""
+  },
+  "Catatan-Haid/index.html": {
+    "mtime": 1785785346.7649848,
+    "ast_hash": "0ec6853bdf2e3279df106555814da1e3",
+    "semantic_hash": ""
+  },
+  "System-Bedroom/index.html": {
+    "mtime": 1787031875.441256,
+    "ast_hash": "4c7b6f008beadeafd03ade01e01c732d",
+    "semantic_hash": ""
+  },
+  "Video-Player/index.html": {
+    "mtime": 1787035220.8636491,
+    "ast_hash": "1c7726e5d6eaad3a42e8776caa5f75bf",
+    "semantic_hash": ""
+  },
+  "Kondangan/index.html": {
+    "mtime": 1787830158.502031,
+    "ast_hash": "2130e6a6536af7b9cd91075d50f98fc0",
+    "semantic_hash": ""
+  },
+  "Kisah/Tiga-Kisah-Babylon/content.json": {
+    "mtime": 1788697910.677077,
+    "ast_hash": "4a2ccf05b655eb7d993d09f8f1037f88",
+    "semantic_hash": ""
+  },
+  "Kisah/Tiga-Kisah-Babylon/script.js": {
+    "mtime": 1788672310.9303024,
+    "ast_hash": "a939ea29764d9e1a9fc8bb893ed15d62",
+    "semantic_hash": ""
+  },
+  "Kisah/Tiga-Kisah-Babylon/index.html": {
+    "mtime": 1788672314.5034492,
+    "ast_hash": "8af44e4bad2caab45ed11cd33c2df13f",
+    "semantic_hash": ""
+  },
+  "Kisah/Tiga-Kisah-Babylon/sumber-asli.md": {
+    "mtime": 1788671551.44694,
+    "ast_hash": "c0f706a8af8a108104ccf81c6ff3c07e",
+    "semantic_hash": ""
+  },
+  "Kisah/editor.js": {
+    "mtime": 1788697856.691272,
+    "ast_hash": "c54775428294321039539aea3172f9e7",
+    "semantic_hash": ""
+  },
+  "Kisah/server.py": {
+    "mtime": 1788697780.0846024,
+    "ast_hash": "074169fa3d517ef273969ce6981a99ac",
+    "semantic_hash": ""
+  },
+  "Kisah/editor.html": {
+    "mtime": 1788697783.5912693,
+    "ast_hash": "cb2ad0c4cf05216b55834c5413fd133e",
+    "semantic_hash": ""
+  },
+  "Menulis/Apps-Script/code.gs.js": {
+    "mtime": 1791303474.1577106,
+    "ast_hash": "d2e829e2e2d9c5a35a38fff6a5452ec5",
+    "semantic_hash": ""
+  },
+  "Read-Dashboard/Apps-Script/code.gs.js": {
+    "mtime": 1791049464.0150297,
+    "ast_hash": "8498ce36975d53e227a584fd565872fc",
+    "semantic_hash": ""
+  },
+  "Read-Dashboard/Edit/edit.js": {
+    "mtime": 1791044696.888182,
+    "ast_hash": "1563109218b6f89c91a404568d360d1c",
+    "semantic_hash": ""
+  },
+  "Read-Dashboard/Read/read.js": {
+    "mtime": 1791044671.1215143,
+    "ast_hash": "e0e2da53c97178208ebe1dd235b0ac45",
+    "semantic_hash": ""
+  },
+  "Read-Dashboard/api.js": {
+    "mtime": 1791049485.751697,
+    "ast_hash": "1b49e4519cc75296a3d6583a4dbf7dc2",
+    "semantic_hash": ""
+  },
+  "Read-Dashboard/config.js": {
+    "mtime": 1791045211.218362,
+    "ast_hash": "f2a042c4b9a4290a0fc9958cd3639650",
+    "semantic_hash": ""
+  },
+  "Read-Dashboard/script.js": {
+    "mtime": 1791049600.1217015,
+    "ast_hash": "d359098144c8741714144bc43e2aae34",
+    "semantic_hash": ""
+  },
+  "Read-Dashboard/Edit/index.html": {
+    "mtime": 1791044696.8748486,
+    "ast_hash": "7c2dda46622c6ada999dea2ff113e26b",
+    "semantic_hash": ""
+  },
+  "Read-Dashboard/Read/index.html": {
+    "mtime": 1791044671.1115143,
+    "ast_hash": "276504c1c6c1f0dc29f36614832f4932",
+    "semantic_hash": ""
+  },
+  "Read-Dashboard/index.html": {
+    "mtime": 1791049485.7550304,
+    "ast_hash": "7777f58d0237c6187127930d26ff9b0e",
+    "semantic_hash": ""
+  },
+  "Menulis/Jawab-Pertanyaan/script.js": {
+    "mtime": 1791309979.2179575,
+    "ast_hash": "51fd8a2c456f080b2344b23e8f49f5eb",
+    "semantic_hash": ""
+  },
+  "Menulis/Catatan-Baca/index.html": {
+    "mtime": 1791297651.410823,
+    "ast_hash": "f36e6f934d219afda1b664b936294d3b",
+    "semantic_hash": ""
+  },
+  "Menulis/Jawab-Pertanyaan/index.html": {
+    "mtime": 1791309952.814623,
+    "ast_hash": "20327777795fb7031ad0adf9f208a097",
+    "semantic_hash": ""
+  },
+  "Menulis/Catatan-Baca/script.js": {
+    "mtime": 1791310025.4179592,
+    "ast_hash": "41ca91771ce1ab715ab9c50f7b8dbccb",
+    "semantic_hash": ""
+  },
+  "Menulis/config.js": {
+    "mtime": 1791305060.1870458,
+    "ast_hash": "ceca99f6e7041fdf3065bf232f3e2359",
+    "semantic_hash": ""
+  },
+  "Menulis/Report-Freebuff/REPORT-REKAP-DISCOVERY.md": {
+    "mtime": 1791301743.1309783,
+    "ast_hash": "337a4fdfb7f70c38217be40dc9fe2c57",
+    "semantic_hash": ""
+  },
+  "Menulis/Rekap/Baca/Edit/script.js": {
+    "mtime": 1791361491.276479,
+    "ast_hash": "7ab9ff2f3671f4e4b86fdd4aa73e1759",
+    "semantic_hash": ""
+  },
+  "Menulis/Rekap/Baca/script.js": {
+    "mtime": 1791361015.4097943,
+    "ast_hash": "6c968c8d3c76984b317b7cffdf769698",
+    "semantic_hash": ""
+  },
+  "Menulis/Rekap/script.js": {
+    "mtime": 1791308303.0945606,
+    "ast_hash": "39dec42192706b1c11e727c6b0cca043",
+    "semantic_hash": ""
+  },
+  "Menulis/Rekap/Baca/Edit/index.html": {
+    "mtime": 1791308211.9112236,
+    "ast_hash": "429afeb2970438d974b17f4800dabaaa",
+    "semantic_hash": ""
+  },
+  "Menulis/Rekap/Baca/index.html": {
+    "mtime": 1791308211.864557,
+    "ast_hash": "901d73fab9ecfd1a751c2ebd65926741",
+    "semantic_hash": ""
+  },
+  "Menulis/Rekap/index.html": {
+    "mtime": 1791308211.8378904,
+    "ast_hash": "7aec489000d86606fdac3b91b9201e35",
+    "semantic_hash": ""
+  }
+}
