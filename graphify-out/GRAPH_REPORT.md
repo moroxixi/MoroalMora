@@ -1,16 +1,16 @@
-# Graph Report - MoroalMora  (2026-10-12)
+# Graph Report - MoroalMora  (2026-10-14)
 
 ## Corpus Check
-- 31 files · ~72,026 words
+- 30 files · ~72,356 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 359 nodes · 692 edges · 28 communities (26 shown, 2 thin omitted)
+- 358 nodes · 692 edges · 27 communities (25 shown, 2 thin omitted)
 - Extraction: 98% EXTRACTED · 2% INFERRED · 0% AMBIGUOUS · INFERRED: 12 edges (avg confidence: 0.5)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `b9f8a8f9`
+- Built from commit: `5d2f33df`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -36,9 +36,9 @@
 - Rekap/script.js
 - Baca/script.js
 - Integrity and its counterfeits: Shakespeare's Henriad
-- Integritas dan bentuk-bentuk palsunya: *Henriad* karya Shakespeare
 - Richard II
 - IntegrityandItsConterfeitsPV-ROBINSON.refs.md
+- Integritas dan bentuk-bentuk palsunya: *Henriad* karya Shakespeare
 
 ## God Nodes (most connected - your core abstractions)
 1. `doPost()` - 16 edges
@@ -58,7 +58,7 @@
 ## Import Cycles
 - None detected.
 
-## Communities (28 total, 2 thin omitted)
+## Communities (27 total, 2 thin omitted)
 
 ### Community 0 - "Catatan Haid · MAO — Pencatat Siklus + Kalkulator Masa Subur"
 Cohesion: 0.13
@@ -140,13 +140,13 @@ Nodes (8): apiPost(), blok(), blokLink(), chip(), muat(), render(), show(), tamp
 Cohesion: 0.15
 Nodes (12): Additional information, Conclusion, Counterfeit integrity, Data availability, Developing integrity, Falstaff, Henry V, Hotspur (+4 more)
 
-### Community 24 - "Integritas dan bentuk-bentuk palsunya: *Henriad* karya Shakespeare"
-Cohesion: 0.17
-Nodes (11): Catatan, Falstaff, Henry V, Hotspur, Informasi tambahan, Integritas dan bentuk-bentuk palsunya: *Henriad* karya Shakespeare, Integritas palsu, Kesimpulan (+3 more)
-
 ### Community 25 - "Richard II"
 Cohesion: 0.17
 Nodes (11): Additional information, ARTICLE, Counterfeit integrity, Data availability, Developing integrity, Falstaff, Henry V, Hotspur (+3 more)
+
+### Community 27 - "Integritas dan bentuk-bentuk palsunya: *Henriad* karya Shakespeare"
+Cohesion: 0.17
+Nodes (11): Catatan, Falstaff, Henry V, Hotspur, Informasi tambahan, Integritas dan bentuk-bentuk palsunya: *Henriad* karya Shakespeare, Integritas palsu, Kesimpulan (+3 more)
 
 ## Knowledge Gaps
 - **60 isolated node(s):** `timeZone`, `dependencies`, `exceptionLogging`, `runtimeVersion`, `state` (+55 more)

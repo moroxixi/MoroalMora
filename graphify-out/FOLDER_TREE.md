@@ -1,4 +1,4 @@
-# Folder Tree (51 files tracked)
+# Folder Tree (50 files tracked)
 
 > Auto-generated dari manifest.json — jangan edit manual. Regenerate: gen-folder-tree.py <path-manifest.json>
 
@@ -33,7 +33,6 @@
 │   │   │   └── IntegrityandItsConterfeitsPV-ROBINSON.pdf
 │   │   ├── Output/
 │   │   │   └── IntegrityandItsConterfeitsPV-ROBINSON/
-│   │   │       ├── IntegrIntegritas-id.md
 │   │   │       ├── Integritas-id.md
 │   │   │       ├── IntegrityandItsConterfeitsPV-ROBINSON.md
 │   │   │       ├── IntegrityandItsConterfeitsPV-ROBINSON.raw.md
