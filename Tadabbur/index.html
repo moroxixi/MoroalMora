@@ -64,8 +64,8 @@ pre.on{display:block}
 
 <script>
 (function(){
-  fetch('tadabbur.json',{cache:'no-cache'}).then(function(r){if(!r.ok)throw new Error('HTTP '+r.status);return r.json()}).then(start).catch(showErr);
-  function showErr(e){var l=document.getElementById('list');var p=document.createElement('p');p.style.cssText='color:#8d8b86;text-align:center';p.textContent='Gagal memuat tadabbur.json ('+e.message+'). Jalankan lewat server lokal, misalnya: python3 -m http.server';l.appendChild(p)}
+  fetch('Tadabbur.json',{cache:'no-cache'}).then(function(r){if(!r.ok)throw new Error('HTTP '+r.status);return r.json()}).then(start).catch(showErr);
+  function showErr(e){var l=document.getElementById('list');var p=document.createElement('p');p.style.cssText='color:#8d8b86;text-align:center';p.textContent='Gagal memuat Tadabbur.json ('+e.message+'). Jalankan lewat server lokal, misalnya: python3 -m http.server';l.appendChild(p)}
   function start(DATA){
   var list=document.getElementById('list');
   function el(tag,cls,text){var e=document.createElement(tag);if(cls)e.className=cls;if(text!==undefined)e.textContent=text;return e}

@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="dark">
+<title>Edit Tadabbur</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Amiri+Quran&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  color-scheme:dark;
+  --bg:#000;--card:#0a0a0a;--field:#0f0f0f;--line:#1c1c1c;
+  --text:#e8e6e1;--muted:#8d8b86;--gold:#d4b36a;--red:#e07a6f;--ok:#7fc99a;
+  --ar:'Amiri Quran','Scheherazade New','Traditional Arabic','Noto Naskh Arabic',serif;
+  --ui:'Inter',system-ui,-apple-system,'Segoe UI',sans-serif;
+}
+*,*::before,*::after{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font-family:var(--ui);line-height:1.6;-webkit-font-smoothing:antialiased}
+a{color:var(--gold);text-decoration:none;font-size:14px}
+.bar{position:sticky;top:0;z-index:10;display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:12px 16px;background:rgba(0,0,0,.92);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+.bar .sp{flex:1}
+#status{font-size:13px;color:var(--muted);min-width:0}
+#status.ok{color:var(--ok)}#status.err{color:var(--red)}#status.dirty{color:var(--gold)}
+.wrap{max-width:760px;margin:0 auto;padding:22px 16px 90px}
+button,.btn{background:transparent;color:var(--text);border:1px solid var(--line);border-radius:999px;padding:7px 15px;font:500 13px var(--ui);cursor:pointer;display:inline-block}
+button:hover,button:focus-visible,.btn:hover{border-color:var(--gold);color:var(--gold);outline:none}
+button.pri{background:var(--gold);border-color:var(--gold);color:#000;font-weight:600}
+button.pri:hover{filter:brightness(1.1);color:#000}
+button.del:hover{border-color:var(--red);color:var(--red)}
+button.sm{padding:3px 11px;font-size:12px}
+article{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:18px;margin:0 0 20px}
+.head{display:flex;align-items:center;gap:8px;margin-bottom:12px}
+.head .t{flex:1;font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--gold);font-weight:600}
+label{display:block;margin:0 0 12px}
+label>span{display:block;font-size:12px;color:var(--muted);margin-bottom:4px}
+input,textarea{width:100%;background:var(--field);color:var(--text);border:1px solid var(--line);border-radius:10px;padding:10px 12px;font:15px/1.6 var(--ui)}
+input:focus,textarea:focus{outline:none;border-color:var(--gold)}
+textarea{resize:none;overflow:hidden;min-height:44px}
+textarea.ar{direction:rtl;text-align:right;font-family:var(--ar);font-size:28px;line-height:2.1;word-spacing:.08em;color:#f4f1ea}
+.ayat{border:1px solid var(--line);border-radius:14px;padding:14px;margin:0 0 12px}
+.ayat .head .t{color:var(--muted)}
+.add{width:100%;border-style:dashed;border-radius:14px;padding:11px}
+.empty{text-align:center;color:var(--muted);padding:30px 0}
+</style>
+</head>
+<body>
+<div class="bar">
+  <a href="../">← Lihat halaman</a>
+  <span id="status" role="status" aria-live="polite"></span>
+  <span class="sp"></span>
+  <button id="open">Buka file</button>
+  <button id="save" class="pri">Simpan</button>
+</div>
+<div class="wrap">
+  <div id="list"></div>
+  <button id="addTema" class="add">+ Tambah tema</button>
+</div>
+<input type="file" id="imp" accept=".json,application/json" hidden>
+
+<script>
+(function(){
+  var DATA=[],handle=null,dirty=false;
+  var FT=[{description:'JSON',accept:{'application/json':['.json']}}];
+  var $=function(id){return document.getElementById(id)};
+  function el(t,c,x){var e=document.createElement(t);if(c)e.className=c;if(x!==undefined)e.textContent=x;return e}
+  function btn(text,fn,cls){var b=el('button',cls||'sm',text);b.type='button';b.addEventListener('click',fn);return b}
+  function msg(t,kind){var s=$('status');s.textContent=t;s.className=kind||''}
+  function setDirty(v){dirty=v;if(v)msg('Ada perubahan yang belum disimpan','dirty');else if($('status').className==='dirty')msg('')}
+  function grow(t){t.style.height='auto';t.style.height=t.scrollHeight+'px'}
+
+  function norm(a){
+    if(!Array.isArray(a))throw new Error('format harus berupa daftar (array) tema');
+    return a.map(function(d){return{
+      judul:String(d.judul||''),
+      isi:(Array.isArray(d.isi)?d.isi:[]).map(function(v){return{arab:String(v.arab||''),arti:String(v.arti||''),ref:String(v.ref||'')}}),
+      keterangan:String(d.keterangan||'')}});
+  }
+  function load(text){DATA=norm(JSON.parse(text));render();dirty=false}
+  function output(){
+    var clean=DATA.map(function(d){return{
+      judul:d.judul.trim(),
+      isi:d.isi.map(function(v){return{arab:v.arab.trim(),arti:v.arti.trim(),ref:v.ref.trim()}})
+              .filter(function(v){return v.arab||v.arti}),
+      keterangan:d.keterangan.trim()}});
+    return JSON.stringify(clean,null,2)+'\n';
+  }
+
+  function field(label,tag,val,cls,set){
+    var l=el('label'),s=el('span',null,label),f=el(tag,cls||'');
+    if(tag==='input')f.type='text';
+    f.value=val;
+    f.addEventListener('input',function(){set(f.value);if(tag==='textarea')grow(f);setDirty(true)});
+    l.appendChild(s);l.appendChild(f);return l;
+  }
+  function move(i,d){var j=i+d;if(j<0||j>=DATA.length)return;var t=DATA[i];DATA[i]=DATA[j];DATA[j]=t;render();setDirty(true)}
+
+  function render(){
+    var list=$('list');list.textContent='';
+    if(!DATA.length)list.appendChild(el('div','empty','Belum ada tema. Klik “Tambah tema” untuk mulai menulis.'));
+    DATA.forEach(function(d,i){
+      var a=el('article'),h=el('div','head');
+      h.appendChild(el('span','t','Tema '+(i+1)));
+      h.appendChild(btn('↑',function(){move(i,-1)}));
+      h.appendChild(btn('↓',function(){move(i,1)}));
+      h.appendChild(btn('Hapus',function(){
+        if(confirm('Hapus tema “'+(d.judul||'tanpa judul')+'”?')){DATA.splice(i,1);render();setDirty(true)}
+      },'sm del'));
+      a.appendChild(h);
+      a.appendChild(field('Judul (ini tentang apa)','input',d.judul,'',function(v){d.judul=v}));
+      d.isi.forEach(function(v,j){
+        var b=el('div','ayat'),hh=el('div','head');
+        hh.appendChild(el('span','t','Ayat '+(j+1)));
+        hh.appendChild(btn('Hapus',function(){d.isi.splice(j,1);render();setDirty(true)},'sm del'));
+        b.appendChild(hh);
+        var ar=field('Teks Arab','textarea',v.arab,'ar',function(x){v.arab=x});
+        var ta=ar.querySelector('textarea');ta.setAttribute('dir','rtl');ta.setAttribute('lang','ar');
+        b.appendChild(ar);
+        b.appendChild(field('Arti','textarea',v.arti,'',function(x){v.arti=x}));
+        b.appendChild(field('Rujukan (contoh: QS. Ar-Ra’d [13]: 28)','input',v.ref,'',function(x){v.ref=x}));
+        a.appendChild(b);
+      });
+      a.appendChild(btn('+ Tambah ayat',function(){d.isi.push({arab:'',arti:'',ref:''});render();setDirty(true)},'add'));
+      var k=field('Keterangan (penjelasan / perenungan)','textarea',d.keterangan,'',function(x){d.keterangan=x});
+      k.style.marginTop='14px';
+      a.appendChild(k);
+      list.appendChild(a);
+    });
+    list.querySelectorAll('textarea').forEach(grow);
+  }
+
+  function download(text){
+    var u=URL.createObjectURL(new Blob([text],{type:'application/json'}));
+    var a=document.createElement('a');a.href=u;a.download='Tadabbur.json';
+    document.body.appendChild(a);a.click();a.remove();
+    setTimeout(function(){URL.revokeObjectURL(u)},1000);
+  }
+  async function save(){
+    var text=output();
+    try{
+      if(!handle&&window.showSaveFilePicker)handle=await showSaveFilePicker({suggestedName:'Tadabbur.json',types:FT});
+      if(handle){
+        var w=await handle.createWritable();await w.write(text);await w.close();
+        dirty=false;msg('Tersimpan ke '+handle.name,'ok');
+      }else{
+        download(text);dirty=false;
+        msg('Terunduh. Taruh Tadabbur.json di folder Tadabbur, gantikan yang lama.','ok');
+      }
+    }catch(e){if(e.name!=='AbortError')msg('Gagal menyimpan: '+e.message,'err')}
+  }
+  async function openFile(){
+    if(!window.showOpenFilePicker){$('imp').click();return}
+    try{
+      var r=await showOpenFilePicker({types:FT});
+      handle=r[0];load(await(await handle.getFile()).text());
+      msg('Dibuka: '+handle.name+'. Simpan akan menimpa file ini.','ok');
+    }catch(e){if(e.name!=='AbortError')msg('Gagal membuka: '+e.message,'err')}
+  }
+
+  $('save').addEventListener('click',save);
+  $('open').addEventListener('click',openFile);
+  $('addTema').addEventListener('click',function(){
+    DATA.push({judul:'',isi:[{arab:'',arti:'',ref:''}],keterangan:''});render();setDirty(true);
+    var items=$('list').querySelectorAll('article');
+    var last=items[items.length-1];last.scrollIntoView({behavior:'smooth',block:'start'});
+    last.querySelector('input').focus({preventScroll:true});
+  });
+  $('imp').addEventListener('change',function(){
+    var f=this.files[0];if(!f)return;
+    var r=new FileReader();
+    r.onload=function(){try{load(r.result);msg('Diimpor: '+f.name,'ok')}catch(e){msg('File tidak valid: '+e.message,'err')}};
+    r.readAsText(f);this.value='';
+  });
+  document.addEventListener('keydown',function(e){
+    if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='s'){e.preventDefault();save()}
+  });
+  window.addEventListener('beforeunload',function(e){if(dirty){e.preventDefault();e.returnValue=''}});
+
+  fetch('../Tadabbur.json',{cache:'no-store'})
+    .then(function(r){if(!r.ok)throw new Error('HTTP '+r.status);return r.text()})
+    .then(function(t){load(t);msg('Tadabbur.json dimuat','ok')})
+    .catch(function(){render();msg('Belum bisa memuat otomatis. Jalankan lewat server lokal atau klik “Buka file”.','err')});
+})();
+</script>
+</body>
+</html>
