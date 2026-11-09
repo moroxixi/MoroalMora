@@ -81,6 +81,11 @@ h2{margin:0 0 18px;font-size:19px;font-weight:600;line-height:1.4}
        if(RX.test(w)){ar.appendChild(el('span','alt',w))}
        else{ar.appendChild(document.createTextNode(w))}
       });
+      box.appendChild(ar);
+      box.appendChild(el('p','arti',v.arti));
+      if(v.ref)box.appendChild(el('div','ref',v.ref));
+      a.appendChild(box);
+    });
     var k=el('div','ket');
     k.appendChild(el('b',null,'Keterangan'));
     k.appendChild(el('p',null,d.keterangan));
@@ -89,7 +94,7 @@ h2{margin:0 0 18px;font-size:19px;font-weight:600;line-height:1.4}
   });
 
   // Ukuran tulisan Arab
-  var size=34;
+  var size=38;
   try{var s=parseInt(localStorage.getItem('ar-size'),10);if(s>=24&&s<=60)size=s}catch(e){}
   function apply(){
     document.documentElement.style.setProperty('--ar-size',size+'px');
