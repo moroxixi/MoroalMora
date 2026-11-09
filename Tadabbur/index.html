@@ -28,8 +28,8 @@ header{text-align:center;padding:18px 0 26px}
 header h1{margin:0;font-size:22px;font-weight:600;letter-spacing:.04em;color:var(--gold)}
 header p{margin:6px 0 0;color:var(--muted);font-size:14px}
 .tools{display:flex;justify-content:center;gap:8px;margin-top:16px;flex-wrap:wrap}
-button{background:transparent;color:var(--text);border:1px solid var(--line);border-radius:999px;padding:7px 16px;font:500 13px var(--ui);cursor:pointer}
-button:hover,button:focus-visible{border-color:var(--gold);color:var(--gold);outline:none}
+button,.btn{text-decoration:none;display:inline-block;background:transparent;color:var(--text);border:1px solid var(--line);border-radius:999px;padding:7px 16px;font:500 13px var(--ui);cursor:pointer}
+button:hover,button:focus-visible,.btn:hover,.btn:focus-visible{border-color:var(--gold);color:var(--gold);outline:none}
 article{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:22px 20px;margin:0 0 22px}
 .no{display:inline-block;font-size:12px;color:var(--gold);border:1px solid var(--gold-dim);background:var(--gold-dim);border-radius:999px;padding:1px 10px;margin-bottom:8px}
 h2{margin:0 0 18px;font-size:19px;font-weight:600;line-height:1.4}
@@ -41,8 +41,6 @@ h2{margin:0 0 18px;font-size:19px;font-weight:600;line-height:1.4}
 .ket{margin-top:6px;padding:14px 16px;border-left:2px solid var(--gold);background:#0f0f0f;border-radius:0 12px 12px 0}
 .ket b{display:block;font-size:12px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--gold);margin-bottom:4px}
 .ket p{margin:0;font-size:15px;color:#cfccc5}
-pre{display:none;margin:0 0 22px;padding:16px;background:var(--card);border:1px solid var(--line);border-radius:14px;overflow-x:auto;font:12.5px/1.6 ui-monospace,Menlo,Consolas,monospace;color:#b9b6ae;direction:ltr;text-align:left}
-pre.on{display:block}
 </style>
 </head>
 <body>
@@ -53,10 +51,9 @@ pre.on{display:block}
     <div class="tools">
       <button id="minus" aria-label="Perkecil tulisan Arab">A−</button>
       <button id="plus" aria-label="Perbesar tulisan Arab">A+</button>
-      <button id="jsonBtn">Lihat JSON</button>
+      <a class="btn" href="Edit/">Edit JSON</a>
     </div>
   </header>
-  <pre id="jsonView"></pre>
   <main id="list"></main>
 </div>
 
@@ -87,14 +84,6 @@ pre.on{display:block}
     k.appendChild(el('p',null,d.keterangan));
     a.appendChild(k);
     list.appendChild(a);
-  });
-
-  // JSON view
-  var pre=document.getElementById('jsonView');
-  pre.textContent=JSON.stringify(DATA,null,2);
-  document.getElementById('jsonBtn').addEventListener('click',function(){
-    var on=pre.classList.toggle('on');
-    this.textContent=on?'Sembunyikan JSON':'Lihat JSON';
   });
 
   // Ukuran tulisan Arab
