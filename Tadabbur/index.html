@@ -7,13 +7,14 @@
 <title>Tadabbur</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Noto+Naskh+Arabic:wght@400;500&family=Scheherazade+New:wght@400;500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Scheherazade+New:wght@400;500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
 :root{
   color-scheme:dark;
   --bg:#000;--card:#0a0a0a;--line:#1c1c1c;
   --text:#e8e6e1;--muted:#8d8b86;--gold:#d4b36a;--gold-dim:#d4b36a22;
-  --ar:'Amiri','Noto Naskh Arabic','Scheherazade New',serif;
+  --ar:'Scheherazade New','Noto Naskh Arabic',serif;
+  --ar-alt:'Amiri','Noto Naskh Arabic',serif;
   --ar-size:38px;
   --ui:'Inter',system-ui,-apple-system,'Segoe UI',sans-serif;
   box-sizing:border-box;
@@ -41,6 +42,7 @@ h2{margin:0 0 18px;font-size:19px;font-weight:600;line-height:1.4}
 .ket{margin-top:6px;padding:14px 16px;border-left:2px solid var(--gold);background:#0f0f0f;border-radius:0 12px 12px 0}
 .ket b{display:block;font-size:12px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--gold);margin-bottom:4px}
 .ket p{margin:0;font-size:15px;color:#cfccc5}
+.ar .alt{font-family:var(--ar-alt);font-size:.92em}
 </style>
 </head>
 <body>
@@ -73,12 +75,12 @@ h2{margin:0 0 18px;font-size:19px;font-weight:600;line-height:1.4}
     a.appendChild(el('h2',null,d.judul));
     d.isi.forEach(function(v){
       var box=el('div','ayat');
-      var ar=el('div','ar',v.arab);ar.setAttribute('lang','ar');ar.setAttribute('dir','rtl');
-      box.appendChild(ar);
-      box.appendChild(el('p','arti',v.arti));
-      if(v.ref)box.appendChild(el('div','ref',v.ref));
-      a.appendChild(box);
-    });
+      var ar=el('div','ar');ar.setAttribute('lang','ar');ar.setAttribute('dir','rtl');
+      var RX=/\u0651[\u064B-\u0650]*[\u0650\u064D]|[\u0650\u064D][\u064B-\u0650]*\u0651/;
+      v.arab.split(/(\s+)/).forEach(function(w){
+       if(RX.test(w)){ar.appendChild(el('span','alt',w))}
+       else{ar.appendChild(document.createTextNode(w))}
+      });
     var k=el('div','ket');
     k.appendChild(el('b',null,'Keterangan'));
     k.appendChild(el('p',null,d.keterangan));
