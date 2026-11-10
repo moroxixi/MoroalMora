@@ -263,5 +263,15 @@
     "mtime": 1794254246.4288867,
     "ast_hash": "f4d6ed75539c8a00f104ae87e520fd77",
     "semantic_hash": ""
+  },
+  "Tadabbur/Hafalan/Tadabbur.json": {
+    "mtime": 1794316630.5906484,
+    "ast_hash": "18e449fc54490c68b3fbe3e34b89023e",
+    "semantic_hash": ""
+  },
+  "Tadabbur/Hafalan/index.html": {
+    "mtime": 1794316679.2592354,
+    "ast_hash": "209baefa65a4a5deff217e19be0a2db5",
+    "semantic_hash": ""
   }
 }

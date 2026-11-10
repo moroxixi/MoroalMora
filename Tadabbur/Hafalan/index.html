@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="dark">
+<title>Hafalan</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Scheherazade+New:wght@400;500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  color-scheme:dark;
+  --bg:#000;--card:#0a0a0a;--line:#1c1c1c;
+  --text:#e8e6e1;--muted:#8d8b86;--gold:#d4b36a;--gold-dim:#d4b36a22;
+  --ar:'Scheherazade New','Noto Naskh Arabic',serif;
+  --ar-alt:'Amiri','Noto Naskh Arabic',serif;
+  --ar-size:38px;
+  --ui:'Inter',system-ui,-apple-system,'Segoe UI',sans-serif;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*,*::before,*::after{box-sizing:inherit}
+body{margin:0;background:var(--bg);color:var(--text);font-family:var(--ui);line-height:1.7;-webkit-font-smoothing:antialiased}
+.wrap{max-width:720px;margin:0 auto;padding:28px 18px 80px}
+header{text-align:center;padding:18px 0 26px}
+header h1{margin:0;font-size:22px;font-weight:600;letter-spacing:.04em;color:var(--gold)}
+header p{margin:6px 0 0;color:var(--muted);font-size:14px}
+.tools{display:flex;justify-content:center;gap:8px;margin-top:16px;flex-wrap:wrap}
+button,.btn{text-decoration:none;display:inline-block;background:transparent;color:var(--text);border:1px solid var(--line);border-radius:999px;padding:7px 16px;font:500 13px var(--ui);cursor:pointer}
+button:hover,button:focus-visible,.btn:hover,.btn:focus-visible{border-color:var(--gold);color:var(--gold);outline:none}
+article{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:22px 20px;margin:0 0 22px}
+.no{display:inline-block;font-size:12px;color:var(--gold);border:1px solid var(--gold-dim);background:var(--gold-dim);border-radius:999px;padding:1px 10px;margin-bottom:8px}
+h2{margin:0 0 18px;font-size:19px;font-weight:600;line-height:1.4}
+.ayat{padding:18px 0;border-top:1px solid var(--line)}
+.ayat:first-of-type{border-top:0;padding-top:0}
+.ar{direction:rtl;text-align:right;font-family:var(--ar);font-size:var(--ar-size);line-height:2.25;word-spacing:.08em;color:#f4f1ea;text-rendering:optimizeLegibility;font-feature-settings:"liga","calt","kern"}
+.arti{margin:10px 0 0;font-size:16px;color:var(--text)}
+.ref{margin-top:6px;font-size:12.5px;color:var(--muted);letter-spacing:.03em}
+.ket{margin-top:6px;padding:14px 16px;border-left:2px solid var(--gold);background:#0f0f0f;border-radius:0 12px 12px 0}
+.ket b{display:block;font-size:12px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--gold);margin-bottom:4px}
+.ket p{margin:0;font-size:15px;color:#cfccc5}
+.ar .alt{font-family:var(--ar-alt);font-size:.92em}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>Tadabbur</h1>
+    <p>Membaca pelan, merenungi maknanya.</p>
+    <div class="tools">
+      <button id="minus" aria-label="Perkecil tulisan Arab">A−</button>
+      <button id="plus" aria-label="Perbesar tulisan Arab">A+</button>
+    </div>
+  </header>
+  <main id="list"></main>
+</div>
+
+
+
+<script>
+(function(){
+  fetch('Tadabbur.json',{cache:'no-cache'}).then(function(r){if(!r.ok)throw new Error('HTTP '+r.status);return r.json()}).then(start).catch(showErr);
+  function showErr(e){var l=document.getElementById('list');var p=document.createElement('p');p.style.cssText='color:#8d8b86;text-align:center';p.textContent='Gagal memuat Tadabbur.json ('+e.message+'). Jalankan lewat server lokal, misalnya: python3 -m http.server';l.appendChild(p)}
+  function start(DATA){
+  var list=document.getElementById('list');
+  function el(tag,cls,text){var e=document.createElement(tag);if(cls)e.className=cls;if(text!==undefined)e.textContent=text;return e}
+
+  DATA.forEach(function(d,i){
+    var a=el('article');
+    a.appendChild(el('span','no','Tema '+(i+1)));
+    a.appendChild(el('h2',null,d.judul));
+    d.isi.forEach(function(v){
+      var box=el('div','ayat');
+      var ar=el('div','ar');ar.setAttribute('lang','ar');ar.setAttribute('dir','rtl');
+      var RX=/\u0651[\u064B-\u0650]*[\u0650\u064D]|[\u0650\u064D][\u064B-\u0650]*\u0651/;
+      v.arab.split(/(\s+)/).forEach(function(w){
+       if(RX.test(w)){ar.appendChild(el('span','alt',w))}
+       else{ar.appendChild(document.createTextNode(w))}
+      });
+      box.appendChild(ar);
+      box.appendChild(el('p','arti',v.arti));
+      if(v.ref)box.appendChild(el('div','ref',v.ref));
+      a.appendChild(box);
+    });
+    var k=el('div','ket');
+    k.appendChild(el('b',null,'Keterangan'));
+    k.appendChild(el('p',null,d.keterangan));
+    a.appendChild(k);
+    list.appendChild(a);
+  });
+
+  // Ukuran tulisan Arab
+  var size=38;
+  try{var s=parseInt(localStorage.getItem('ar-size'),10);if(s>=24&&s<=60)size=s}catch(e){}
+  function apply(){
+    document.documentElement.style.setProperty('--ar-size',size+'px');
+    try{localStorage.setItem('ar-size',size)}catch(e){}
+  }
+  apply();
+  document.getElementById('plus').addEventListener('click',function(){if(size<60){size+=3;apply()}});
+  document.getElementById('minus').addEventListener('click',function(){if(size>24){size-=3;apply()}});
+  }
+})();
+</script>
+</body>
+</html>
