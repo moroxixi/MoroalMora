@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Repreat Ayat</title>
+<style>
+  :root { --bg:#1a1b26; --card:#24283b; --fg:#c0caf5; --mute:#7a88b8; --acc:#7aa2f7; --ok:#9ece6a; --err:#f7768e; }
+  * { box-sizing: border-box; }
+  body { margin:0; background:var(--bg); color:var(--fg); font-family:system-ui,sans-serif; display:flex; justify-content:center; padding:20px; }
+  main { width:100%; max-width:640px; }
+  h1 { font-size:1.2rem; margin:0 0 14px; }
+  .card { background:var(--card); border-radius:12px; padding:16px; margin-bottom:14px; }
+  .ar { font-family:"Amiri","Noto Naskh Arabic","Scheherazade New",serif; font-size:2rem; line-height:2.3; direction:rtl; text-align:center; }
+  .row { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+  label { display:block; font-size:.8rem; color:var(--mute); margin-bottom:4px; }
+  input, select { width:100%; padding:8px; border-radius:8px; border:1px solid #3b4261; background:var(--bg); color:var(--fg); font-size:1rem; }
+  .full { grid-column:1 / -1; }
+  .btns { display:flex; gap:10px; margin-top:12px; }
+  button { flex:1; padding:12px; border:0; border-radius:8px; font-size:1rem; cursor:pointer; background:var(--acc); color:#10131f; font-weight:600; }
+  button.sec { background:#3b4261; color:var(--fg); }
+  #status { text-align:center; margin-top:10px; font-size:.95rem; color:var(--mute); min-height:1.4em; }
+  #status.err { color:var(--err); } #status.ok { color:var(--ok); }
+  #trans { text-align:center; color:var(--mute); font-size:.9rem; margin-top:6px; }
+</style>
+</head>
+<body>
+<main>
+  <h1>Repreat Ayat</h1>
+
+  <div class="card">
+    <div id="ayat" class="ar">...</div>
+    <div id="trans"></div>
+  </div>
+
+  <div class="card">
+    <div class="row">
+      <div><label for="surah">Surah (1-114)</label><input id="surah" type="number" min="1" max="114" value="35"></div>
+      <div><label for="ayah">Ayat</label><input id="ayah" type="number" min="1" value="37"></div>
+      <div class="full">
+        <label for="reciter">Qari</label>
+        <select id="reciter">
+          <option value="Minshawy_Teacher_128kbps">Al-Minshawi (Teacher / Muallim)</option>
+          <option value="Minshawy_Murattal_128kbps">Al-Minshawi (Murattal)</option>
+          <option value="Minshawy_Mujawwad_192kbps">Al-Minshawi (Mujawwad)</option>
+          <option value="Husary_Muallim_128kbps">Al-Husary (Muallim)</option>
+          <option value="Alafasy_128kbps">Mishary Alafasy</option>
+        </select>
+      </div>
+      <div><label for="count">Jumlah ulangan (0 = tanpa henti)</label><input id="count" type="number" min="0" value="10"></div>
+      <div><label for="gap">Jeda antar ulangan (detik)</label><input id="gap" type="number" min="0" step="0.5" value="1"></div>
+      <div class="full">
+        <label for="rate">Kecepatan: <span id="rateVal">1.0</span>x</label>
+        <input id="rate" type="range" min="0.5" max="1.5" step="0.05" value="1">
+      </div>
+    </div>
+    <div class="btns">
+      <button id="play">Mulai</button>
+      <button id="stop" class="sec">Berhenti</button>
+    </div>
+    <div id="status"></div>
+  </div>
+
+  <audio id="audio" preload="auto"></audio>
+</main>
+
+<script>
+const $ = id => document.getElementById(id);
+const audio = $('audio');
+const FALLBACK = { '35:37': 'وَهُمْ يَصْطَرِخُونَ فِيهَا رَبَّنَا أَخْرِجْنَا نَعْمَلْ صَالِحًا غَيْرَ الَّذِي كُنَّا نَعْمَلُ ۚ أَوَلَمْ نُعَمِّرْكُمْ مَا يَتَذَكَّرُ فِيهِ مَنْ تَذَكَّرَ وَجَاءَكُمُ النَّذِيرُ ۖ فَذُوقُوا فَمَا لِلظَّالِمِينَ مِنْ نَصِيرٍ' };
+
+let running = false, done = 0, timer = null;
+
+const pad = n => String(n).padStart(3, '0');
+const setStatus = (t, cls = '') => { const s = $('status'); s.textContent = t; s.className = cls; };
+const audioUrl = () => `https://everyayah.com/data/${$('reciter').value}/${pad($('surah').value)}${pad($('ayah').value)}.mp3`;
+
+async function loadText() {
+  const key = `${$('surah').value}:${$('ayah').value}`;
+  $('ayat').textContent = FALLBACK[key] || '...';
+  $('trans').textContent = '';
+  try {
+    const [ar, id] = await Promise.all([
+      fetch(`https://api.alquran.cloud/v1/ayah/${key}/quran-uthmani`).then(r => r.json()),
+      fetch(`https://api.alquran.cloud/v1/ayah/${key}/id.indonesian`).then(r => r.json())
+    ]);
+    if (ar.data) $('ayat').textContent = ar.data.text;
+    if (id.data) $('trans').textContent = id.data.text;
+  } catch (e) { /* tetap pakai teks bawaan bila ada */ }
+}
+
+function stop(msg) {
+  running = false;
+  clearTimeout(timer);
+  audio.pause();
+  if (msg) setStatus(msg, 'ok');
+}
+
+function playOnce() {
+  if (!running) return;
+  const total = parseInt($('count').value, 10) || 0;
+  setStatus(`Ulangan ke-${done + 1}` + (total ? ` dari ${total}` : ''));
+  audio.currentTime = 0;
+  audio.playbackRate = parseFloat($('rate').value);
+  audio.play().catch(() => {
+    stop();
+    setStatus('Audio gagal diputar. Cek koneksi atau pilihan qari.', 'err');
+  });
+}
+
+audio.addEventListener('ended', () => {
+  if (!running) return;
+  done++;
+  const total = parseInt($('count').value, 10) || 0;
+  if (total && done >= total) return stop(`Selesai, ${done} kali ulangan.`);
+  const gap = (parseFloat($('gap').value) || 0) * 1000;
+  timer = setTimeout(playOnce, gap);
+});
+
+audio.addEventListener('error', () => {
+  if (!running) return;
+  stop();
+  setStatus('File audio tidak ditemukan untuk qari/ayat ini di EveryAyah. Coba qari lain.', 'err');
+});
+
+$('play').addEventListener('click', () => {
+  stop();
+  done = 0;
+  running = true;
+  audio.src = audioUrl();
+  playOnce();
+});
+$('stop').addEventListener('click', () => stop('Dihentikan.'));
+$('rate').addEventListener('input', e => {
+  $('rateVal').textContent = parseFloat(e.target.value).toFixed(1);
+  audio.playbackRate = parseFloat(e.target.value);
+});
+['surah', 'ayah'].forEach(id => $(id).addEventListener('change', () => { stop(); loadText(); }));
+$('reciter').addEventListener('change', () => stop());
+
+loadText();
+</script>
+</body>
+</html>
