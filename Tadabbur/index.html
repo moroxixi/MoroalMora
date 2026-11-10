@@ -43,6 +43,9 @@ h2{margin:0 0 18px;font-size:19px;font-weight:600;line-height:1.4}
 .ket b{display:block;font-size:12px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--gold);margin-bottom:4px}
 .ket p{margin:0;font-size:15px;color:#cfccc5}
 .ar .alt{font-family:var(--ar-alt);font-size:.92em}
+.play{margin-top:10px}
+.play.on{border-color:var(--gold);color:var(--gold);background:var(--gold-dim)}
+.play.err{color:#f7768e;border-color:#f7768e}
 </style>
 </head>
 <body>
@@ -70,6 +73,66 @@ h2{margin:0 0 18px;font-size:19px;font-weight:600;line-height:1.4}
   var list=document.getElementById('list');
   function el(tag,cls,text){var e=document.createElement(tag);if(cls)e.className=cls;if(text!==undefined)e.textContent=text;return e}
 
+  // ===== Murattal: Al-Minshawi (Teacher / Muallim), ulang terus sampai dihentikan =====
+  var RECITER='Minshawy_Teacher_128kbps';
+  var GAP=1000; // jeda antar ulangan (ms)
+  var audio=new Audio();
+  audio.preload='auto';
+  var cur=null,timer=null;
+  function pad(n){return String(n).padStart(3,'0')}
+  // Ambil surah & ayat dari ref, contoh "QS. Fāṭir [35]: 37" atau "[2]: 255-257"
+  function parseRef(ref){
+    var m=/\[(\d+)\]\s*:\s*(\d+)(?:\s*[-\u2013]\s*(\d+))?/.exec(ref||'');
+    if(!m)return null;
+    var a=parseInt(m[2],10),b=m[3]?parseInt(m[3],10):a;
+    return {s:parseInt(m[1],10),a:a,n:Math.max(b-a,0)};
+  }
+  function setBtn(btn,on){
+    btn.textContent=on?'\u23F9 Berhenti':'\u25B6 Putar murattal';
+    btn.classList.toggle('on',on);
+    btn.classList.remove('err');
+    btn.setAttribute('aria-pressed',on?'true':'false');
+  }
+  function stopAll(){
+    clearTimeout(timer);
+    audio.pause();
+    if(cur)setBtn(cur.btn,false);
+    cur=null;
+  }
+  function playStep(){
+    if(!cur)return;
+    audio.src='https://everyayah.com/data/'+RECITER+'/'+pad(cur.s)+pad(cur.a+cur.i)+'.mp3';
+    audio.play().catch(fail);
+  }
+  function fail(){
+    if(!cur)return;
+    var b=cur.btn;
+    stopAll();
+    b.textContent='Audio gagal diputar';
+    b.classList.add('err');
+  }
+  audio.addEventListener('ended',function(){
+    if(!cur)return;
+    cur.i++;
+    if(cur.i>cur.n){cur.i=0;timer=setTimeout(playStep,GAP)}
+    else playStep();
+  });
+  audio.addEventListener('error',fail);
+  function makePlay(pos){
+    var b=el('button','play');
+    b.type='button';
+    setBtn(b,false);
+    b.addEventListener('click',function(){
+      var same=cur&&cur.btn===b;
+      stopAll();
+      if(same)return;
+      cur={btn:b,s:pos.s,a:pos.a,n:pos.n,i:0};
+      setBtn(b,true);
+      playStep();
+    });
+    return b;
+  }
+
   DATA.forEach(function(d,i){
     var a=el('article');
     a.appendChild(el('span','no','Tema '+(i+1)));
@@ -85,6 +148,8 @@ h2{margin:0 0 18px;font-size:19px;font-weight:600;line-height:1.4}
       box.appendChild(ar);
       box.appendChild(el('p','arti',v.arti));
       if(v.ref)box.appendChild(el('div','ref',v.ref));
+      var pos=parseRef(v.ref);
+      if(pos)box.appendChild(makePlay(pos));
       a.appendChild(box);
     });
     var k=el('div','ket');
