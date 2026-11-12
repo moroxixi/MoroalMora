@@ -164,7 +164,7 @@ h2{margin:0 0 18px;font-size:19px;font-weight:600;line-height:1.4}
     var head=el('div','head');
     head.appendChild(el('span','no','Tema '+(i+1)));
     var tr=themeRange(d);
-    if(tr)head.appendChild(makePlay(tr,'\u25B6 Murotal tema (ayat'+(tr.from===tr.to?tr.from:tr.from+'-'+tr.to)+')',true));
+    if(tr)head.appendChild(makePlay(tr,'\u25B6 Murotal tema (ayat '+(tr.from===tr.to?tr.from:tr.from+'-'+tr.to)+')',true));
     a.appendChild(head);
     a.appendChild(el('h2',null,d.judul));
     d.isi.forEach(function(v){
