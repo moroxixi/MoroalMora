@@ -37,13 +37,17 @@ h2{margin:0 0 18px;font-size:19px;font-weight:600;line-height:1.4}
 .ayat{padding:18px 0;border-top:1px solid var(--line)}
 .ayat:first-of-type{border-top:0;padding-top:0}
 .ar{direction:rtl;text-align:right;font-family:var(--ar);font-size:var(--ar-size);line-height:2.25;word-spacing:.08em;color:#f4f1ea;text-rendering:optimizeLegibility;font-feature-settings:"liga","calt","kern"}
-.arti{margin:10px 0 0;font-size:16px;color:var(--text)}
+.arti{margin:6px 0 0;font-size:16px;color:var(--text)}
 .ref{margin-top:6px;font-size:12.5px;color:var(--muted);letter-spacing:.03em}
 .ket{margin-top:6px;padding:14px 16px;border-left:2px solid var(--gold);background:#0f0f0f;border-radius:0 12px 12px 0}
 .ket b{display:block;font-size:12px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--gold);margin-bottom:4px}
 .ket p{margin:0;font-size:15px;color:#cfccc5}
 .ar .alt{font-family:var(--ar-alt);font-size:.92em}
-.play{margin-top:10px}
+.head{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:10px}
+.head .no{margin-bottom:0}
+.atop{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:6px}
+.atop .ref{margin-top:0}
+.play{white-space:nowrap}
 .play.on{border-color:var(--gold);color:var(--gold);background:var(--gold-dim)}
 .play.err{color:#f7768e;border-color:#f7768e}
 </style>
@@ -87,8 +91,28 @@ h2{margin:0 0 18px;font-size:19px;font-weight:600;line-height:1.4}
     var a=parseInt(m[2],10),b=m[3]?parseInt(m[3],10):a;
     return {s:parseInt(m[1],10),a:a,n:Math.max(b-a,0)};
   }
+  // Rentang murattal per tema: default dari ayat pertama s/d terakhir di 'isi'.
+  // Bisa diatur lewat JSON: "murotal": {"dari": 64, "sampai": 65}
+  function themeRange(d){
+    var first=null,last=null;
+    (d.isi||[]).forEach(function(v){
+      var p=parseRef(v.ref);if(!p)return;
+      if(!first)first=p;
+      if(p.s===first.s)last=p;
+    });
+    if(!first)return null;
+    var from=first.a,to=last.a+last.n;
+    var m=d.murotal;
+    if(m){
+      var f=parseInt(m.dari,10),t=parseInt(m.sampai,10);
+      if(f>0)from=f;
+      if(t>0)to=t;
+      if(to<from)to=from;
+    }
+    return {s:first.s,a:from,n:to-from,from:from,to:to};
+  }
   function setBtn(btn,on){
-    btn.textContent=on?'\u23F9 Berhenti':'\u25B6 Putar murattal';
+    btn.textContent=on?'\u23F9 Berhenti':(btn.dataset.label||'\u25B6 Putar murattal');
     btn.classList.toggle('on',on);
     btn.classList.remove('err');
     btn.setAttribute('aria-pressed',on?'true':'false');
@@ -102,6 +126,7 @@ h2{margin:0 0 18px;font-size:19px;font-weight:600;line-height:1.4}
   function playStep(){
     if(!cur)return;
     audio.src='https://everyayah.com/data/'+RECITER+'/'+pad(cur.s)+pad(cur.a+cur.i)+'.mp3';
+    if(cur.theme)cur.btn.textContent='\u23F9 Berhenti (ayat '+(cur.a+cur.i)+')';
     audio.play().catch(fail);
   }
   function fail(){
@@ -118,15 +143,16 @@ h2{margin:0 0 18px;font-size:19px;font-weight:600;line-height:1.4}
     else playStep();
   });
   audio.addEventListener('error',fail);
-  function makePlay(pos){
+  function makePlay(pos,label,isTheme){
     var b=el('button','play');
     b.type='button';
+    if(label)b.dataset.label=label;
     setBtn(b,false);
     b.addEventListener('click',function(){
       var same=cur&&cur.btn===b;
       stopAll();
       if(same)return;
-      cur={btn:b,s:pos.s,a:pos.a,n:pos.n,i:0};
+      cur={btn:b,s:pos.s,a:pos.a,n:pos.n,i:0,theme:!!isTheme};
       setBtn(b,true);
       playStep();
     });
@@ -135,10 +161,19 @@ h2{margin:0 0 18px;font-size:19px;font-weight:600;line-height:1.4}
 
   DATA.forEach(function(d,i){
     var a=el('article');
-    a.appendChild(el('span','no','Tema '+(i+1)));
+    var head=el('div','head');
+    head.appendChild(el('span','no','Tema '+(i+1)));
+    var tr=themeRange(d);
+    if(tr)head.appendChild(makePlay(tr,'\u25B6 Murotal tema ('+(tr.from===tr.to?tr.from:tr.from+'-'+tr.to)+')',true));
+    a.appendChild(head);
     a.appendChild(el('h2',null,d.judul));
     d.isi.forEach(function(v){
       var box=el('div','ayat');
+      var top=el('div','atop');
+      top.appendChild(el('div','ref',v.ref||''));
+      var pos=parseRef(v.ref);
+      if(pos)top.appendChild(makePlay(pos));
+      box.appendChild(top);
       var ar=el('div','ar');ar.setAttribute('lang','ar');ar.setAttribute('dir','rtl');
       var RX=/\u0651[\u064B-\u0650]*[\u0650\u064D]|[\u0650\u064D][\u064B-\u0650]*\u0651/;
       v.arab.split(/(\s+)/).forEach(function(w){
@@ -147,9 +182,6 @@ h2{margin:0 0 18px;font-size:19px;font-weight:600;line-height:1.4}
       });
       box.appendChild(ar);
       box.appendChild(el('p','arti',v.arti));
-      if(v.ref)box.appendChild(el('div','ref',v.ref));
-      var pos=parseRef(v.ref);
-      if(pos)box.appendChild(makePlay(pos));
       a.appendChild(box);
     });
     var k=el('div','ket');
