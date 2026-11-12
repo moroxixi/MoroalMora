@@ -13,7 +13,7 @@
   color-scheme:dark;
   --bg:#000;--card:#0a0a0a;--field:#0f0f0f;--line:#1c1c1c;
   --text:#e8e6e1;--muted:#8d8b86;--gold:#d4b36a;--red:#e07a6f;--ok:#7fc99a;
-  --ar:'Amiri','Noto Naskh Arabic','Scheherazade New',serif;
+  --ar:'Scheherazade New','Noto Naskh Arabic',serif;
   --ui:'Inter',system-ui,-apple-system,'Segoe UI',sans-serif;
 }
 *,*::before,*::after{box-sizing:border-box}
@@ -38,7 +38,10 @@ label>span{display:block;font-size:12px;color:var(--muted);margin-bottom:4px}
 input,textarea{width:100%;background:var(--field);color:var(--text);border:1px solid var(--line);border-radius:10px;padding:10px 12px;font:15px/1.6 var(--ui)}
 input:focus,textarea:focus{outline:none;border-color:var(--gold)}
 textarea{resize:none;overflow:hidden;min-height:44px}
-textarea.ar{direction:rtl;text-align:right;font-family:var(--ar);font-size:28px;line-height:2.1;word-spacing:.08em;color:#f4f1ea}
+textarea.ar{direction:rtl;text-align:right;font-family:var(--ar);font-size:34px;line-height:2.25;word-spacing:.08em;color:#f4f1ea;text-rendering:optimizeLegibility;font-feature-settings:"liga","calt","kern"}
+.rng{display:flex;gap:12px;margin:0 0 4px}
+.rng label{flex:1;margin:0}
+.hint{font-size:12px;color:var(--muted);margin:0 0 12px}
 .ayat{border:1px solid var(--line);border-radius:14px;padding:14px;margin:0 0 12px}
 .ayat .head .t{color:var(--muted)}
 .add{width:100%;border-style:dashed;border-radius:14px;padding:11px}
@@ -70,23 +73,39 @@ textarea.ar{direction:rtl;text-align:right;font-family:var(--ar);font-size:28px;
   function setDirty(v){dirty=v;if(v)msg('Ada perubahan yang belum disimpan','dirty');else if($('status').className==='dirty')msg('')}
   function grow(t){t.style.height='auto';t.style.height=t.scrollHeight+'px'}
 
+  function posInt(x){var n=parseInt(x,10);return n>0?n:''}
   function norm(a){
     if(!Array.isArray(a))throw new Error('format harus berupa daftar (array) tema');
-    return a.map(function(d){return{
+    return a.map(function(d){var m=d.murotal||{};return{
       judul:String(d.judul||''),
+      dari:posInt(m.dari),sampai:posInt(m.sampai),
       isi:(Array.isArray(d.isi)?d.isi:[]).map(function(v){return{arab:String(v.arab||''),arti:String(v.arti||''),ref:String(v.ref||'')}}),
       keterangan:String(d.keterangan||'')}});
   }
   function load(text){DATA=norm(JSON.parse(text));render();dirty=false}
   function output(){
-    var clean=DATA.map(function(d){return{
-      judul:d.judul.trim(),
-      isi:d.isi.map(function(v){return{arab:v.arab.trim(),arti:v.arti.trim(),ref:v.ref.trim()}})
-              .filter(function(v){return v.arab||v.arti}),
-      keterangan:d.keterangan.trim()}});
+    var clean=DATA.map(function(d){
+      var o={judul:d.judul.trim()};
+      var f=posInt(d.dari),t=posInt(d.sampai);
+      if(f||t){o.murotal={};if(f)o.murotal.dari=f;if(t)o.murotal.sampai=t}
+      o.isi=d.isi.map(function(v){return{arab:v.arab.trim(),arti:v.arti.trim(),ref:v.ref.trim()}})
+              .filter(function(v){return v.arab||v.arti});
+      o.keterangan=d.keterangan.trim();
+      return o});
     return JSON.stringify(clean,null,2)+'\n';
   }
 
+  function defRange(d){
+    var first=null,last=null;
+    d.isi.forEach(function(v){
+      var m=/\[(\d+)\]\s*:\s*(\d+)(?:\s*[-\u2013]\s*(\d+))?/.exec(v.ref||'');
+      if(!m)return;
+      var p={s:+m[1],a:+m[2],b:m[3]?+m[3]:+m[2]};
+      if(!first)first=p;
+      if(p.s===first.s)last=p;
+    });
+    return first?{a:first.a,b:last.b}:null;
+  }
   function field(label,tag,val,cls,set){
     var l=el('label'),s=el('span',null,label),f=el(tag,cls||'');
     if(tag==='input')f.type='text';
@@ -109,6 +128,19 @@ textarea.ar{direction:rtl;text-align:right;font-family:var(--ar);font-size:28px;
       },'sm del'));
       a.appendChild(h);
       a.appendChild(field('Judul (ini tentang apa)','input',d.judul,'',function(v){d.judul=v}));
+      var rng=el('div','rng');
+      var fd=field('Murattal dari ayat','input',String(d.dari),'',function(v){d.dari=v.replace(/\D/g,'')});
+      var fs=field('Murattal sampai ayat','input',String(d.sampai),'',function(v){d.sampai=v.replace(/\D/g,'')});
+      var inD=fd.querySelector('input'),inS=fs.querySelector('input');
+      inD.inputMode=inS.inputMode='numeric';
+      rng.appendChild(fd);rng.appendChild(fs);
+      var hint=el('p','hint');
+      function ph(){
+        var r=defRange(d);
+        inD.placeholder=r?String(r.a):'';inS.placeholder=r?String(r.b):'';
+        hint.textContent=r?'Kosongkan untuk memutar semua ayat tema ini (ayat '+r.a+'–'+r.b+').':'Kosongkan untuk memutar semua ayat tema ini.';
+      }
+      a.appendChild(rng);a.appendChild(hint);ph();
       d.isi.forEach(function(v,j){
         var b=el('div','ayat'),hh=el('div','head');
         hh.appendChild(el('span','t','Ayat '+(j+1)));
@@ -118,7 +150,7 @@ textarea.ar{direction:rtl;text-align:right;font-family:var(--ar);font-size:28px;
         var ta=ar.querySelector('textarea');ta.setAttribute('dir','rtl');ta.setAttribute('lang','ar');
         b.appendChild(ar);
         b.appendChild(field('Arti','textarea',v.arti,'',function(x){v.arti=x}));
-        b.appendChild(field('Rujukan (contoh: QS. Ar-Ra’d [13]: 28)','input',v.ref,'',function(x){v.ref=x}));
+        b.appendChild(field('Rujukan (contoh: QS. Ar-Ra’d [13]: 28)','input',v.ref,'',function(x){v.ref=x;ph()}));
         a.appendChild(b);
       });
       a.appendChild(btn('+ Tambah ayat',function(){d.isi.push({arab:'',arti:'',ref:''});render();setDirty(true)},'add'));
